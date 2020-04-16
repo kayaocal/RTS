@@ -1,8 +1,0 @@
-{
-	"SourceFiles": [
-		"E:\\UE4\\Projects\\RTS\\Source\\RTS\\RTS.Build.cs",
-		"E:\\UE4\\Projects\\RTS\\Source\\RTS.Target.cs",
-		"E:\\UE4\\Projects\\RTS\\Source\\RTSEditor.Target.cs"
-	],
-	"EngineVersion": "4.24.3"
-}

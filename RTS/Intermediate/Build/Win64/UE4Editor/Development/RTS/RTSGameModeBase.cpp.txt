@@ -1,7 +1,0 @@
-E:\UE4\Projects\RTS\Intermediate\Build\Win64\UE4Editor\Development\RTS\Definitions.RTS.h
-e:\ue4\projects\rts\source\rts\RTSGameModeBase.h
-E:\UE\UE_4.24\Engine\Source\Runtime\Engine\Classes\GameFramework/GameModeBase.h
-E:\UE\UE_4.24\Engine\Source\Runtime\Engine\Classes\Engine/ServerStatReplicator.h
-E:\UE\UE_4.24\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\ServerStatReplicator.generated.h
-E:\UE\UE_4.24\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\GameModeBase.generated.h
-E:\UE4\Projects\RTS\Intermediate\Build\Win64\UE4Editor\Inc\RTS\RTSGameModeBase.generated.h

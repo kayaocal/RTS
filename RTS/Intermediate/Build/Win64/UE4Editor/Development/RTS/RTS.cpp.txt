@@ -1,2 +1,0 @@
-E:\UE4\Projects\RTS\Intermediate\Build\Win64\UE4Editor\Development\RTS\Definitions.RTS.h
-e:\ue4\projects\rts\source\rts\RTS.h
