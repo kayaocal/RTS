@@ -4,7 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/StaticMeshComponent.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Runtime/CoreUObject/Public/UObject/SoftObjectPtr.h"
 #include "RTSActor.generated.h"
+
 
 UCLASS()
 class RTS2_API ARTSActor : public AActor
@@ -14,6 +18,12 @@ class RTS2_API ARTSActor : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ARTSActor();
+	void SetMeshFromFile(FString MeshName);
+	void SetTextureFromFile(FString MaterialName);
+	UStaticMeshComponent* ItemStaticMesh;
+	UStaticMesh* CustomMesh;
+	UMaterialInstance* CustomMaterial;
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -22,7 +32,4 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	void AddStaticMesh();
-
 };

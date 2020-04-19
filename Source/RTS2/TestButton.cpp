@@ -12,12 +12,16 @@ void UTestButton::buttonEvent()
 {
 	RTSUnit *unit = new RTSUnit();
 
-	FVector NewLocation = FVector(0.f, 0.f, 0.f);
+	FVector NewLocation = FVector(100,100,15);
 	ARTSActor* NewActor = GetWorld()->SpawnActor<ARTSActor>(ARTSActor::StaticClass(), NewLocation, FRotator::ZeroRotator);
 
 	unit->actor = NewActor;
-	
-	NewActor->AddStaticMesh();
+
+	NewActor->SetMeshFromFile("SM_House_Var01");
+	NewActor->SetTextureFromFile("M_Inst_Pack_04");
+
+	NewActor->SetActorLocation(NewLocation, false);
+
 	
 	
 	//if (ItemStaticMesh)
