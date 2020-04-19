@@ -1,0 +1,52 @@
+[
+	{
+		"Name": "BaseHouse",
+		"UnitId": 0,
+		"UnitType": "BaseBuilding",
+		"Nation": "Any",
+		"IsSkeletalMesh": true,
+		"StaticMeshData":
+		{
+			"Construcion1": "StaticMesh'/Game/AdvancedVillagePack/Meshes/SM_House_Var01.SM_House_Var01'",
+			"Construcion2": "None",
+			"Construcion3": "None",
+			"ReadyMesh2": "None",
+			"ReadyMesh3": "None",
+			"Material": "MaterialInstanceConstant'/Game/AdvancedVillagePack/Materials/M_Inst_Pack_04.M_Inst_Pack_04'"
+		},
+		"SkeletalMeshData":
+		{
+			"Construcion1": "None",
+			"Construcion2": "None",
+			"Construcion3": "None",
+			"ReadyMesh2": "None",
+			"ReadyMesh3": "None",
+			"Material": "None"
+		}
+	},
+	{
+		"Name": "BaseHouse2",
+		"UnitId": 0,
+		"UnitType": "BaseBuilding",
+		"Nation": "Any",
+		"IsSkeletalMesh": false,
+		"StaticMeshData":
+		{
+			"Construcion1": "StaticMesh'/Game/AdvancedVillagePack/Meshes/SM_House_Var02.SM_House_Var02'",
+			"Construcion2": "None",
+			"Construcion3": "None",
+			"ReadyMesh2": "None",
+			"ReadyMesh3": "None",
+			"Material": "MaterialInstanceConstant'/Game/AdvancedVillagePack/Materials/M_Inst_Pack_05.M_Inst_Pack_05'"
+		},
+		"SkeletalMeshData":
+		{
+			"Construcion1": "None",
+			"Construcion2": "None",
+			"Construcion3": "None",
+			"ReadyMesh2": "None",
+			"ReadyMesh3": "None",
+			"Material": "None"
+		}
+	}
+]
