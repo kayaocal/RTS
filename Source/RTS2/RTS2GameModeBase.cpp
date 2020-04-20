@@ -2,4 +2,11 @@
 
 
 #include "RTS2GameModeBase.h"
+#include "RTS2/Public/RTSPlayerCameraSpectatorPawn.h"
+#include "RTS2/Public/RTSPlayerController.h"
 
+ARTS2GameModeBase::ARTS2GameModeBase()
+{
+	PlayerControllerClass = ARTSPlayerController::StaticClass();
+	DefaultPawnClass = ARTSPlayerCameraSpectatorPawn::StaticClass();
+}
