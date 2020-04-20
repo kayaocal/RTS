@@ -12,7 +12,8 @@
 				"UMG",
 				"Engine",
 				"UnrealEd",
-				"CoreUObject"
+				"CoreUObject",
+				"AIModule"
 			]
 		}
 	]
