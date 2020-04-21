@@ -9,43 +9,59 @@
 #include "Components/CapsuleComponent.h"
 #include "RTS2/Data/UnitDataRow.h"
 #include "RTS2/Prerequisites.h"
+#include "RTS2/Public/RTSPlayerController.h"
+#include "Engine/Classes/GameFramework/Pawn.h"
+#include "Engine/Classes/Kismet/GameplayStatics.h"
 
 void UTestButton::buttonEvent()
 {
 	RTSUnit *unit = new RTSUnit();
 
 	FVector NewLocation = FVector(100,100,15);
-	ARTSActor* NewActor = GetWorld()->SpawnActor<ARTSActor>(ARTSActor::StaticClass(), NewLocation, FRotator::ZeroRotator);
+	FVector NewDirection = FVector(0, 0, 0);
 
-	unit->actor = NewActor;
-
-	FSoftObjectPath UnitDataTablePath = FSoftObjectPath(TEXT("DataTable'/Game/Data/UnitConstructionData.UnitConstructionData'"));
-
-	FUnitDataRow* unitRow = nullptr;
-	UDataTable* UnitConstructionData = nullptr;
-
-	UnitConstructionData = Cast<UDataTable>(UnitDataTablePath.ResolveObject());
-
-	if (UnitConstructionData == nullptr)
+	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PlayerController != nullptr)
 	{
-		UnitConstructionData = Cast<UDataTable>(UnitDataTablePath.TryLoad());
+		ARTSActor* NewActor = GetWorld()->SpawnActor<ARTSActor>(ARTSActor::StaticClass(), NewLocation, FRotator::ZeroRotator);
+
+		unit->actor = NewActor;
+
+		FSoftObjectPath UnitDataTablePath = FSoftObjectPath(TEXT("DataTable'/Game/Data/UnitConstructionData.UnitConstructionData'"));
+
+		FUnitDataRow* unitRow = nullptr;
+		UDataTable* UnitConstructionData = nullptr;
+
+		UnitConstructionData = Cast<UDataTable>(UnitDataTablePath.ResolveObject());
+
+		if (UnitConstructionData == nullptr)
+		{
+			UnitConstructionData = Cast<UDataTable>(UnitDataTablePath.TryLoad());
+		}
+
+		if (UnitConstructionData != nullptr)
+		{
+			unitRow = UnitConstructionData->FindRow<FUnitDataRow>(FName(TEXT("BaseHouse")), TEXT(""));
+		}
+
+		if (unitRow)
+		{
+			NewActor->ItemStaticMesh->SetStaticMesh(unitRow->StaticMeshData.Construcion1);
+			NewActor->ItemStaticMesh->SetMaterial(0, (UMaterialInterface*)unitRow->StaticMeshData.Material);
+		}
+		
+		PlayerController->SetSelectedActor(NewActor);
 	}
 
-	if (UnitConstructionData != nullptr)
-	{
-		unitRow = UnitConstructionData->FindRow<FUnitDataRow>(FName(TEXT("BaseHouse2")), TEXT(""));
-	}
+
+	
 
 	//NewActor->SetMeshFromFile("SM_House_Var01");
 	//NewActor->SetTextureFromFile("M_Inst_Pack_04");
 
-	NewActor->SetActorLocation(NewLocation, false);
+	//NewActor->SetActorLocation(NewLocation, false);
 
-	if (unitRow)
-	{
-		NewActor->ItemStaticMesh->SetStaticMesh(unitRow->StaticMeshData.Construcion1);
-		NewActor->ItemStaticMesh->SetMaterial(0, (UMaterialInterface*)unitRow->StaticMeshData.Material);
-	}
+	
 	
 	
 	//if (ItemStaticMesh)
@@ -53,7 +69,7 @@ void UTestButton::buttonEvent()
 		//ItemStaticMesh->AttachToComponent(NewActor->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	//}
 
-	if (GEngine)
+	/*if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Unit Created"));
 		if (unitRow)
@@ -71,5 +87,5 @@ void UTestButton::buttonEvent()
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("unitRow is null"));
 		}
-	}
+	}*/
 }

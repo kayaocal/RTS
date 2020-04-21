@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "RTS2/Public/RTSActor.h"
 #include "RTSPlayerController.generated.h"
 
 /**
@@ -15,4 +16,8 @@ class RTS2_API ARTSPlayerController : public APlayerController
 	GENERATED_BODY()
 public:
 	ARTSPlayerController();
+	virtual void Tick(float DeltaSeconds)override;
+	void SetSelectedActor(ARTSActor* NewActor);
+private:
+	ARTSActor* SelectedActor;
 };

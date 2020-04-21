@@ -24,7 +24,7 @@ ARTSPlayerCameraSpectatorPawn::ARTSPlayerCameraSpectatorPawn(const FObjectInitia
 
 	CameraXYLimit = 7500.f;
 	CameraHeight = 4000.f;
-	CameraHeightMin = 1500.f;
+	CameraHeightMin = 5.f;
 	CameraHeightMax = 5000.f;
 
 	CameraRadius = 1100.f;
