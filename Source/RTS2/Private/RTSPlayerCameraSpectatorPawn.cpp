@@ -22,7 +22,7 @@ ARTSPlayerCameraSpectatorPawn::ARTSPlayerCameraSpectatorPawn(const FObjectInitia
 	GetCollisionComponent()->SetCollisionProfileName(TEXT("NoCollision"));
 	GetCollisionComponent()->SetSimulatePhysics(false);
 
-	CameraXYLimit = 5000.f;
+	CameraXYLimit = 7500.f;
 	CameraHeight = 4000.f;
 	CameraHeightMin = 1500.f;
 	CameraHeightMax = 5000.f;
@@ -60,10 +60,26 @@ void ARTSPlayerCameraSpectatorPawn::SetupPlayerInputComponent(UInputComponent * 
 
 	PlayerInputComponent->BindAction("ZoomOutByWheel", IE_Pressed, this, &ARTSPlayerCameraSpectatorPawn::ZoomOutByWheel);
 	PlayerInputComponent->BindAction("ZoomInByWheel", IE_Pressed, this, &ARTSPlayerCameraSpectatorPawn::ZoomInByWheel);
+	PlayerInputComponent->BindAction("RotateUpByWheel", IE_Pressed, this, &ARTSPlayerCameraSpectatorPawn::RotateUpByWheel);
+	PlayerInputComponent->BindAction("RotateDownByWheel", IE_Pressed, this, &ARTSPlayerCameraSpectatorPawn::RotateDownByWheel);
+	PlayerInputComponent->BindAction("RotateLeftByWheel", IE_Pressed, this, &ARTSPlayerCameraSpectatorPawn::RotateLeftByWheel);
+	PlayerInputComponent->BindAction("RotateRightByWheel", IE_Pressed, this, &ARTSPlayerCameraSpectatorPawn::RotateRightByWheel);
 	PlayerInputComponent->BindAxis("MoveForward", this, &ARTSPlayerCameraSpectatorPawn::MoveCameraForwardInput);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ARTSPlayerCameraSpectatorPawn::MoveCameraRightInput);
 	PlayerInputComponent->BindAxis("MoveUp", this, &ARTSPlayerCameraSpectatorPawn::MoveCameraUpInput);
 	PlayerInputComponent->BindAxis("ZoomIn", this, &ARTSPlayerCameraSpectatorPawn::ZoomCameraInInput);
+	PlayerInputComponent->BindAxis("Rotate", this, &ARTSPlayerCameraSpectatorPawn::RotateInput);
+
+}
+
+void ARTSPlayerCameraSpectatorPawn::RotateInput(float Direction)
+{
+	if (!bCanMoveCamera)
+	{
+		return;
+	}
+
+	RotateValue = FMath::Abs(Direction);
 }
 
 void ARTSPlayerCameraSpectatorPawn::ZoomInByWheel()
@@ -87,6 +103,49 @@ void ARTSPlayerCameraSpectatorPawn::ZoomOutByWheel()
 
 	CameraRadius += CameraZoomSpeed;
 	CameraRadius = FMath::Clamp(CameraRadius, CameraRadiusMin, CameraRadiusMax);
+}
+
+void ARTSPlayerCameraSpectatorPawn::RotateLeftByWheel()
+{
+	if (!bCanMoveCamera)
+	{
+		return;
+	}
+
+	CameraZAngle -= CameraRotationSpeed;
+}
+
+void ARTSPlayerCameraSpectatorPawn::RotateRightByWheel()
+{
+	if (!bCanMoveCamera)
+	{
+		return;
+	}
+
+	CameraZAngle += CameraRotationSpeed;
+}
+
+void ARTSPlayerCameraSpectatorPawn::RotateUpByWheel()
+{
+	if (!bCanMoveCamera)
+	{
+		return;
+	}
+
+	CameraHeightAngle += CameraRotationSpeed;
+	CameraHeightAngle = FMath::Clamp(CameraHeightAngle, CameraHeightAngleMin, CameraHeightAngleMax);
+}
+
+void ARTSPlayerCameraSpectatorPawn::RotateDownByWheel()
+{
+	if (!bCanMoveCamera)
+	{
+		return;
+	}
+
+    CameraHeightAngle -= CameraRotationSpeed;
+    CameraHeightAngle = FMath::Clamp(CameraHeightAngle, CameraHeightAngleMin, CameraHeightAngleMax);
+
 }
 
 void ARTSPlayerCameraSpectatorPawn::RepositionCamera()
@@ -185,6 +244,17 @@ void ARTSPlayerCameraSpectatorPawn::ZoomCameraIn(float Direction)
 	CameraRadius = FMath::Clamp(CameraRadius, CameraRadiusMin, CameraRadiusMax);
 }
 
+void ARTSPlayerCameraSpectatorPawn::TurnCameraUp(float Direction)
+{
+	CameraHeightAngle -= Direction * CameraRotationSpeed * 10.0f;
+	CameraHeightAngle = FMath::Clamp(CameraHeightAngle, CameraHeightAngleMin, CameraHeightAngleMax);
+}
+
+void ARTSPlayerCameraSpectatorPawn::TurnCameraRight(float Direction)
+{
+	CameraZAngle += Direction * CameraRotationSpeed * 10.0f;
+}
+
 FRotator ARTSPlayerCameraSpectatorPawn::GetIsolatedCameraYaw()
 {
 	// FRotator containing Yaw only
@@ -259,9 +329,11 @@ void ARTSPlayerCameraSpectatorPawn::Tick(float DeltaSeconds)
 		FVector ActualLocation = GetActorLocation();
 		FVector ActualMovement = FVector::ZeroVector;
 	
-		ActualMovement += MoveCameraForward(MoveForwardValue * DeltaSeconds);
-		ActualMovement += MoveCameraRight(MoveRightValue * DeltaSeconds);
-
+		if (RotateValue == 0.f)
+		{
+			ActualMovement += MoveCameraForward(MoveForwardValue * DeltaSeconds);
+			ActualMovement += MoveCameraRight(MoveRightValue * DeltaSeconds);
+		}
 		ActualLocation += ActualMovement;
 
 		CameraHeight += MoveCameraUp(MoveUpValue * DeltaSeconds);
@@ -274,6 +346,12 @@ void ARTSPlayerCameraSpectatorPawn::Tick(float DeltaSeconds)
 		ActualLocation.Y = FMath::Clamp(ActualLocation.Y, -CameraXYLimit, CameraXYLimit);
 
 		SetActorLocation(ActualLocation);
+
+		if (RotateValue != 0.f)
+		{
+			TurnCameraUp(MoveForwardValue * DeltaSeconds);
+			TurnCameraRight(MoveRightValue * DeltaSeconds);
+		}
 
 		ZoomCameraIn(ZoomInValue * DeltaSeconds);
 		RepositionCamera();

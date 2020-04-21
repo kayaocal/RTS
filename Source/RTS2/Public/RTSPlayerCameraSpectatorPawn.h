@@ -75,10 +75,23 @@ private:
 	float MoveRightValue;
 	float MoveUpValue;
 	float ZoomInValue;
+	float RotateValue;
+
 public:
+
+	void RotateInput(float Direction);
+
 	void ZoomInByWheel();
 
 	void ZoomOutByWheel();
+
+	void RotateLeftByWheel();
+
+	void RotateRightByWheel();
+
+	void RotateUpByWheel();
+
+	void RotateDownByWheel();
 
 	void MoveCameraForwardInput(float Direction);
 
