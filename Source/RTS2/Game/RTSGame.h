@@ -17,6 +17,26 @@ class RTS2_API RTSGameMode
 {
 
 public:
+
+	RTSGameMode(const RTSGameMode& Mode);
+	~RTSGameMode();
+
+	void SetGameCountDown(uint64 Value);
+	
+
+	void SetNumberOfPlayers(uint8 Value);
+	
+
+	void SetMapID(uint8 Value);
+	
+
+	void SetGamePlayType(EGamePlayType Value);
+	
+
+	void SetGameMode(EGameMode Value);
+	
+
+
 private:
 
 	/*
@@ -33,17 +53,17 @@ private:
 
 	EGameMode GameMode;
 
+	RTSNationIdentity NationIdentities[RTS_NATION_MAX];
 };
 
-class RTS2_API RTSGame
+class RTS2_API RTSGame : public RTSGameMode
 {
 
 public:
-	RTSGame(RTSGameMode* GameMode);
+	RTSGame(const RTSGameMode& GameMode);
 
 	~RTSGame();
 
-	RTSNation* NationFactory(ENations Nation, FColor Color, EControllerType ControllerType, uint8 PlayerID);
 
 	RTSNation* GetNationByPlayer(uint8 PlayerID);
 
@@ -51,7 +71,5 @@ private:
 
 	EGameStates GameState;
 
-	std::vector<RTSNation*> Players;
-
-	RTSGameMode* GameMode;
+	RTSNation* Nations[RTS_NATION_MAX];
 };

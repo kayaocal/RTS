@@ -32,6 +32,8 @@ public:
 
 	bool Spend(RTSPrimitiveResources const &obj);
 
+	bool IsAffordable(RTSPrimitiveResources const &obj);
+	
 	void operator + (RTSPrimitiveResources const &obj);
 
 	RTSPrimitiveResources& operator += (RTSPrimitiveResources const &obj);

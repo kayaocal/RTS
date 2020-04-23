@@ -9,17 +9,22 @@
 /**
  * 
  */
-class RTS2_API RTSNation
+ 
+ /*
+ *	Responsible of holding game setup datas
+ */
+class RTS2_API RTSNationIdentity
 {
 
-public:
+public :
 
-	RTSNation(ENations Nation, FColor Color, EControllerType ControllerType, uint8 PlayerID);
+	RTSNationIdentity();
+	RTSNationIdentity(const RTSNationIdentity& Identity);
+	~RTSNationIdentity();
 
-	~RTSNation();
-
-private:
-
+	void SetNationForm(ENations Nation, const FColor& Color, uint8 PlayerID, uint8 TeamID, EControllerType Controller);
+	void SetNationForm(const RTSNationIdentity& NationIdentity);
+	
 	/*
 	*	Nation cannot change after game started
 	*	It is necessary to create other gameplay modules
@@ -41,9 +46,31 @@ private:
 
 	/*
 	*	Bot or Gamer
-	*/
+	* */
 	EControllerType ControllerType;
 
-	RTSPrimitiveResources NationBank;
+	/*TODO: Connection datas such as ip...*/
+	
+};
+
+
+class RTS2_API RTSNation : public RTSNationIdentity
+{
+
+public:
+
+	RTSNation(const RTSNationIdentity &Identity);
+
+	~RTSNation();
+
+
+private:
+
+	/*
+	*	All of the resources that nation has
+	*/
+	RTSPrimitiveResources NationalBank;
+
+
 
 };

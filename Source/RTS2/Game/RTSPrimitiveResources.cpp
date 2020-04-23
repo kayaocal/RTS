@@ -58,7 +58,7 @@ void RTSPrimitiveResources::Add(RTSPrimitiveResources const &obj)
 
 bool RTSPrimitiveResources::Spend(RTSPrimitiveResources const & obj)
 {
-	if (Gold >= obj.Gold && Wood >= obj.Wood && Food >= obj.Food)
+	if (IsAffordable(obj))
 	{
 		Gold -= obj.Gold;
 		Wood -= obj.Wood;
@@ -68,6 +68,11 @@ bool RTSPrimitiveResources::Spend(RTSPrimitiveResources const & obj)
 	}
 
 	return false;
+}
+
+bool RTSPrimitiveResources::IsAffordable(RTSPrimitiveResources const & obj)
+{
+	return (Gold >= obj.Gold && Wood >= obj.Wood && Food >= obj.Food);
 }
 
 void RTSPrimitiveResources::operator+(RTSPrimitiveResources const & obj)

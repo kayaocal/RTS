@@ -12,15 +12,24 @@
 #define LOG_W(txt) UE_LOG(LogTemp, Warning, TEXT(txt) )
 #define LOG_ERR(txt) UE_LOG(LogTemp, Error, TEXT(txt) )
 
+#define RTS_NATION_MAX 8
+
 UENUM(BlueprintType)
-enum EControllerType
+enum class EMap : uint8
+{
+	MainMenu		= 0,
+	DebugMap		= 1
+};
+
+UENUM(BlueprintType)
+enum class EControllerType : uint8
 {
 	Bot,
 	Player
 };
 
 UENUM(BlueprintType)
-enum EGameStates
+enum class EGameStates : uint8
 {
 	Waiting,
 	Pause,
@@ -28,7 +37,7 @@ enum EGameStates
 };
 
 UENUM(BlueprintType)
-enum EGamePlayType
+enum class EGamePlayType : uint8
 {
 	Campaign,
 	Solo,
@@ -36,14 +45,14 @@ enum EGamePlayType
 };
 
 UENUM(BlueprintType)
-enum EGameMode
+enum class EGameMode : uint8
 {
 	Classic,
 	Raid
 };
 
 UENUM(BlueprintType)
-enum EUnitTypes
+enum class EUnitTypes : uint8
 {
 	BaseBuilding		UMETA(DisplayName = "BASE BUILDING"),
 	House				UMETA(DisplayName = "HOUSE"),
@@ -52,7 +61,7 @@ enum EUnitTypes
 };
 
 UENUM(BlueprintType)
-enum ENations
+enum class ENations :uint8
 {
 	Any						UMETA(DisplayName = "ANY NATION",	ToolTip = "All Nations"),
 	Group1					UMETA(DisplayName = "GROUP 1",		ToolTip = "Group One")
