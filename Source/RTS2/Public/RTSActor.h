@@ -24,6 +24,10 @@ public:
 	UStaticMesh* CustomMesh;
 	UMaterialInstance* CustomMaterial;
 
+	UStaticMeshComponent* SelectionPlaneComponent;
+	UStaticMesh* SelectionPlaneMesh;
+	UMaterialInstance* SelectionPlaneMaterial;
+
 
 protected:
 	// Called when the game starts or when spawned

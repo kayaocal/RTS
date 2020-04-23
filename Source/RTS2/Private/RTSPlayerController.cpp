@@ -12,7 +12,7 @@ ARTSPlayerController::ARTSPlayerController()
 }
 void ARTSPlayerController::Tick(float DeltaSeconds)
 {
-	if (SelectedActor != nullptr)
+	if (TemporaryActor != nullptr)
 	{
 		FVector NewLocation = FVector(0, 0, 0);
 		FHitResult TraceResult(ForceInit);
@@ -20,17 +20,26 @@ void ARTSPlayerController::Tick(float DeltaSeconds)
 		if (TraceResult.GetActor() != nullptr)
 		{
 			NewLocation = TraceResult.ImpactPoint;
-			SelectedActor->SetActorLocation(NewLocation, false);
+			TemporaryActor->SetActorLocation(NewLocation, false);
 			if (this->WasInputKeyJustReleased(EKeys::LeftMouseButton))
 			{
-				SelectedActor = nullptr;
+				TemporaryActor = nullptr;
+				return;
 			}
 		}
+		return;
+	}
+
+	if (this->WasInputKeyJustReleased(EKeys::LeftMouseButton))
+	{
+		FVector NewLocation = FVector(0, 0, 0);
+		FHitResult TraceResult(ForceInit);
+		this->GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, TraceResult);
 	}
 }
 
-void ARTSPlayerController::SetSelectedActor(ARTSActor * NewActor)
+void ARTSPlayerController::SetTemporaryActor(ARTSActor * NewActor)
 {
-	SelectedActor = NewActor;
+	TemporaryActor = NewActor;
 }
 
