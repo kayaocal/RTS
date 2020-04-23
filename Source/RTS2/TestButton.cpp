@@ -50,7 +50,7 @@ void UTestButton::buttonEvent()
 			NewActor->ItemStaticMesh->SetMaterial(0, (UMaterialInterface*)unitRow->StaticMeshData.Material);
 		}
 		
-		PlayerController->SetSelectedActor(NewActor);
+		PlayerController->SetTemporaryActor(NewActor);
 	}
 
 

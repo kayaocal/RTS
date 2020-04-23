@@ -17,7 +17,8 @@ class RTS2_API ARTSPlayerController : public APlayerController
 public:
 	ARTSPlayerController();
 	virtual void Tick(float DeltaSeconds)override;
-	void SetSelectedActor(ARTSActor* NewActor);
+	void SetTemporaryActor(ARTSActor* NewActor);
 private:
-	ARTSActor* SelectedActor;
+	ARTSActor* TemporaryActor;
+	TArray<ARTSActor*> SelectedActorsArray;
 };
