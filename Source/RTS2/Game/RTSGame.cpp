@@ -17,6 +17,22 @@ RTSGameMode::RTSGameMode(const RTSGameMode & Mode)
 	}
 }
 
+RTSGameMode::RTSGameMode()
+	:GameCountDown(0), NumberOfPlayers(0), MapID(0), GamePlayType(EGamePlayType::Campaign), GameMode(EGameMode::Classic)
+{
+
+}
+
+RTSGameMode::~RTSGameMode()
+{
+}
+
+RTSGame::RTSGame()
+	:RTSGameMode()
+{
+	GameState = EGameStates::Waiting;
+}
+
 RTSGame::RTSGame(const RTSGameMode& GameMode)
 	:RTSGameMode(GameMode)
 {
@@ -24,7 +40,11 @@ RTSGame::RTSGame(const RTSGameMode& GameMode)
 
 }
 
-void RTSGameMode::SetGameCountDown(uint64 Value)
+RTSGame::~RTSGame()
+{
+}
+
+void RTSGameMode::SetGameCountDown(uint64 Value) 
 {
 	GameCountDown = Value;
 }

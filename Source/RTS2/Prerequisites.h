@@ -12,6 +12,8 @@
 #define LOG_W(txt) UE_LOG(LogTemp, Warning, TEXT(txt) )
 #define LOG_ERR(txt) UE_LOG(LogTemp, Error, TEXT(txt) )
 
+#define RTS_GAME_INSTANCE Cast<URTSGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))
+
 #define RTS_NATION_MAX 8
 
 UENUM(BlueprintType)
@@ -31,6 +33,7 @@ enum class EControllerType : uint8
 UENUM(BlueprintType)
 enum class EGameStates : uint8
 {
+	Menu,
 	Waiting,
 	Pause,
 	Resuming
@@ -65,4 +68,4 @@ enum class ENations :uint8
 {
 	Any						UMETA(DisplayName = "ANY NATION",	ToolTip = "All Nations"),
 	Group1					UMETA(DisplayName = "GROUP 1",		ToolTip = "Group One")
-};
+}; 

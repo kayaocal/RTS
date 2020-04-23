@@ -19,17 +19,17 @@ RTSPrimitiveResources::~RTSPrimitiveResources()
 {
 }
 
-uint64 RTSPrimitiveResources::GetGold()
+uint64 RTSPrimitiveResources::GetGold() const
 {
 	return Gold;
 }
 
-uint64 RTSPrimitiveResources::GetWood()
+uint64 RTSPrimitiveResources::GetWood() const
 {
 	return Wood;
 }
 
-uint64 RTSPrimitiveResources::GetFood()
+uint64 RTSPrimitiveResources::GetFood() const
 {
 	return Food;
 }
@@ -70,7 +70,7 @@ bool RTSPrimitiveResources::Spend(RTSPrimitiveResources const & obj)
 	return false;
 }
 
-bool RTSPrimitiveResources::IsAffordable(RTSPrimitiveResources const & obj)
+bool RTSPrimitiveResources::IsAffordable(RTSPrimitiveResources const & obj) const
 {
 	return (Gold >= obj.Gold && Wood >= obj.Wood && Food >= obj.Food);
 }
