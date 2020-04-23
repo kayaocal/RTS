@@ -2,6 +2,8 @@
 
 
 #include "RTS2/Public/RTSPlayerController.h"
+#include "RTS2/Public/RTSHud.h"
+#include "Engine/Engine.h"
 
 ARTSPlayerController::ARTSPlayerController()
 {
@@ -9,6 +11,10 @@ ARTSPlayerController::ARTSPlayerController()
 	bEnableClickEvents = true;
 	bEnableTouchEvents = true;
 	PrimaryActorTick.bCanEverTick = true;
+}
+void ARTSPlayerController::BeginPlay()
+{
+	RTSHud = Cast<ARTSHud>(GetHUD());
 }
 void ARTSPlayerController::Tick(float DeltaSeconds)
 {
@@ -38,8 +44,62 @@ void ARTSPlayerController::Tick(float DeltaSeconds)
 	}
 }
 
+ARTSHud* ARTSPlayerController::GetRTSHud()
+{
+	return RTSHud;
+}
+
 void ARTSPlayerController::SetTemporaryActor(ARTSActor * NewActor)
 {
 	TemporaryActor = NewActor;
 }
 
+void ARTSPlayerController::SetSelectedActors(FVector2D StartPos, FVector2D EndPos)
+{
+	ClearSelectedActors();
+	if(RTSHud == nullptr)
+	{ 
+		return;
+	}
+	RTSHud->GetActorsInSelectionRectangle(StartPos, EndPos, SelectedActorsArray, false, false);
+
+	for (int i = 0; i < SelectedActorsArray.Num(); i++)
+	{
+		if (SelectedActorsArray[i] == nullptr || SelectedActorsArray[i]->GetMyUnit() == nullptr)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("dongu"));
+			continue;
+		}
+		SelectedActorsArray[i]->GetMyUnit()->SetSelection(true);
+	}
+}
+
+void ARTSPlayerController::SetSelectedActors(ARTSActor * SelectedActor)
+{
+	if (SelectedActor == nullptr)
+	{
+		return;
+	}
+
+
+	ClearSelectedActors();
+	SelectedActorsArray.Add(SelectedActor);
+	if (SelectedActorsArray[0] == nullptr || SelectedActorsArray[0]->GetMyUnit() == nullptr)
+	{
+		return;
+	}
+	SelectedActorsArray[0]->GetMyUnit()->SetSelection(true);
+}
+
+void ARTSPlayerController::ClearSelectedActors()
+{
+	for (int i = 0; i < SelectedActorsArray.Num(); i++)
+	{
+		if (SelectedActorsArray[i] == nullptr || SelectedActorsArray[i]->GetMyUnit() == nullptr)
+		{
+			continue;
+		}
+		SelectedActorsArray[i]->GetMyUnit()->SetSelection(false);
+	}
+	SelectedActorsArray.Empty();
+}

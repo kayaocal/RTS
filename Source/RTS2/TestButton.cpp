@@ -26,6 +26,7 @@ void UTestButton::buttonEvent()
 		ARTSActor* NewActor = GetWorld()->SpawnActor<ARTSActor>(ARTSActor::StaticClass(), NewLocation, FRotator::ZeroRotator);
 
 		unit->actor = NewActor;
+		NewActor->SetMyUnit(unit);
 
 		FSoftObjectPath UnitDataTablePath = FSoftObjectPath(TEXT("DataTable'/Game/Data/UnitConstructionData.UnitConstructionData'"));
 
