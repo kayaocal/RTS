@@ -6,6 +6,11 @@
 #include "RTS2/Data/UnitDataRow.h"
 #include "RTS2/Prerequisites.h"
 
+
+
+#include "Kismet/GameplayStatics.h"
+#include "RTSGameInstance.h"
+
 // Sets default values
 ARTSActor::ARTSActor()
 {
@@ -42,8 +47,6 @@ ARTSActor::ARTSActor()
 	{
 		SelectionPlaneComponent->SetMaterial(0,MaterialAsset.Object);
 	}
-
-	
 }
 
 void ARTSActor::SetMeshFromFile(FString MeshName)

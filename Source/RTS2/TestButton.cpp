@@ -12,9 +12,12 @@
 #include "RTS2/Public/RTSPlayerController.h"
 #include "Engine/Classes/GameFramework/Pawn.h"
 #include "Engine/Classes/Kismet/GameplayStatics.h"
+#include "RTSGameInstance.h"
 
 void UTestButton::buttonEvent()
 {
+
+
 	RTSUnit *unit = new RTSUnit();
 
 	FVector NewLocation = FVector(100,100,15);
@@ -28,23 +31,15 @@ void UTestButton::buttonEvent()
 		unit->actor = NewActor;
 		NewActor->SetMyUnit(unit);
 
-		FSoftObjectPath UnitDataTablePath = FSoftObjectPath(TEXT("DataTable'/Game/Data/UnitConstructionData.UnitConstructionData'"));
+		URTSGameInstance* GameInstance = RTS_GAME_INSTANCE;
 
-		FUnitDataRow* unitRow = nullptr;
-		UDataTable* UnitConstructionData = nullptr;
-
-		UnitConstructionData = Cast<UDataTable>(UnitDataTablePath.ResolveObject());
-
-		if (UnitConstructionData == nullptr)
+		FUnitDataRow* unitRow = GameInstance->GetUnitConstructionDataRow(TEXT("BaseHouse"));
+		
+		if (unitRow == nullptr)
 		{
-			UnitConstructionData = Cast<UDataTable>(UnitDataTablePath.TryLoad());
+			LOG_ERR("UnitRow is null!");
 		}
-
-		if (UnitConstructionData != nullptr)
-		{
-			unitRow = UnitConstructionData->FindRow<FUnitDataRow>(FName(TEXT("BaseHouse")), TEXT(""));
-		}
-
+		
 		if (unitRow)
 		{
 			NewActor->ItemStaticMesh->SetStaticMesh(unitRow->StaticMeshData.Construcion1);
