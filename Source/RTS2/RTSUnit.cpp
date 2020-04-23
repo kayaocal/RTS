@@ -3,6 +3,16 @@
 
 #include "RTSUnit.h"
 
+void RTSUnit::SetSelection(bool bSelected)
+{
+	if (actor == nullptr)
+	{
+		return;
+	}
+	bIsSelected = bSelected;
+	actor->SetSelection(bIsSelected);
+}
+
 RTSUnit::RTSUnit()
 {
 }

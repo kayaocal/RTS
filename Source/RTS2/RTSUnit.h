@@ -4,16 +4,23 @@
 
 #include "Runtime/CoreUObject/Public/UObject/UnrealType.h"
 #include "CoreMinimal.h"
+#include "RTS2/Public/RTSActor.h"
 
 /**
  * 
  */
 class RTS2_API RTSUnit
 {
+private:
+	bool bIsSelected;
+
 public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class ARTSActor* actor;
+	ARTSActor* actor;
+
+	void SetSelection(bool bIsSelected);
+
 
 	RTSUnit();
 	~RTSUnit();

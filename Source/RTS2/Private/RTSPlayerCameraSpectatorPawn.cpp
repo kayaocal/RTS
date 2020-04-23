@@ -6,6 +6,7 @@
 #include "Engine/Classes/Camera/CameraComponent.h"
 #include "Engine/Classes/Components/InputComponent.h"
 #include "Engine/Classes/Engine/Engine.h"
+#include "RTS2/Public/RTSHud.h"
 
 ARTSPlayerCameraSpectatorPawn::ARTSPlayerCameraSpectatorPawn(const FObjectInitializer& ObjectInitializer)
 {
@@ -69,7 +70,35 @@ void ARTSPlayerCameraSpectatorPawn::SetupPlayerInputComponent(UInputComponent * 
 	PlayerInputComponent->BindAxis("MoveUp", this, &ARTSPlayerCameraSpectatorPawn::MoveCameraUpInput);
 	PlayerInputComponent->BindAxis("ZoomIn", this, &ARTSPlayerCameraSpectatorPawn::ZoomCameraInInput);
 	PlayerInputComponent->BindAxis("Rotate", this, &ARTSPlayerCameraSpectatorPawn::RotateInput);
+	PlayerInputComponent->BindAction("LeftMouseClick", IE_Pressed, this, &ARTSPlayerCameraSpectatorPawn::SelectionPressed);
+	PlayerInputComponent->BindAction("LeftMouseClick", IE_Released, this, &ARTSPlayerCameraSpectatorPawn::SelectionReleased);
 
+}
+
+void ARTSPlayerCameraSpectatorPawn::SelectionPressed()
+{
+	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PlayerController != nullptr)
+	{
+		ARTSHud* HudPtr =  PlayerController->GetRTSHud();
+		if (HudPtr)
+		{
+			HudPtr->StartSelecting();
+		}
+	}
+}
+
+void ARTSPlayerCameraSpectatorPawn::SelectionReleased()
+{
+	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PlayerController != nullptr)
+	{
+		ARTSHud* HudPtr = PlayerController->GetRTSHud();
+		if (HudPtr)
+		{
+			HudPtr->StopSelecting();
+		}
+	}
 }
 
 void ARTSPlayerCameraSpectatorPawn::RotateInput(float Direction)

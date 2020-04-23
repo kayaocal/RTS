@@ -19,6 +19,8 @@ ARTSActor::ARTSActor()
 	SelectionPlaneComponent = CreateDefaultSubobject<UStaticMeshComponent>(FName("SelectionPlane"));
 	SelectionPlaneComponent->AttachToComponent(ItemStaticMesh, FAttachmentTransformRules::KeepRelativeTransform);
 	SelectionPlaneComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
+
+	SelectionPlaneComponent->SetVisibility(false);
 	
 	FString PathString = TEXT("StaticMesh'/Engine/BasicShapes/Plane.Plane'");
 	const TCHAR*  PathChars = *PathString;
@@ -30,17 +32,6 @@ ARTSActor::ARTSActor()
 		SelectionPlaneComponent->SetStaticMesh(MeshAsset.Object);
 		SelectionPlaneComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 2.0f));
 		SelectionPlaneComponent->SetWorldScale3D(FVector(9.f, 9.f, 0));
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Mesh Added"));
-		}
-	}
-	else
-	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Mesh not found"));
-		}
 	}
 
 	PathString = TEXT("MaterialInstanceConstant'/Game/Materials/SelectionCircleMatInstance.SelectionCircleMatInstance'");
@@ -50,18 +41,8 @@ ARTSActor::ARTSActor()
 	if (MaterialAsset.Succeeded())
 	{
 		SelectionPlaneComponent->SetMaterial(0,MaterialAsset.Object);
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Material Added"));
-		}
 	}
-	else
-	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Material not found"));
-		}
-	}
+
 	
 }
 
@@ -167,5 +148,25 @@ void ARTSActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ARTSActor::SetSelection(bool bIsSelected)
+{
+	if (SelectionPlaneComponent == nullptr)
+	{
+		return;
+	}
+
+	SelectionPlaneComponent->SetVisibility(bIsSelected);
+}
+
+void ARTSActor::SetMyUnit(RTSUnit * AUnit)
+{
+	MyUnit = AUnit;
+}
+
+RTSUnit * ARTSActor::GetMyUnit()
+{
+	return MyUnit;
 }
 

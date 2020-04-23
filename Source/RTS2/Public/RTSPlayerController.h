@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "RTS2/Public/RTSActor.h"
+#include "RTS2/RTSUnit.h"
 #include "RTSPlayerController.generated.h"
 
 /**
@@ -16,9 +17,15 @@ class RTS2_API ARTSPlayerController : public APlayerController
 	GENERATED_BODY()
 public:
 	ARTSPlayerController();
+	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds)override;
+	class ARTSHud* GetRTSHud();
 	void SetTemporaryActor(ARTSActor* NewActor);
+	void SetSelectedActors(FVector2D StartPos, FVector2D EndPos);
+	void SetSelectedActors(ARTSActor* SelectedUnit);
+	void ClearSelectedActors();
 private:
 	ARTSActor* TemporaryActor;
+	class ARTSHud* RTSHud;
 	TArray<ARTSActor*> SelectedActorsArray;
 };

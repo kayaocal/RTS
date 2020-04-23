@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SpectatorPawn.h"
+#include "RTS2/Public/RTSPlayerController.h"
+#include "Engine/Classes/Kismet/GameplayStatics.h"
 #include "RTSPlayerCameraSpectatorPawn.generated.h"
 
 /**
@@ -78,6 +80,10 @@ private:
 	float RotateValue;
 
 public:
+
+	void SelectionPressed();
+
+	void SelectionReleased();
 
 	void RotateInput(float Direction);
 

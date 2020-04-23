@@ -14,7 +14,10 @@ UCLASS()
 class RTS2_API ARTSActor : public AActor
 {
 	GENERATED_BODY()
-	
+
+private:
+	class RTSUnit* MyUnit;
+
 public:	
 	// Sets default values for this actor's properties
 	ARTSActor();
@@ -36,4 +39,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	void SetSelection(bool bIsSelected);
+	void SetMyUnit(RTSUnit* AUnit);
+	class RTSUnit* GetMyUnit();
 };
