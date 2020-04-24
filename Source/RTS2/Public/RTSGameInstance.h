@@ -23,9 +23,10 @@ public :
 
 	RTSGame Game;
 
-	class UDataTable* UnitConstructionData;
 
+	class UDataTable* UnitConstructionData;
 	void ReadUnitConstructionData();
 	struct FUnitDataRow* GetUnitConstructionDataRow(const FName& RowName) const;
+
 
 };

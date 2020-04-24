@@ -18,6 +18,7 @@ class RTS2_API RTSGameMode
 
 public:
 
+	RTSGameMode();
 	RTSGameMode(const RTSGameMode& Mode);
 	~RTSGameMode();
 
@@ -60,6 +61,8 @@ class RTS2_API RTSGame : public RTSGameMode
 {
 
 public:
+
+	RTSGame();
 	RTSGame(const RTSGameMode& GameMode);
 
 	~RTSGame();
