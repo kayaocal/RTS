@@ -13,6 +13,7 @@
 #include "Engine/Classes/GameFramework/Pawn.h"
 #include "Engine/Classes/Kismet/GameplayStatics.h"
 #include "RTSGameInstance.h"
+#include "RTS2/Data/DataStore.h"
 
 void UTestButton::buttonEvent()
 {
@@ -32,8 +33,8 @@ void UTestButton::buttonEvent()
 		NewActor->SetMyUnit(unit);
 
 		URTSGameInstance* GameInstance = RTS_GAME_INSTANCE;
-
-		FUnitDataRow* unitRow = GameInstance->GetUnitConstructionDataRow(TEXT("BaseHouse"));
+		DataStore* DataStore = RTS_DATA_STORE;
+		FUnitDataRow* unitRow = DataStore->GetUnitConstructionDataRow(TEXT("BaseHouse"));
 		
 		if (unitRow == nullptr)
 		{

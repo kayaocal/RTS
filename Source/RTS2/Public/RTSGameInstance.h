@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "RTS2/Game/RTSGame.h"
+#include "RTS2/Data/DataStore.h"
 
 #include "RTSGameInstance.generated.h"
 /**
@@ -23,10 +24,9 @@ public :
 
 	RTSGame Game;
 
+	DataStore DataStore;
 
-	class UDataTable* UnitConstructionData;
-	void ReadUnitConstructionData();
-	struct FUnitDataRow* GetUnitConstructionDataRow(const FName& RowName) const;
+
 
 
 };

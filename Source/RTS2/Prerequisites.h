@@ -13,6 +13,7 @@
 #define LOG_ERR(txt) UE_LOG(LogTemp, Error, TEXT(txt) )
 
 #define RTS_GAME_INSTANCE Cast<URTSGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))
+#define RTS_DATA_STORE &(Cast<URTSGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->DataStore)
 
 #define RTS_NATION_MAX 8
 
@@ -69,3 +70,9 @@ enum class ENations :uint8
 	Any						UMETA(DisplayName = "ANY NATION",	ToolTip = "All Nations"),
 	Group1					UMETA(DisplayName = "GROUP 1",		ToolTip = "Group One")
 }; 
+
+UENUM(BlueprintType)
+enum DataTableEnums
+{
+	UnitConstructionDataTable = 0
+};
