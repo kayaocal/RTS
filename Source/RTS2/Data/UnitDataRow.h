@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "RTS2\Prerequisites.h"
+#include "RTS2/Data/RTSPrimitiveResourceData.h"
+
 #include "UnitDataRow.generated.h"
 /**
  * 
@@ -56,6 +58,19 @@ struct RTS2_API FUnitStaticMeshData
 };
 
 USTRUCT(BlueprintType)
+struct RTS2_API FUnitNecessity
+{
+	GENERATED_BODY();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		TEnumAsByte<ENations> Nation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		FRTSPrimitiveResourceData ResourceData;
+
+};
+
+USTRUCT(BlueprintType)
 struct RTS2_API FUnitDataRow : public FTableRowBase
 {
 	 GENERATED_BODY();
@@ -67,7 +82,7 @@ struct RTS2_API FUnitDataRow : public FTableRowBase
 		 TEnumAsByte<EUnitTypes> UnitType;
 
 	 UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		 TEnumAsByte<ENations> Nation;
+		 TArray<FUnitNecessity> NecessityByNation;
 
 	 UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		 bool IsSkeletalMesh;

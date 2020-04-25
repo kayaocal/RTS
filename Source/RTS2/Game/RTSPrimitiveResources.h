@@ -3,28 +3,26 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
+#include "RTS2/Data/RTSPrimitiveResourceData.h"
 /**
  *	In game resources and payments 
  */
-class RTS2_API RTSPrimitiveResources
+ 
+class RTS2_API RTSPrimitiveResources : FRTSPrimitiveResourceData
 {
-	uint64 Gold;
-	uint64 Wood;
-	uint64 Food;
 
 public:
 
 	RTSPrimitiveResources();
-	RTSPrimitiveResources(uint64 Gold, uint64 Wood, uint64 Food);
+	RTSPrimitiveResources(int Gold, int Wood, int Food);
 	~RTSPrimitiveResources();
 	
-	uint64 GetGold() const;
-	uint64 GetWood() const;
-	uint64 GetFood() const;
-	void SetGold(uint64 GoldAmount);
-	void SetWood(uint64 WoodAmount);
-	void SetFood(uint64 FoodAmount);
+	int GetGold() const;
+	int GetWood() const;
+	int GetFood() const;
+	void SetGold(int GoldAmount);
+	void SetWood(int WoodAmount);
+	void SetFood(int FoodAmount);
 
 	void operator = (RTSPrimitiveResources const &obj);
 

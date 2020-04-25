@@ -56,7 +56,7 @@ enum class EGameMode : uint8
 };
 
 UENUM(BlueprintType)
-enum class EUnitTypes : uint8
+enum EUnitTypes
 {
 	BaseBuilding		UMETA(DisplayName = "BASE BUILDING"),
 	House				UMETA(DisplayName = "HOUSE"),
@@ -65,7 +65,7 @@ enum class EUnitTypes : uint8
 };
 
 UENUM(BlueprintType)
-enum class ENations :uint8
+enum ENations
 {
 	Any						UMETA(DisplayName = "ANY NATION",	ToolTip = "All Nations"),
 	Group1					UMETA(DisplayName = "GROUP 1",		ToolTip = "Group One")

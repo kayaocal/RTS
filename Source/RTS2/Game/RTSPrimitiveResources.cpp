@@ -10,41 +10,43 @@ RTSPrimitiveResources::RTSPrimitiveResources()
 	Food = 0;
 }
 
-RTSPrimitiveResources::RTSPrimitiveResources(uint64 Gold, uint64 Wood, uint64 Food)
-	:Gold(Gold), Wood(Wood), Food(Food)
+RTSPrimitiveResources::RTSPrimitiveResources(int GoldAmount, int WoodAmount, int FoodAmount)
 {
+	Gold = GoldAmount;
+	Wood = WoodAmount;
+	Food = FoodAmount;
 }
 
 RTSPrimitiveResources::~RTSPrimitiveResources()
 {
 }
 
-uint64 RTSPrimitiveResources::GetGold() const
+int RTSPrimitiveResources::GetGold() const
 {
 	return Gold;
 }
 
-uint64 RTSPrimitiveResources::GetWood() const
+int RTSPrimitiveResources::GetWood() const
 {
 	return Wood;
 }
 
-uint64 RTSPrimitiveResources::GetFood() const
+int RTSPrimitiveResources::GetFood() const
 {
 	return Food;
 }
 
-void RTSPrimitiveResources::SetGold(uint64 GoldAmount)
+void RTSPrimitiveResources::SetGold(int GoldAmount)
 {
 	Gold = GoldAmount;
 }
 
-void RTSPrimitiveResources::SetWood(uint64 WoodAmount)
+void RTSPrimitiveResources::SetWood(int WoodAmount)
 {
 	Wood = WoodAmount;
 }
 
-void RTSPrimitiveResources::SetFood(uint64 FoodAmount)
+void RTSPrimitiveResources::SetFood(int FoodAmount)
 {
 	Food = FoodAmount;
 }
