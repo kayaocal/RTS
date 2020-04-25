@@ -25,8 +25,14 @@ void UDebugUIWidget::AssignBankEditableTexts(UEditableText * Wood, UEditableText
 	NBFoodAmountText = Food;
 	NBWoodAmountText = Wood;
 	NBGoldAmountText = Gold;
-	WidgetNBObserver = new WidgetPrimitiveResObserver(this, RTSGame->GetNationByPlayer(NationIndex));
-
+	
+	if(WidgetNBObserver == nullptr)
+	{
+		if(RTSGame->GetNationByPlayer(NationIndex))
+		{
+			//WidgetNBObserver = new WidgetPrimitiveResObserver(this, RTSGame->GetNationByPlayer(NationIndex));
+		}
+	}
  }
 
 void UDebugUIWidget::AssignPriceEditableTexts(UEditableText * Wood, UEditableText * Food, UEditableText * Gold)
@@ -119,7 +125,10 @@ UDebugUIWidget::UDebugUIWidget(const FObjectInitializer& ObjectInitializer)
 
 UDebugUIWidget::~UDebugUIWidget()
 {
-	delete WidgetNBObserver;
+	if(WidgetNBObserver)
+	{
+	//	delete WidgetNBObserver;
+	}
 }
 
 void UDebugUIWidget::SpawnUnitButton()
