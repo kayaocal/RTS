@@ -3,12 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RTS2/Template/ObserverTemplate.h"
 #include "RTS2/Data/RTSPrimitiveResourceData.h"
+
 /**
  *	In game resources and payments 
  */
- 
-class RTS2_API RTSPrimitiveResources : FRTSPrimitiveResourceData
+class RTS2_API RTSPrimitiveResources : public FRTSPrimitiveResourceData, public Observable<RTSPrimitiveResources>
 {
 
 public:
@@ -41,3 +42,4 @@ public:
 	RTSPrimitiveResources& operator -= (RTSPrimitiveResources const &obj);
 
 };
+

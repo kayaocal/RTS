@@ -63,13 +63,12 @@ public:
 
 	~RTSNation();
 
-
-private:
-
 	/*
 	*	All of the resources that nation has
 	*/
 	RTSPrimitiveResources NationalBank;
+
+
 
 
 

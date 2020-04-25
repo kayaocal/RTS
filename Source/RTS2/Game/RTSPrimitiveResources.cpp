@@ -39,16 +39,19 @@ int RTSPrimitiveResources::GetFood() const
 void RTSPrimitiveResources::SetGold(int GoldAmount)
 {
 	Gold = GoldAmount;
+	Notify(*this);
 }
 
 void RTSPrimitiveResources::SetWood(int WoodAmount)
 {
 	Wood = WoodAmount;
+	Notify(*this);
 }
 
 void RTSPrimitiveResources::SetFood(int FoodAmount)
 {
 	Food = FoodAmount;
+	Notify(*this);
 }
 
 void RTSPrimitiveResources::Add(RTSPrimitiveResources const &obj)
@@ -56,6 +59,7 @@ void RTSPrimitiveResources::Add(RTSPrimitiveResources const &obj)
 	Gold += obj.Gold;
 	Wood += obj.Wood;
 	Food += obj.Food;
+	Notify(*this);
 }
 
 bool RTSPrimitiveResources::Spend(RTSPrimitiveResources const & obj)
@@ -65,7 +69,7 @@ bool RTSPrimitiveResources::Spend(RTSPrimitiveResources const & obj)
 		Gold -= obj.Gold;
 		Wood -= obj.Wood;
 		Food -= obj.Food;
-
+		Notify(*this);
 		return true;
 	}
 
@@ -104,4 +108,5 @@ void RTSPrimitiveResources::operator=(RTSPrimitiveResources const & obj)
 	Gold = obj.Gold;
 	Wood = obj.Wood;
 	Food = obj.Food;
+	Notify(*this);
 }

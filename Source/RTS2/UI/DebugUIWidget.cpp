@@ -11,6 +11,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "RTS2/Public/RTSPlayerController.h"
 #include "Engine/Classes/Kismet/GameplayStatics.h"
+#include "RTSGameInstance.h"
 
 void UDebugUIWidget::AssignSpawnUnitCombobox(UComboBoxString * ComboNation, UComboBoxString * ComboUnitType, UComboBoxString * ComboColor)
 {
@@ -24,6 +25,8 @@ void UDebugUIWidget::AssignBankEditableTexts(UEditableText * Wood, UEditableText
 	NBFoodAmountText = Food;
 	NBWoodAmountText = Wood;
 	NBGoldAmountText = Gold;
+	WidgetNBObserver = new WidgetPrimitiveResObserver(this, RTSGame->GetNationByPlayer(NationIndex));
+
  }
 
 void UDebugUIWidget::AssignPriceEditableTexts(UEditableText * Wood, UEditableText * Food, UEditableText * Gold)
@@ -40,6 +43,8 @@ void UDebugUIWidget::AssignCreateUnitMenuAnchor(UMenuAnchor * Menu)
 
 void UDebugUIWidget::SetMenuDefaults()
 {
+	NationIndex = 0;
+	
 	if (NBFoodAmountText) { NBFoodAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0")));}
 	if (NBWoodAmountText) { NBWoodAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0"))); }
 	if (NBGoldAmountText) { NBGoldAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0"))); }
@@ -72,6 +77,49 @@ void UDebugUIWidget::SetMenuDefaults()
 		}
 	}
 
+}
+
+void UDebugUIWidget::GiveResource(int ID, int Amount)
+{
+	if(RTSGame->GetNationByPlayer(0) == nullptr)
+	{
+		return;
+	}
+	
+	switch (ID)
+	{
+		case 0:
+		RTSGame->GetNationByPlayer(0)->NationalBank.SetFood(RTSGame->GetNationByPlayer(NationIndex)->NationalBank.GetFood() + Amount);
+			break;
+		case 1:
+	    RTSGame->GetNationByPlayer(0)->NationalBank.SetGold(RTSGame->GetNationByPlayer(NationIndex)->NationalBank.GetGold() + Amount);
+			break;
+		case 2:
+	    RTSGame->GetNationByPlayer(0)->NationalBank.SetWood(RTSGame->GetNationByPlayer(NationIndex)->NationalBank.GetWood() + Amount);
+			break;
+		
+	}
+}
+
+
+void UDebugUIWidget::UpdateBank(RTSPrimitiveResources& Source)
+{
+	if (NBFoodAmountText) { NBFoodAmountText->SetText(FText::FromString(FString::FromInt(Source.GetFood())));}
+	if (NBWoodAmountText) { NBWoodAmountText->SetText(FText::FromString(FString::FromInt(Source.GetWood()))); }
+	if (NBGoldAmountText) { NBGoldAmountText->SetText(FText::FromString(FString::FromInt(Source.GetGold()))); }
+}
+
+
+UDebugUIWidget::UDebugUIWidget(const FObjectInitializer& ObjectInitializer)
+	:UUserWidget(ObjectInitializer)
+{
+	RTSGameInstance = RTS_GAME_INSTANCE;
+	RTSGame = &RTS_GAME_INSTANCE->Game;
+}
+
+UDebugUIWidget::~UDebugUIWidget()
+{
+	delete WidgetNBObserver;
 }
 
 void UDebugUIWidget::SpawnUnitButton()
@@ -108,4 +156,31 @@ void UDebugUIWidget::SpawnUnitButton()
 		PlayerController->SetTemporaryActor(NewActor);
 	}
 
+}
+
+WidgetPrimitiveResObserver::WidgetPrimitiveResObserver(UDebugUIWidget* widget, RTSNation* Nation)
+{
+	Widget = widget;
+	Nation = Nation;
+	if(Nation)
+	{
+		Nation->NationalBank.Subscribe(*this);
+	}
+}
+
+WidgetPrimitiveResObserver::~WidgetPrimitiveResObserver()
+{
+	if(Nation)
+	{
+		Nation->NationalBank.Unsubscribe(*this);
+	}
+}
+
+
+void WidgetPrimitiveResObserver::OnFieldChanged(RTSPrimitiveResources& Source)
+{
+	if(Widget)
+	{
+		Widget->UpdateBank(Source);
+	}
 }

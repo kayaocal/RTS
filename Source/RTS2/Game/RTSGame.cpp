@@ -31,6 +31,7 @@ RTSGame::RTSGame()
 	:RTSGameMode()
 {
 	GameState = EGameStates::Waiting;
+	Nations[0] = new RTSNation(RTSNationIdentity());
 }
 
 RTSGame::RTSGame(const RTSGameMode& GameMode)
@@ -42,6 +43,11 @@ RTSGame::RTSGame(const RTSGameMode& GameMode)
 
 RTSGame::~RTSGame()
 {
+}
+
+RTSNation* RTSGame::GetNationByPlayer(uint8 PlayerID)
+{
+	return Nations[PlayerID];
 }
 
 void RTSGameMode::SetGameCountDown(uint64 Value) 
