@@ -55,6 +55,7 @@ enum class EGameMode : uint8
 	Raid
 };
 
+//------------------ UNIT TYPES ------------------->>>
 UENUM(BlueprintType)
 enum EUnitTypes
 {
@@ -64,6 +65,19 @@ enum EUnitTypes
 	Archer				UMETA(DisplayName = "ARCHER")
 };
 
+#define UNIT_TYPE_COUNT 4
+/*
+ * UnitNames Order and Size must be same with EUnitTypes enum
+ */
+const char UnitNames[UNIT_TYPE_COUNT][40]
+{
+	"BaseBuilding",
+	"House",
+	"BaseUnit",
+	"Archer"	
+};
+//------------------ UNIT TYPES -------------------<<<
+//------------------- NATIONS -------------------->>>
 UENUM(BlueprintType)
 enum ENations
 {
@@ -71,6 +85,29 @@ enum ENations
 	Group1					UMETA(DisplayName = "GROUP 1",		ToolTip = "Group One")
 }; 
 
+#define NATION_COUNT 2
+/*
+* NationNames Order and Size must be same with ENations enum
+*/
+const char NationNames[UNIT_TYPE_COUNT][40]
+{
+	"AllNations",
+    "Group1"
+};
+//------------------- NATIONS --------------------<<<
+
+//------------------- COLORS -------------------->>>
+
+#define COLOR_COUNT 4
+const char ColorNames[UNIT_TYPE_COUNT][40]
+{
+	"Red",
+    "Green",
+	"Blue",
+	"Yellow"
+};
+
+//------------------- COLORS --------------------<<<
 UENUM(BlueprintType)
 enum DataTableEnums
 {

@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "RTSHud.h"
 #include "Engine/Classes/GameFramework/PlayerController.h"
 #include "Runtime/Engine/Classes/Engine/Engine.h"
 #include "RTS2/RTSUnit.h"
-#include "RTSHud.h"
 #include "RTS2/Public/RTSPlayerController.h"
 
 void ARTSHud::DrawHUD()

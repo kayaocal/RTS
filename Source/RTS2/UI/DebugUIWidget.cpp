@@ -1,8 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "RTS2/RTSUnit.h"
 #include "DebugUIWidget.h"
+#include "RTS2/RTSUnit.h"
 #include "RTSGameInstance.h"
 #include "RTS2/Prerequisites.h"
 #include "RTS2/Data/DataStore.h"
@@ -11,7 +10,6 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "RTS2/Public/RTSPlayerController.h"
-#include "Engine/Classes/GameFramework/Pawn.h"
 #include "Engine/Classes/Kismet/GameplayStatics.h"
 
 void UDebugUIWidget::AssignSpawnUnitCombobox(UComboBoxString * ComboNation, UComboBoxString * ComboUnitType, UComboBoxString * ComboColor)
@@ -26,7 +24,7 @@ void UDebugUIWidget::AssignBankEditableTexts(UEditableText * Wood, UEditableText
 	NBFoodAmountText = Food;
 	NBWoodAmountText = Wood;
 	NBGoldAmountText = Gold;
-}
+ }
 
 void UDebugUIWidget::AssignPriceEditableTexts(UEditableText * Wood, UEditableText * Food, UEditableText * Gold)
 {
@@ -52,24 +50,26 @@ void UDebugUIWidget::SetMenuDefaults()
 
 	if (ComboboxNation)
 	{
-		ComboboxNation->AddOption("NATION 1");
-		ComboboxNation->AddOption("NATION 2");
-		ComboboxNation->AddOption("NATION 3");
+		for(int i = 0; i < NATION_COUNT; i++)
+		{
+			ComboboxNation->AddOption(NationNames[i]);
+		}
 	}
 
 	if (ComboboxColor)
 	{
-		ComboboxColor->AddOption("RED");
-		ComboboxColor->AddOption("GREEN");
-		ComboboxColor->AddOption("BLUE");
-		ComboboxColor->AddOption("YELLOW");
+		for(int i = 0; i < COLOR_COUNT; i++)
+		{
+			ComboboxColor->AddOption(ColorNames[i]);
+		}
 	}
 
 	if (ComboboxUnitType)
 	{
-		ComboboxUnitType->AddOption("BASE BUILDING");
-		ComboboxUnitType->AddOption("HOUSE");
-		ComboboxUnitType->AddOption("ARCHERY");
+		for(int i = 0; i < UNIT_TYPE_COUNT; i++)
+		{
+			ComboboxUnitType->AddOption(UnitNames[i]);
+		}
 	}
 
 }
