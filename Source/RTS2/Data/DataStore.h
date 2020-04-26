@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RTSPrimitiveResourceData.h"
+#include "RTS2/Prerequisites.h"
 
 /**
  * 
@@ -14,10 +16,17 @@ public:
 	~DataStore();
 
 	struct FUnitDataRow* GetUnitConstructionDataRow(const FName& RowName) const;
+	struct FUnitNecessityRow* GetUnitNecessityRow(const FName& RowName) const;
+	FRTSPrimitiveResourceData* GetUnitPrice(ENations NationType, EUnitTypes UnitType);
+	class UStaticMesh* GetUnitStaticMesh(ENations NationType, EUnitTypes UnitType);
+	class USkeletalMesh* GetUnitSkeletalMesh(ENations NationType, EUnitTypes UnitType);
+	class UMaterialInstance* GetUnitSkeletalMeshMaterial(ENations NationType, EUnitTypes UnitType);
+	class UMaterialInstance* GetUnitStaticMeshMaterial(ENations NationType, EUnitTypes UnitType);
 
 private:
 
 	void ReadUnitConstructionData();
 	class UDataTable* UnitConstructionData;
-
+	class UDataTable* UnitNecessitiesData;
+	void ReadUnitNecessitiesData();
 };

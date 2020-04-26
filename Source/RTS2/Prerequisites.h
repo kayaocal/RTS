@@ -17,22 +17,23 @@
 
 #define RTS_NATION_MAX 8
 
+
 UENUM(BlueprintType)
-enum class EMap : uint8
+enum EMap
 {
 	MainMenu		= 0,
 	DebugMap		= 1
 };
 
 UENUM(BlueprintType)
-enum class EControllerType : uint8
+enum EControllerType
 {
 	Bot,
 	Player
 };
 
 UENUM(BlueprintType)
-enum class EGameStates : uint8
+enum  EGameStates
 {
 	Menu,
 	Waiting,
@@ -41,7 +42,7 @@ enum class EGameStates : uint8
 };
 
 UENUM(BlueprintType)
-enum class EGamePlayType : uint8
+enum EGamePlayType
 {
 	Campaign,
 	Solo,
@@ -49,7 +50,7 @@ enum class EGamePlayType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EGameMode : uint8
+enum EGameMode
 {
 	Classic,
 	Raid
@@ -59,41 +60,54 @@ enum class EGameMode : uint8
 UENUM(BlueprintType)
 enum EUnitTypes
 {
-	BaseBuilding		UMETA(DisplayName = "BASE BUILDING"),
-	House				UMETA(DisplayName = "HOUSE"),
-	BaseUnit			UMETA(DisplayName = "BASE UNIT"),
-	Archer				UMETA(DisplayName = "ARCHER")
+	BaseBuilding		=0			UMETA(DisplayName = "BaseBuilding"),
+	House				=1			UMETA(DisplayName = "House"),
+	Library			 	=2			UMETA(DisplayName = "Library"),
+	Tomb				=3			UMETA(DisplayName = "Tomb"),			
+
+
+
+	EUnitTypeCounter									
 };
 
 #define UNIT_TYPE_COUNT 4
+
 /*
  * UnitNames Order and Size must be same with EUnitTypes enum
  */
 const char UnitNames[UNIT_TYPE_COUNT][40]
 {
-	"BaseBuilding",
-	"House",
-	"BaseUnit",
-	"Archer"	
+	"BaseBuilding",					//0
+	"House",						//1
+	"Library",						//2
+	"Tomb"							//3
 };
+
 //------------------ UNIT TYPES -------------------<<<
 //------------------- NATIONS -------------------->>>
+
 UENUM(BlueprintType)
 enum ENations
 {
-	Any						UMETA(DisplayName = "ANY NATION",	ToolTip = "All Nations"),
-	Group1					UMETA(DisplayName = "GROUP 1",		ToolTip = "Group One")
+	Any						= 0		UMETA(DisplayName = "ANY NATION",	ToolTip = "All Nations"),
+	Nation1					= 1		UMETA(DisplayName = "Nation 1",		ToolTip = "Nation One"),	
+	Nation2					= 2		UMETA(DisplayName = "Nation 2",		ToolTip = "Nation Two"),	
+	Nation3					= 3		UMETA(DisplayName = "Nation 3",		ToolTip = "Nation Three")
 }; 
 
-#define NATION_COUNT 2
+#define NATION_COUNT 4
+
 /*
 * NationNames Order and Size must be same with ENations enum
 */
 const char NationNames[UNIT_TYPE_COUNT][40]
 {
-	"AllNations",
-    "Group1"
+	"AllNations",					// 0
+    "Nation1",						// 1
+    "Nation2",						// 1
+    "Nation3"						// 1
 };
+
 //------------------- NATIONS --------------------<<<
 
 //------------------- COLORS -------------------->>>
@@ -108,6 +122,7 @@ const char ColorNames[UNIT_TYPE_COUNT][40]
 };
 
 //------------------- COLORS --------------------<<<
+
 UENUM(BlueprintType)
 enum DataTableEnums
 {

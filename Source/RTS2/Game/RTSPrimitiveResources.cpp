@@ -3,6 +3,7 @@
 
 #include "RTSPrimitiveResources.h"
 
+
 RTSPrimitiveResources::RTSPrimitiveResources()
 {
 	Gold = 0;
@@ -15,6 +16,7 @@ RTSPrimitiveResources::RTSPrimitiveResources(int GoldAmount, int WoodAmount, int
 	Gold = GoldAmount;
 	Wood = WoodAmount;
 	Food = FoodAmount;
+	OnResourceChanged.ExecuteIfBound(*this);
 }
 
 RTSPrimitiveResources::~RTSPrimitiveResources()
@@ -39,74 +41,63 @@ int RTSPrimitiveResources::GetFood() const
 void RTSPrimitiveResources::SetGold(int GoldAmount)
 {
 	Gold = GoldAmount;
-	Notify(*this);
+	OnResourceChanged.ExecuteIfBound(*this);
 }
 
 void RTSPrimitiveResources::SetWood(int WoodAmount)
 {
 	Wood = WoodAmount;
-	Notify(*this);
+	OnResourceChanged.ExecuteIfBound(*this);
 }
 
 void RTSPrimitiveResources::SetFood(int FoodAmount)
 {
 	Food = FoodAmount;
-	Notify(*this);
+	OnResourceChanged.ExecuteIfBound(*this);
 }
 
-void RTSPrimitiveResources::Add(RTSPrimitiveResources const &obj)
+void RTSPrimitiveResources::Add(FRTSPrimitiveResourceData const &obj)
 {
 	Gold += obj.Gold;
 	Wood += obj.Wood;
 	Food += obj.Food;
-	Notify(*this);
+	OnResourceChanged.ExecuteIfBound(*this);
 }
 
-bool RTSPrimitiveResources::Spend(RTSPrimitiveResources const & obj)
+bool RTSPrimitiveResources::Spend(FRTSPrimitiveResourceData const & obj)
 {
 	if (IsAffordable(obj))
 	{
 		Gold -= obj.Gold;
 		Wood -= obj.Wood;
 		Food -= obj.Food;
-		Notify(*this);
+		OnResourceChanged.ExecuteIfBound(*this);
 		return true;
 	}
 
 	return false;
 }
 
-bool RTSPrimitiveResources::IsAffordable(RTSPrimitiveResources const & obj) const
+bool RTSPrimitiveResources::IsAffordable(FRTSPrimitiveResourceData const & obj) const
 {
 	return (Gold >= obj.Gold && Wood >= obj.Wood && Food >= obj.Food);
 }
 
-void RTSPrimitiveResources::operator+(RTSPrimitiveResources const & obj)
+void RTSPrimitiveResources::operator+(FRTSPrimitiveResourceData const & obj)
 {
 	Add(obj);
 }
 
-RTSPrimitiveResources & RTSPrimitiveResources::operator+=(RTSPrimitiveResources const & obj)
-{
-	Add(obj);
-	return *this;
-}
 
-bool RTSPrimitiveResources::operator-(RTSPrimitiveResources const & obj)
+bool RTSPrimitiveResources::operator-(FRTSPrimitiveResourceData const & obj)
 {
 	return Spend(obj);
 }
 
-RTSPrimitiveResources & RTSPrimitiveResources::operator-=(RTSPrimitiveResources const & obj)
-{
-	Spend(obj);
-	return *this;
-}
 
-void RTSPrimitiveResources::operator=(RTSPrimitiveResources const & obj)
+void RTSPrimitiveResources::operator=(FRTSPrimitiveResourceData const & obj)
 {
 	Gold = obj.Gold;
 	Wood = obj.Wood;
 	Food = obj.Food;
-	Notify(*this);
 }

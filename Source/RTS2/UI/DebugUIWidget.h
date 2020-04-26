@@ -40,11 +40,16 @@ class RTS2_API UDebugUIWidget : public UUserWidget
 
 	UMenuAnchor*	CreateUnitMenuAnchor;
 
+	int SelectedComboboxNation;
+	int SelectedComboboxColor;
+	int SelectedComboboxUnitType;
+	FRTSPrimitiveResourceData* SelectedUnitPrice;
+	
 	class WidgetPrimitiveResObserver* WidgetNBObserver;
 
 	UDebugUIWidget(const FObjectInitializer& ObjectInitializer);
 	~UDebugUIWidget();
-	
+
 	UFUNCTION(BlueprintCallable, Category = "My Functions")
 	void SpawnUnitButton();
 
@@ -66,19 +71,20 @@ class RTS2_API UDebugUIWidget : public UUserWidget
 	UFUNCTION(BlueprintCallable, Category = "My Functions")
 	void GiveResource(int ID, int Amount);
 	
-	public:
-	void UpdateBank(RTSPrimitiveResources& Source);
-};
+	UFUNCTION(BlueprintCallable)
+	void OnNationComboboxChanged(FString selectedItem, ESelectInfo::Type selectInfo);
 
-class RTS2_API WidgetPrimitiveResObserver
-	: public Observer<RTSPrimitiveResources>
-{
-	UDebugUIWidget* Widget;
-	RTSNation* Nation;
+	UFUNCTION(BlueprintCallable)
+	void OnUnitTypeComboboxChanged(FString selectedItem, ESelectInfo::Type selectInfo);
+
+	UFUNCTION(BlueprintCallable)
+	void OnColorComboboxChanged(FString selectedItem, ESelectInfo::Type selectInfo);
+	void UpdateUnitSpawnInfo();
+
+
+public:
 	
-	public:
+	UFUNCTION()
+	void OnPlayerResourcesChanged(FRTSPrimitiveResourceData& Resources);
 
-	WidgetPrimitiveResObserver(UDebugUIWidget* widget, RTSNation*  Nation);
-	~WidgetPrimitiveResObserver();
-	void OnFieldChanged(RTSPrimitiveResources& Source) override;
 };

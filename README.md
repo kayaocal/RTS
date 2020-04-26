@@ -19,4 +19,7 @@ This project uses Unreal's coding conventions system. [LINK](https://docs.unreal
 * **Source\RTS2\Data:** Data related classes such as derived classes from *FTableRowBase* will be here. 
 * **Source\RTS2\Game:** Game Logic related classes. Excluding Actors. 
 
+## Data Structure
 
+* **Content\Data\Unit\UnitNecessity:** This data table stores unit prices or any other necessities specific to Unit type and Nation.. 
+* **Content\Data\Unit\UnitConstruction:** This data table stores unit materials or meshes specific to Unit type and Nation and Age..
