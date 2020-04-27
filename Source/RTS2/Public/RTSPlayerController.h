@@ -20,12 +20,18 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds)override;
 	class ARTSHud* GetRTSHud();
+	class UDebugUIWidget* GetUIWidget();
+	void SetUIWidget(class UDebugUIWidget* Widget);
 	void SetTemporaryActor(ARTSActor* NewActor);
 	void SetSelectedActors(FVector2D StartPos, FVector2D EndPos);
 	void SetSelectedActors(ARTSActor* SelectedUnit);
 	void ClearSelectedActors();
+	ARTSActor* GetSelectedActor(int index);
+	
+
 private:
 	ARTSActor* TemporaryActor;
 	class ARTSHud* RTSHud;
+	class UDebugUIWidget* UIWidget;
 	TArray<ARTSActor*> SelectedActorsArray;
 };

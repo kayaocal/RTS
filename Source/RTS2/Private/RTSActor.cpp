@@ -36,7 +36,7 @@ ARTSActor::ARTSActor()
 	{
 		SelectionPlaneComponent->SetStaticMesh(MeshAsset.Object);
 		SelectionPlaneComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 2.0f));
-		SelectionPlaneComponent->SetWorldScale3D(FVector(9.f, 9.f, 0));
+		SelectionPlaneComponent->SetWorldScale3D(FVector(9.f, 9.f, 0.1f));
 	}
 
 	PathString = TEXT("MaterialInstanceConstant'/Game/Materials/SelectionCircleMatInstance.SelectionCircleMatInstance'");

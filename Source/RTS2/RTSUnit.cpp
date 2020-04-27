@@ -19,4 +19,8 @@ RTSUnit::RTSUnit()
 
 RTSUnit::~RTSUnit()
 {
+	if (actor != nullptr)
+	{
+		actor->Destroy(false, true);
+	}
 }
