@@ -109,10 +109,11 @@ class RTS2_API UDebugUIWidget : public UUserWidget
 	TArray<UButton*> CommandButtonArray;
 
 	void UpdateBank(RTSPrimitiveResources& Source);
+	
 	virtual bool Initialize() override;
+	
 	void SetCommandButtonsVisible(int Count);
-};
-
+	
 	UFUNCTION(BlueprintCallable)
 	void OnNationComboboxChanged(FString selectedItem, ESelectInfo::Type selectInfo);
 
@@ -121,12 +122,15 @@ class RTS2_API UDebugUIWidget : public UUserWidget
 
 	UFUNCTION(BlueprintCallable)
 	void OnColorComboboxChanged(FString selectedItem, ESelectInfo::Type selectInfo);
+	
 	void UpdateUnitSpawnInfo();
 
 
 public:
-	
+
 	UFUNCTION()
 	void OnPlayerResourcesChanged(FRTSPrimitiveResourceData& Resources);
 
 };
+
+	
