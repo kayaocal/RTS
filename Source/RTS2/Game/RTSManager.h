@@ -14,15 +14,14 @@ public:
 	DataStore 	DataStore;
 	RTSGameMode GameModeSetting;
 
-	 static RTSManager& GetInstance();
+	static RTSManager& GetInstance();
 
 	void InitializeDataTables();
 	
+private:
+	
     RTSManager();
     ~RTSManager();
-private:
-	static RTSManager* RTSManager::Instance;
-	
 
 };
 

@@ -1,13 +1,11 @@
 #include "RTSManager.h"
 
+
 RTSManager& RTSManager::GetInstance()
 {
-    if(RTSManager::Instance == nullptr)
-    {
-        RTSManager::Instance = new RTSManager();
-    }
+   static RTSManager Instance;
+   return Instance; 
 
-    return *RTSManager::Instance;
 }
 
 void RTSManager::InitializeDataTables()

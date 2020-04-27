@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RTSGameInstance.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/ComboBoxString.h"
 #include "Components/EditableText.h"
@@ -107,8 +106,6 @@ class RTS2_API UDebugUIWidget : public UUserWidget
 
 	TArray<UButton*> CommandButtonArray;
 
-	void UpdateBank(RTSPrimitiveResources& Source);
-	
 	virtual bool Initialize() override;
 	
 	void SetCommandButtonsVisible(int Count);
