@@ -13,7 +13,54 @@
 #include "Engine/Classes/Kismet/GameplayStatics.h"
 #include "Types/SlateEnums.h"
 #include "RTS2/Game/RTSManager.h"
-#include "RTS2/Game/RTSManager.h"
+#include "RTSGameInstance.h"
+#include "RTS2/RTSUnit.h"
+#include "Runtime/UMG/Public/Components/Button.h"
+#include "UnitCommand.h"
+
+bool UDebugUIWidget::Initialize()
+{
+	bool Success = Super::Initialize();
+	if (!Success) return false;
+	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PlayerController != nullptr)
+	{
+		PlayerController->SetUIWidget(this);
+	}
+
+	CommandButtonArray.Add(Command_1);
+	CommandButtonArray.Add(Command_2);
+	CommandButtonArray.Add(Command_3);
+	CommandButtonArray.Add(Command_4);
+	CommandButtonArray.Add(Command_5);
+	CommandButtonArray.Add(Command_6);
+	CommandButtonArray.Add(Command_7);
+	CommandButtonArray.Add(Command_8);
+	CommandButtonArray.Add(Command_9);
+	CommandButtonArray.Add(Command_10);
+	SetCommandButtonsVisible(0);
+	return true;
+}
+
+void UDebugUIWidget::SetCommandButtonsVisible(int Count)
+{
+	int i;
+
+	for(i = 0;  i< 10; i++)//todo change 10 to define
+	{
+		if (CommandButtonArray[i] != nullptr)
+		{
+			if (i < Count)
+			{
+				CommandButtonArray[i]->SetVisibility(ESlateVisibility::Visible);
+			}
+			else
+			{
+				CommandButtonArray[i]->SetVisibility(ESlateVisibility::Hidden);
+			}
+		}	
+	}
+}
 
 void UDebugUIWidget::AssignSpawnUnitCombobox(UComboBoxString * ComboNation, UComboBoxString * ComboUnitType, UComboBoxString * ComboColor)
 {
@@ -224,4 +271,22 @@ void UDebugUIWidget::SpawnUnitButton()
 		PlayerController->SetTemporaryActor(NewActor);
 	}
 
+	DestroyCommand* NewCommand = new DestroyCommand(unit);
+
+	unit->UnitCommands.Add(NewCommand);
+
+}
+
+void UDebugUIWidget::UnitCommandButton(int index)
+{
+	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+
+	if (PlayerController != nullptr && PlayerController->GetSelectedActor(0) != nullptr && index >= 0)
+	{
+		RTSUnit* SelectedUnit = PlayerController->GetSelectedActor(0)->GetMyUnit();
+		if (SelectedUnit != nullptr && SelectedUnit->UnitCommands[index] != nullptr)
+		{
+			SelectedUnit->UnitCommands[index]->Execute();
+		}
+	}
 }

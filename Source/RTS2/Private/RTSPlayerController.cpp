@@ -3,6 +3,8 @@
 
 #include "RTS2/Public/RTSPlayerController.h"
 #include "RTS2/Public/RTSHud.h"
+#include "RTS2/UI/DebugUIWidget.h"
+#include "Runtime/UMG/Public/Components/Button.h"
 #include "Engine/Engine.h"
 
 ARTSPlayerController::ARTSPlayerController()
@@ -49,6 +51,16 @@ ARTSHud* ARTSPlayerController::GetRTSHud()
 	return RTSHud;
 }
 
+UDebugUIWidget * ARTSPlayerController::GetUIWidget()
+{
+	return UIWidget;
+}
+
+void ARTSPlayerController::SetUIWidget(UDebugUIWidget * Widget)
+{
+	UIWidget = Widget;
+}
+
 void ARTSPlayerController::SetTemporaryActor(ARTSActor * NewActor)
 {
 	TemporaryActor = NewActor;
@@ -71,6 +83,11 @@ void ARTSPlayerController::SetSelectedActors(FVector2D StartPos, FVector2D EndPo
 			continue;
 		}
 		SelectedActorsArray[i]->GetMyUnit()->SetSelection(true);
+	}
+
+	if (UIWidget != nullptr && SelectedActorsArray.Num() == 1 && SelectedActorsArray[0] != nullptr && SelectedActorsArray[0]->GetMyUnit() != nullptr)
+	{
+		UIWidget->SetCommandButtonsVisible(SelectedActorsArray[0]->GetMyUnit()->UnitCommands.Num());
 	}
 }
 
@@ -102,4 +119,19 @@ void ARTSPlayerController::ClearSelectedActors()
 		SelectedActorsArray[i]->GetMyUnit()->SetSelection(false);
 	}
 	SelectedActorsArray.Empty();
+
+	if (UIWidget != nullptr)
+	{
+		UIWidget->SetCommandButtonsVisible(0);
+	}
+}
+
+ARTSActor * ARTSPlayerController::GetSelectedActor(int index)
+{
+	if (index < 0 || index >= SelectedActorsArray.Num())
+	{
+		return nullptr;
+	}
+
+	return SelectedActorsArray[index];
 }

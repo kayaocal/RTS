@@ -53,6 +53,9 @@ class RTS2_API UDebugUIWidget : public UUserWidget
 	void SpawnUnitButton();
 
 	UFUNCTION(BlueprintCallable, Category = "My Functions")
+	void UnitCommandButton(int index);
+
+	UFUNCTION(BlueprintCallable, Category = "My Functions")
 	void AssignSpawnUnitCombobox(UComboBoxString* ComboNation, UComboBoxString* ComboUnitType, UComboBoxString* ComboColor);
 		
 	UFUNCTION(BlueprintCallable, Category = "My Functions")
@@ -70,6 +73,46 @@ class RTS2_API UDebugUIWidget : public UUserWidget
 	UFUNCTION(BlueprintCallable, Category = "My Functions")
 	void GiveResource(int ID, int Amount);
 	
+	public:
+		
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Command_1 = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Command_2 = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Command_3 = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Command_4 = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Command_5 = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Command_6 = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Command_7 = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Command_8 = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Command_9 = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Command_10 = nullptr;
+
+	TArray<UButton*> CommandButtonArray;
+
+	void UpdateBank(RTSPrimitiveResources& Source);
+	
+	virtual bool Initialize() override;
+	
+	void SetCommandButtonsVisible(int Count);
+	
 	UFUNCTION(BlueprintCallable)
 	void OnNationComboboxChanged(FString selectedItem, ESelectInfo::Type selectInfo);
 
@@ -78,12 +121,15 @@ class RTS2_API UDebugUIWidget : public UUserWidget
 
 	UFUNCTION(BlueprintCallable)
 	void OnColorComboboxChanged(FString selectedItem, ESelectInfo::Type selectInfo);
+	
 	void UpdateUnitSpawnInfo();
 
 
 public:
-	
+
 	UFUNCTION()
 	void OnPlayerResourcesChanged(FRTSPrimitiveResourceData& Resources);
 
 };
+
+	
