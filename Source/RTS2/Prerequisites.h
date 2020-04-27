@@ -13,7 +13,10 @@
 #define LOG_ERR(txt) UE_LOG(LogTemp, Error, TEXT(txt) )
 
 #define RTS_GAME_INSTANCE Cast<URTSGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))
-#define RTS_DATA_STORE &(Cast<URTSGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->DataStore)
+
+#define RTS_GAME			RTSManager::GetInstance().Game
+#define RTS_DATA			RTSManager::GetInstance().DataStore
+#define RTS_NATION(Index)	RTSManager::GetInstance().Game.GetNationByPlayer(Index)
 
 #define RTS_NATION_MAX 8
 

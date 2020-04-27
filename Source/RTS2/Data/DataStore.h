@@ -22,6 +22,7 @@ public:
 	class USkeletalMesh* GetUnitSkeletalMesh(ENations NationType, EUnitTypes UnitType);
 	class UMaterialInstance* GetUnitSkeletalMeshMaterial(ENations NationType, EUnitTypes UnitType);
 	class UMaterialInstance* GetUnitStaticMeshMaterial(ENations NationType, EUnitTypes UnitType);
+	void PrepareGameDatas();
 
 private:
 

@@ -10,6 +10,7 @@
 
 #include "Components/MenuAnchor.h"
 #include "RTS2/Template/ObserverTemplate.h"
+#include "RTS2/Data/RTSPrimitiveResourceData.h"
 
 #include "DebugUIWidget.generated.h"
 
@@ -23,8 +24,6 @@ class RTS2_API UDebugUIWidget : public UUserWidget
 	GENERATED_BODY()
 
 	int NationIndex;
-	class URTSGameInstance* RTSGameInstance;
-	class RTSGame* RTSGame;
 	UComboBoxString* ComboboxNation;
 	UComboBoxString* ComboboxUnitType;
 	UComboBoxString* ComboboxColor;

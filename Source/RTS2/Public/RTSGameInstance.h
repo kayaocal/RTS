@@ -4,8 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "RTS2/Game/RTSGame.h"
-#include "RTS2/Data/DataStore.h"
+
 
 #include "RTSGameInstance.generated.h"
 /**
@@ -20,11 +19,7 @@ public :
 
 	URTSGameInstance();
 
-	RTSGameMode GameModeSetting;
 
-	RTSGame Game;
-
-	DataStore DataStore;
 
 
 

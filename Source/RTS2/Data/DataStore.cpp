@@ -7,8 +7,7 @@
 
 DataStore::DataStore()
 {
-	ReadUnitConstructionData();
-	ReadUnitNecessitiesData();
+
 }
 
 DataStore::~DataStore()
@@ -165,6 +164,12 @@ UMaterialInstance* DataStore::GetUnitStaticMeshMaterial(ENations NationType, EUn
 	}
 	
 	return Material;	
+}
+
+void DataStore::PrepareGameDatas()
+{
+	ReadUnitConstructionData();
+	ReadUnitNecessitiesData();
 }
 
 FUnitDataRow* DataStore::GetUnitConstructionDataRow(const FName& RowName) const

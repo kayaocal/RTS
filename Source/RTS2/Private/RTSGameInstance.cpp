@@ -2,9 +2,11 @@
 
 
 #include "RTSGameInstance.h"
+#include "RTS2/Game/RTSManager.h"
 
 URTSGameInstance::URTSGameInstance()
 	:UGameInstance()
 {
+	RTSManager::GetInstance().InitializeDataTables();
 }
 

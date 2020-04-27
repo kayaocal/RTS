@@ -12,13 +12,12 @@
 #include "RTS2/Public/RTSPlayerController.h"
 #include "Engine/Classes/Kismet/GameplayStatics.h"
 #include "Types/SlateEnums.h"
-
-#include "RTSGameInstance.h"
+#include "RTS2/Game/RTSManager.h"
+#include "RTS2/Game/RTSManager.h"
 
 void UDebugUIWidget::AssignSpawnUnitCombobox(UComboBoxString * ComboNation, UComboBoxString * ComboUnitType, UComboBoxString * ComboColor)
 {
 
-	
 	ComboboxNation = ComboNation;
 	ComboboxColor = ComboColor;
 	ComboboxUnitType = ComboUnitType;
@@ -36,9 +35,10 @@ void UDebugUIWidget::AssignBankEditableTexts(UEditableText * Wood, UEditableText
 	
 	if(WidgetNBObserver == nullptr)
 	{
-		if(RTSGame->GetNationByPlayer(NationIndex))
+		if(RTS_NATION(NationIndex))
 		{
-			RTSGame->GetNationByPlayer(NationIndex)->NationalBank.OnResourceChanged.BindUFunction(this, "OnPlayerResourcesChanged");
+			//TODO Delegate Unbind yapmali mi ogren!!!
+			RTS_NATION(NationIndex)->NationalBank.OnResourceChanged.BindUFunction(this, "OnPlayerResourcesChanged");
 		}
 	}
  }
@@ -98,7 +98,7 @@ void UDebugUIWidget::SetMenuDefaults()
 
 void UDebugUIWidget::GiveResource(int ID, int Amount)
 {
-	if(RTSGame->GetNationByPlayer(NationIndex) == nullptr)
+	if(RTS_NATION(NationIndex) == nullptr)
 	{
 		return;
 	}
@@ -106,13 +106,14 @@ void UDebugUIWidget::GiveResource(int ID, int Amount)
 	switch (ID)
 	{
 		case 0:
-		RTSGame->GetNationByPlayer(NationIndex)->NationalBank.SetFood(RTSGame->GetNationByPlayer(NationIndex)->NationalBank.GetFood() + Amount);
+		RTS_NATION(NationIndex)->NationalBank.SetFood(RTS_NATION(NationIndex)->NationalBank.GetFood() + Amount);
 			break;
 		case 1:
-	    RTSGame->GetNationByPlayer(NationIndex)->NationalBank.SetGold(RTSGame->GetNationByPlayer(NationIndex)->NationalBank.GetGold() + Amount);
+	    RTS_NATION(NationIndex)->NationalBank.SetGold(RTS_NATION(NationIndex)->NationalBank.GetGold() + Amount);
 			break;
 		case 2:
-	    RTSGame->GetNationByPlayer(NationIndex)->NationalBank.SetWood(RTSGame->GetNationByPlayer(NationIndex)->NationalBank.GetWood() + Amount);
+		default:
+	    RTS_NATION(NationIndex)->NationalBank.SetWood(RTS_NATION(NationIndex)->NationalBank.GetWood() + Amount);
 			break;
 		
 	}
@@ -138,9 +139,9 @@ void UDebugUIWidget::OnColorComboboxChanged(FString selectedItem, ESelectInfo::T
 
 void UDebugUIWidget::UpdateUnitSpawnInfo()
 {
-	if(RTS_GAME_INSTANCE->Game.GetNationByPlayer(NationIndex))
+	if(RTS_NATION(NationIndex))
 	{
-		SelectedUnitPrice = RTS_GAME_INSTANCE->DataStore.GetUnitPrice((ENations)SelectedComboboxNation, (EUnitTypes)SelectedComboboxUnitType);
+		SelectedUnitPrice = RTS_DATA.GetUnitPrice((ENations)SelectedComboboxNation, (EUnitTypes)SelectedComboboxUnitType);
 		if(SelectedUnitPrice != nullptr)
 		{
 			if(PriceFoodAmountText) { PriceFoodAmountText->SetText(FText::FromString((FString::FromInt(SelectedUnitPrice->Food)))); }
@@ -161,13 +162,17 @@ UDebugUIWidget::UDebugUIWidget(const FObjectInitializer& ObjectInitializer)
 	:UUserWidget(ObjectInitializer)
 {
 	LOG("CTEST UDebugUIWidget constructor");
-	RTSGameInstance = RTS_GAME_INSTANCE;
-	RTSGame = &RTS_GAME_INSTANCE->Game;
 }
 
 UDebugUIWidget::~UDebugUIWidget()
 {
-
+	if(RTS_NATION(NationIndex))
+	{
+		if(RTS_NATION(NationIndex)->NationalBank.OnResourceChanged.IsBound())
+		{
+			//RTS_NATION(NationIndex)->NationalBank.OnResourceChanged.Unbind(this, "OnPlayerResourcesChanged");
+		}
+	}
 }
 
 void UDebugUIWidget::SpawnUnitButton()
@@ -175,7 +180,7 @@ void UDebugUIWidget::SpawnUnitButton()
 
 	if(SelectedUnitPrice != nullptr)
 	{
-		if(RTSGame->GetNationByPlayer(NationIndex)->NationalBank.Spend(*SelectedUnitPrice) == false)
+		if(RTS_NATION(NationIndex)->NationalBank.Spend(*SelectedUnitPrice) == false)
 		{
 			return;
 		}
@@ -189,11 +194,8 @@ void UDebugUIWidget::SpawnUnitButton()
 	RTSUnit *unit = new RTSUnit();
 
 	FVector NewLocation = FVector(100, 100, 15);
-	FVector NewDirection = FVector(0, 0, 0);
 
-	URTSGameInstance* GameInstance = RTS_GAME_INSTANCE;
-	DataStore* DataStore = RTS_DATA_STORE;
-	FUnitDataRow* unitRow = DataStore->GetUnitConstructionDataRow(UnitNames[SelectedComboboxUnitType]);
+	FUnitDataRow* unitRow = RTS_DATA.GetUnitConstructionDataRow(UnitNames[SelectedComboboxUnitType]);
 
 	if (unitRow == nullptr)
 	{
@@ -215,10 +217,9 @@ void UDebugUIWidget::SpawnUnitButton()
 		}
 		else
 		{
-			NewActor->ItemStaticMesh->SetStaticMesh(RTS_GAME_INSTANCE->DataStore.GetUnitStaticMesh((ENations)SelectedComboboxNation, (EUnitTypes)SelectedComboboxUnitType));
-			NewActor->ItemStaticMesh->SetMaterial(0, (UMaterialInterface*)RTS_GAME_INSTANCE->DataStore.GetUnitStaticMeshMaterial((ENations)SelectedComboboxNation, (EUnitTypes)SelectedComboboxUnitType));		
+			NewActor->ItemStaticMesh->SetStaticMesh(RTS_DATA.GetUnitStaticMesh((ENations)SelectedComboboxNation, (EUnitTypes)SelectedComboboxUnitType));
+			NewActor->ItemStaticMesh->SetMaterial(0, (UMaterialInterface*)RTS_DATA.GetUnitStaticMeshMaterial((ENations)SelectedComboboxNation, (EUnitTypes)SelectedComboboxUnitType));		
 		}
-		
 
 		PlayerController->SetTemporaryActor(NewActor);
 	}

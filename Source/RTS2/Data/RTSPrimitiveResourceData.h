@@ -11,10 +11,8 @@ USTRUCT(BlueprintType)
 struct RTS2_API FRTSPrimitiveResourceData
 {
 	GENERATED_BODY();
-
+	
 	DECLARE_DELEGATE_OneParam(OnResourceChangedEvent, FRTSPrimitiveResourceData&);
-
-
 		
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int Wood;
