@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RTSActor.h"
 #include "RTSPrimitiveResourceData.h"
 #include "RTS2/Prerequisites.h"
 
@@ -18,6 +19,7 @@ public:
 	struct FUnitDataRow* GetUnitConstructionDataRow(const FName& RowName) const;
 	struct FUnitNecessityRow* GetUnitNecessityRow(const FName& RowName) const;
 	FRTSPrimitiveResourceData* GetUnitPrice(ENations NationType, EUnitTypes UnitType);
+	void SetRTSActorSMeshAndMaterial(ARTSActor& Actor, ENations NationType, EUnitTypes UnitType, EColors Color);
 	class UStaticMesh* GetUnitStaticMesh(ENations NationType, EUnitTypes UnitType);
 	class USkeletalMesh* GetUnitSkeletalMesh(ENations NationType, EUnitTypes UnitType);
 	class UMaterialInstance* GetUnitSkeletalMeshMaterial(ENations NationType, EUnitTypes UnitType);

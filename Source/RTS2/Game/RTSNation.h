@@ -21,8 +21,9 @@ public :
 	RTSNationIdentity();
 	RTSNationIdentity(const RTSNationIdentity& Identity);
 	~RTSNationIdentity();
+	void SetNationForm(ENations NationEnum, EColors ColorValue, uint8 PlayersID, uint8 TeamsID,
+	                   EControllerType Controller);
 
-	void SetNationForm(ENations Nation, const FColor& Color, uint8 PlayerID, uint8 TeamID, EControllerType Controller);
 	void SetNationForm(const RTSNationIdentity& NationIdentity);
 	
 	/*
@@ -31,7 +32,7 @@ public :
 	*/
 	ENations Nation;
 
-	FColor Color;
+	EColors Color;
 
 	/*
 	*	Given ID to player. Used to identfy which player controls this nation.

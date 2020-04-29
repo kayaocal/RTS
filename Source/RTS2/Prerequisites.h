@@ -115,6 +115,15 @@ const char NationNames[UNIT_TYPE_COUNT][40]
 
 //------------------- COLORS -------------------->>>
 
+UENUM(BlueprintType)
+enum EColors
+{
+	Red						= 0		UMETA(DisplayName = "Red",			ToolTip = "Red"),
+	Green					= 1		UMETA(DisplayName = "Green",		ToolTip = "Green"),	
+	Blue					= 2		UMETA(DisplayName = "Blue",			ToolTip = "Blue"),	
+	Yellow					= 3		UMETA(DisplayName = "Yellow",		ToolTip = "Yellow")
+}; 
+
 #define COLOR_COUNT 4
 const char ColorNames[UNIT_TYPE_COUNT][40]
 {
