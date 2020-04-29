@@ -11,11 +11,7 @@
 // Sets default values for this component's properties
 URTSUnitFactoryComponent::URTSUnitFactoryComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
 
@@ -24,17 +20,7 @@ void URTSUnitFactoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
 	
-}
-
-
-// Called every frame
-void URTSUnitFactoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 RTSUnit* URTSUnitFactoryComponent::CreateUnit(EUnitTypes UnitType, const int PlayerIndex, const FVector& Position)
@@ -46,9 +32,7 @@ RTSUnit* URTSUnitFactoryComponent::CreateUnit(EUnitTypes UnitType, ENations Nati
 	const FVector& Position)
 {
 	RTSUnit *unit = new RTSUnit();
-
-	FVector NewLocation = FVector(100, 100, 15);
-
+	
 	FUnitDataRow* unitRow = RTS_DATA.GetUnitConstructionDataRow(UnitNames[UnitType]);
 	
 	if (unitRow == nullptr)
