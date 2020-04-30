@@ -23,7 +23,6 @@ protected:
 
 public:	
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	class RTSUnit* CreateUnit(EUnitTypes UnitType, const int PlayerIndex, const FVector& Position);
     class RTSUnit* CreateUnit(EUnitTypes UnitType, ENations Nation, EColors Color, const FVector& Position);
