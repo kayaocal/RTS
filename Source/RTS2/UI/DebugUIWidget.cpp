@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "DebugUIWidget.h"
-#include "RTS2/RTSUnit.h"
+#include "RTS2/Game/RTSUnit.h"
 #include "RTSGameInstance.h"
 #include "RTS2/Prerequisites.h"
 #include "RTS2/Data/DataStore.h"
@@ -13,10 +13,10 @@
 #include "Engine/Classes/Kismet/GameplayStatics.h"
 #include "Types/SlateEnums.h"
 #include "RTS2/Game/RTSManager.h"
-#include "RTSGameInstance.h"
-#include "RTS2/RTSUnit.h"
+#include "RTS2/Game/RTSUnit.h"
 #include "Runtime/UMG/Public/Components/Button.h"
 #include "UnitCommand.h"
+#include "RTS2/Game/RTSUnitFactoryComponent.h"
 
 bool UDebugUIWidget::Initialize()
 {
@@ -237,43 +237,13 @@ void UDebugUIWidget::SpawnUnitButton()
 		LOG_ERR("SELECTED UNIT PRICE IS NULL");
 		return;
 	}
-	
-	RTSUnit *unit = new RTSUnit();
+
 
 	FVector NewLocation = FVector(100, 100, 15);
-
-	FUnitDataRow* unitRow = RTS_DATA.GetUnitConstructionDataRow(UnitNames[SelectedComboboxUnitType]);
-
-	if (unitRow == nullptr)
-	{
-		LOG_ERR("UnitRow is null!");
-		return;
-	}
-	
 	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-	if (PlayerController != nullptr)
-	{
-		ARTSActor* NewActor = GetWorld()->SpawnActor<ARTSActor>(ARTSActor::StaticClass(), NewLocation, FRotator::ZeroRotator);
-
-		unit->actor = NewActor;
-		NewActor->SetMyUnit(unit);
-		if(unitRow->IsSkeletalMesh)
-		{
-			//NewActor->ItemStaticMesh->SkeletalMesh(RTS_GAME_INSTANCE->DataStore.GetUnitSkeletalMesh((ENations)SelectedComboboxNation, (EUnitTypes)SelectedComboboxUnitType));
-			//NewActor->ItemStaticMesh->SetMaterial(RTS_GAME_INSTANCE->DataStore.GetUnitSkeletalMeshMaterial((ENations)SelectedComboboxNation, (EUnitTypes)SelectedComboboxUnitType));
-		}
-		else
-		{
-			NewActor->ItemStaticMesh->SetStaticMesh(RTS_DATA.GetUnitStaticMesh((ENations)SelectedComboboxNation, (EUnitTypes)SelectedComboboxUnitType));
-			NewActor->ItemStaticMesh->SetMaterial(0, (UMaterialInterface*)RTS_DATA.GetUnitStaticMeshMaterial((ENations)SelectedComboboxNation, (EUnitTypes)SelectedComboboxUnitType));		
-		}
-
-		PlayerController->SetTemporaryActor(NewActor);
-	}
-
-	DestroyCommand* NewCommand = new DestroyCommand(unit);
-
-	unit->UnitCommands.Add(NewCommand);
+	PlayerController->SetTemporaryUnit((EUnitTypes)SelectedComboboxUnitType, (ENations)SelectedComboboxNation, (EColors)SelectedComboboxColor);
+	//URTSUnitFactoryComponent::CreateUnit((EUnitTypes)SelectedComboboxUnitType, NationIndex, NewLocation);
+	
 
 }
 

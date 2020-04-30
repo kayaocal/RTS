@@ -4,7 +4,7 @@
 #include "RTSHud.h"
 #include "Engine/Classes/GameFramework/PlayerController.h"
 #include "Runtime/Engine/Classes/Engine/Engine.h"
-#include "RTS2/RTSUnit.h"
+#include "RTS2/Game/RTSUnit.h"
 #include "RTS2/Public/RTSPlayerController.h"
 
 void ARTSHud::DrawHUD()

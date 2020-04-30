@@ -26,7 +26,7 @@ RTSNationIdentity::~RTSNationIdentity()
 {
 }
 
-void RTSNationIdentity::SetNationForm(ENations NationEnum, const FColor & ColorValue, uint8 PlayersID, uint8 TeamsID, EControllerType Controller)
+void RTSNationIdentity::SetNationForm(ENations NationEnum, EColors ColorValue, uint8 PlayersID, uint8 TeamsID, EControllerType Controller)
 {
 	this->TeamID = TeamsID;
 	this->PlayerID = PlayersID;

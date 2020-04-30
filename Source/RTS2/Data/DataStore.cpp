@@ -4,6 +4,7 @@
 #include "DataStore.h"
 #include "RTS2/Data/UnitDataRow.h"
 #include "RTS2/Data/FUnitNecessityRow.h"
+#include "RTS2/Game/RTSUnit.h"
 
 DataStore::DataStore()
 {
@@ -68,6 +69,12 @@ FRTSPrimitiveResourceData* DataStore::GetUnitPrice(ENations NationType, EUnitTyp
 	}
 	
 	return ResourceData;	
+}
+
+void DataStore::SetRTSActorSMeshAndMaterial(ARTSActor& Actor, ENations NationType, EUnitTypes UnitType, EColors Color)
+{
+	Actor.ItemStaticMesh->SetStaticMesh(GetUnitStaticMesh(NationType, UnitType));
+	Actor.ItemStaticMesh->SetMaterial(0, (UMaterialInterface*)GetUnitStaticMeshMaterial(NationType, UnitType));
 }
 
 UStaticMesh* DataStore::GetUnitStaticMesh(ENations NationType, EUnitTypes UnitType)

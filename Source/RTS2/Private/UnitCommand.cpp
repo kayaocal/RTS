@@ -2,7 +2,7 @@
 
 
 #include "UnitCommand.h"
-#include "RTS2/RTSUnit.h"
+#include "RTS2/Game/RTSUnit.h"
 #include "RTS2/Public/RTSPlayerController.h"
 #include "Engine/Classes/Kismet/GameplayStatics.h"
 #include "RTS2/Prerequisites.h"

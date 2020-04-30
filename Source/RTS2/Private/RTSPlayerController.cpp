@@ -7,6 +7,8 @@
 #include "Runtime/UMG/Public/Components/Button.h"
 #include "Engine/Engine.h"
 #include "RTS2/Prerequisites.h"
+#include "RTS2/Game/RTSUnitFactoryComponent.h"
+#include "RTS2/Game/RTSManager.h"
 
 ARTSPlayerController::ARTSPlayerController()
 {
@@ -14,14 +16,17 @@ ARTSPlayerController::ARTSPlayerController()
 	bEnableClickEvents = true;
 	bEnableTouchEvents = true;
 	PrimaryActorTick.bCanEverTick = true;
+
+	UnitFactory = CreateDefaultSubobject<URTSUnitFactoryComponent>(TEXT("RTSUnitFactory"));
 }
 void ARTSPlayerController::BeginPlay()
 {
 	RTSHud = Cast<ARTSHud>(GetHUD());
+	TemporaryActor = GetWorld()->SpawnActor<ARTSActor>(ARTSActor::StaticClass(), FVector(0,0, 0), FRotator::ZeroRotator);
 }
 void ARTSPlayerController::Tick(float DeltaSeconds)
 {
-	if (TemporaryActor != nullptr)
+	if (ControllerState == EPlayerControllerState::CONSTRUCTION)
 	{
 		FVector NewLocation = FVector(0, 0, 0);
 		FHitResult TraceResult(ForceInit);
@@ -32,8 +37,12 @@ void ARTSPlayerController::Tick(float DeltaSeconds)
 			TemporaryActor->SetActorLocation(NewLocation, false);
 			if (this->WasInputKeyJustReleased(EKeys::LeftMouseButton))
 			{
-				TemporaryActor = nullptr;
-				return;
+				UnitFactory->CreateUnit(ConstructUnitType,  ConstructNation, ConstructColor, NewLocation);
+				DisableTemporaryUnit();
+			}
+			else if(this->WasInputKeyJustReleased(EKeys::RightMouseButton))
+			{	//Cancel Selection
+				DisableTemporaryUnit();
 			}
 		}
 		return;
@@ -55,9 +64,37 @@ void ARTSPlayerController::SetUIWidget(UDebugUIWidget * Widget)
 	UIWidget = Widget;
 }
 
-void ARTSPlayerController::SetTemporaryActor(ARTSActor * NewActor)
+void ARTSPlayerController::SetTemporaryUnit(EUnitTypes UnitType, ENations Nation, EColors Color)
 {
-	TemporaryActor = NewActor;
+	ControllerState = EPlayerControllerState::CONSTRUCTION;
+
+	ConstructColor = Color;
+	ConstructNation = Nation;
+	ConstructUnitType = UnitType;
+	
+	RTS_DATA.SetRTSActorSMeshAndMaterial(*TemporaryActor, Nation, UnitType, Color);
+	ShowTemporaryUnit();
+}
+
+void ARTSPlayerController::DisableTemporaryUnit()
+{
+	if(ControllerState != CONSTRUCTION)
+	{
+		return;
+	}
+
+	ControllerState = SELECTION;
+	HideTemporaryUnit();
+}
+
+void ARTSPlayerController::ShowTemporaryUnit()
+{
+	TemporaryActor->SetActorHiddenInGame(false);
+}
+
+void ARTSPlayerController::HideTemporaryUnit()
+{
+	TemporaryActor->SetActorHiddenInGame(true);
 }
 
 void ARTSPlayerController::SetSelectedActors(FVector2D StartPos, FVector2D EndPos)
