@@ -6,6 +6,7 @@
 #include "RTS2/UI/DebugUIWidget.h"
 #include "Runtime/UMG/Public/Components/Button.h"
 #include "Engine/Engine.h"
+#include "RTS2/Prerequisites.h"
 
 ARTSPlayerController::ARTSPlayerController()
 {
@@ -37,13 +38,6 @@ void ARTSPlayerController::Tick(float DeltaSeconds)
 		}
 		return;
 	}
-
-	if (this->WasInputKeyJustReleased(EKeys::LeftMouseButton))
-	{
-		FVector NewLocation = FVector(0, 0, 0);
-		FHitResult TraceResult(ForceInit);
-		this->GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, TraceResult);
-	}
 }
 
 ARTSHud* ARTSPlayerController::GetRTSHud()
@@ -73,13 +67,32 @@ void ARTSPlayerController::SetSelectedActors(FVector2D StartPos, FVector2D EndPo
 	{ 
 		return;
 	}
-	RTSHud->GetActorsInSelectionRectangle(StartPos, EndPos, SelectedActorsArray, false, false);
+
+	if (FVector2D::Distance(StartPos, EndPos) < 20)
+	{
+		FVector NewLocation = FVector(0, 0, 0);
+		FHitResult TraceResult(ForceInit);
+		this->GetHitResultUnderCursor(ECollisionChannel::ECC_WorldDynamic, false, TraceResult);
+
+		if (TraceResult.GetActor() != nullptr)
+		{
+			ARTSActor* RTSHitActor = Cast<ARTSActor>(TraceResult.GetActor());
+
+			if (RTSHitActor != nullptr)
+			{
+				SelectedActorsArray.Add(RTSHitActor);
+			}
+		}
+	}
+	else
+	{
+		RTSHud->GetActorsInSelectionRectangle(StartPos, EndPos, SelectedActorsArray, false, false);
+	}
 
 	for (int i = 0; i < SelectedActorsArray.Num(); i++)
 	{
 		if (SelectedActorsArray[i] == nullptr || SelectedActorsArray[i]->GetMyUnit() == nullptr)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, TEXT("dongu"));
 			continue;
 		}
 		SelectedActorsArray[i]->GetMyUnit()->SetSelection(true);
