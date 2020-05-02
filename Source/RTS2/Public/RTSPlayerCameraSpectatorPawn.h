@@ -81,6 +81,14 @@ private:
 
 public:
 
+	void LeftClickHandler();
+
+	void LeftClickReleaseHandler();
+
+	void RightClickHandler();
+	
+	void RightClickReleaseHandler();
+
 	void SelectionPressed();
 
 	void SelectionReleased();

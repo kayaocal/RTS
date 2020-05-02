@@ -70,9 +70,99 @@ void ARTSPlayerCameraSpectatorPawn::SetupPlayerInputComponent(UInputComponent * 
 	PlayerInputComponent->BindAxis("MoveUp", this, &ARTSPlayerCameraSpectatorPawn::MoveCameraUpInput);
 	PlayerInputComponent->BindAxis("ZoomIn", this, &ARTSPlayerCameraSpectatorPawn::ZoomCameraInInput);
 	PlayerInputComponent->BindAxis("Rotate", this, &ARTSPlayerCameraSpectatorPawn::RotateInput);
-	PlayerInputComponent->BindAction("LeftMouseClick", IE_Pressed, this, &ARTSPlayerCameraSpectatorPawn::SelectionPressed);
-	PlayerInputComponent->BindAction("LeftMouseClick", IE_Released, this, &ARTSPlayerCameraSpectatorPawn::SelectionReleased);
+	PlayerInputComponent->BindAction("LeftMouseClick", IE_Pressed, this, &ARTSPlayerCameraSpectatorPawn::LeftClickHandler);
+	PlayerInputComponent->BindAction("LeftMouseClick", IE_Released, this, &ARTSPlayerCameraSpectatorPawn::LeftClickReleaseHandler);
+	PlayerInputComponent->BindAction("RightMouseClick", IE_Pressed, this, &ARTSPlayerCameraSpectatorPawn::RightClickHandler);
+	PlayerInputComponent->BindAction("RightMouseClick", IE_Released, this, &ARTSPlayerCameraSpectatorPawn::RightClickReleaseHandler);
 
+}
+
+void ARTSPlayerCameraSpectatorPawn::LeftClickHandler()
+{
+	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PlayerController == nullptr)
+	{
+		return;
+	}
+
+	switch(PlayerController->GetControllerState())
+	{
+		case SELECTION:
+		SelectionPressed();
+		break;
+		
+		case CONSTRUCTION:
+		PlayerController->SetConstructionRotate(true);
+		break;
+
+		default:
+		break;
+	}
+	
+}
+
+void ARTSPlayerCameraSpectatorPawn::LeftClickReleaseHandler()
+{
+	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PlayerController == nullptr)
+	{
+		return;
+	}
+
+	switch(PlayerController->GetControllerState())
+	{
+		case SELECTION:
+		SelectionReleased();
+		break;
+		
+		case CONSTRUCTION:
+		PlayerController->BuildTemporaryUnit();
+		break;
+
+		default:
+		break;
+	}
+}
+
+void ARTSPlayerCameraSpectatorPawn::RightClickHandler()
+{
+	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PlayerController == nullptr)
+	{
+		return;
+	}
+	switch(PlayerController->GetControllerState())
+	{
+		case SELECTION:
+		break;
+		
+		case CONSTRUCTION:
+		PlayerController->DisableTemporaryUnit();
+		break;
+
+		default:
+		break;
+	}
+}
+
+void ARTSPlayerCameraSpectatorPawn::RightClickReleaseHandler()
+{
+	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PlayerController == nullptr)
+	{
+		return;
+	}
+	switch(PlayerController->GetControllerState())
+	{
+		case SELECTION:
+		break;
+		
+		case CONSTRUCTION:
+		break;
+
+		default:
+		break;
+	}
 }
 
 void ARTSPlayerCameraSpectatorPawn::SelectionPressed()

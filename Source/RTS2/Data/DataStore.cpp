@@ -73,6 +73,10 @@ FRTSPrimitiveResourceData* DataStore::GetUnitPrice(ENations NationType, EUnitTyp
 
 void DataStore::SetRTSActorSMeshAndMaterial(ARTSActor& Actor, ENations NationType, EUnitTypes UnitType, EColors Color)
 {
+	if(Actor.ItemStaticMesh == nullptr)
+	{
+		return;
+	}
 	Actor.ItemStaticMesh->SetStaticMesh(GetUnitStaticMesh(NationType, UnitType));
 	Actor.ItemStaticMesh->SetMaterial(0, (UMaterialInterface*)GetUnitStaticMeshMaterial(NationType, UnitType));
 }

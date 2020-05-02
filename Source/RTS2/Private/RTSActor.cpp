@@ -4,6 +4,7 @@
 #include "RTSActor.h"
 #include "Engine.h"
 #include "RTS2/Data/UnitDataRow.h"
+#include "RTS2/Public/RTSPlayerController.h"
 #include "RTS2/Prerequisites.h"
 
 
@@ -24,8 +25,15 @@ ARTSActor::ARTSActor()
 	SelectionPlaneComponent = CreateDefaultSubobject<UStaticMeshComponent>(FName("SelectionPlane"));
 	SelectionPlaneComponent->AttachToComponent(ItemStaticMesh, FAttachmentTransformRules::KeepRelativeTransform);
 	SelectionPlaneComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
-
 	SelectionPlaneComponent->SetVisibility(false);
+
+	CollisionBox = CreateDefaultSubobject<UBoxComponent>(FName("CollisionBox"));
+	CollisionBox->AttachToComponent(ItemStaticMesh, FAttachmentTransformRules::KeepRelativeTransform);
+	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
+	CollisionBox->SetWorldScale3D(FVector(9,9,9));
+	CollisionBox->SetGenerateOverlapEvents(false);
+	CollisionBox->OnComponentBeginOverlap.AddDynamic(this,  &ARTSActor::OnOverlapBegin);
+	CollisionBox->OnComponentEndOverlap.AddDynamic(this,  &ARTSActor::OnOverlapEnd);
 	
 	FString PathString = TEXT("StaticMesh'/Engine/BasicShapes/Plane.Plane'");
 	const TCHAR*  PathChars = *PathString;
@@ -108,7 +116,7 @@ void ARTSActor::SetMeshFromFile(FString MeshName)
 
 void ARTSActor::SetTextureFromFile(FString MaterialName)
 {
-	FString PathString = TEXT("MaterialInstanceConstant'/Game/AdvancedVillagePack/Materials/");
+	FString PathString = TEXT("MaterialInstanceConstant'/Game/Materials/");
 
 	PathString += MaterialName + "." + MaterialName + "'";
 
@@ -124,10 +132,7 @@ void ARTSActor::SetTextureFromFile(FString MaterialName)
 	if (CustomMaterial != nullptr)
 	{
 		ItemStaticMesh->SetMaterial(0,CustomMaterial);
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("texture added"));
-		}
+		
 	}
 	else
 	{
@@ -137,6 +142,53 @@ void ARTSActor::SetTextureFromFile(FString MaterialName)
 		}
 	}
 
+}
+
+void ARTSActor::OnOverlapBegin(class UPrimitiveComponent* NewComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if(this == OtherActor || OtherActor == nullptr || OtherComp == nullptr)
+	{
+		return;
+	}
+	
+	ARTSActor* CollidingActor = Cast<ARTSActor>(OtherActor);
+	if(CollidingActor == nullptr)
+	{
+		return;
+	}
+	
+	this->SetTextureFromFile("ConstructionMatFailInstance");
+	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PlayerController != nullptr)
+	{
+		PlayerController->SetCanConstruct(false);
+	}
+	OverlappingUnitsCount++;
+
+}
+
+void ARTSActor::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex)
+{
+	if(this == OtherActor || OtherActor == nullptr || OtherComp == nullptr)
+	{
+		return;
+	}
+	ARTSActor* CollidingActor = Cast<ARTSActor>(OtherActor);
+	if(CollidingActor == nullptr)
+	{
+		return;
+	}
+	OverlappingUnitsCount--;
+	if(OverlappingUnitsCount <= 0)
+	{
+		this->SetTextureFromFile("ConstructionMatInstance");
+		ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+		if (PlayerController != nullptr)
+		{
+			PlayerController->SetCanConstruct(true);
+		}
+	}
 }
 
 // Called when the game starts or when spawned

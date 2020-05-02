@@ -2,6 +2,9 @@
 
 
 #include "RTS2/Public/RTSPlayerController.h"
+
+#include <xkeycheck.h>
+
 #include "RTS2/Public/RTSHud.h"
 #include "RTS2/UI/DebugUIWidget.h"
 #include "Runtime/UMG/Public/Components/Button.h"
@@ -23,6 +26,11 @@ void ARTSPlayerController::BeginPlay()
 {
 	RTSHud = Cast<ARTSHud>(GetHUD());
 	TemporaryActor = GetWorld()->SpawnActor<ARTSActor>(ARTSActor::StaticClass(), FVector(0,0, 0), FRotator::ZeroRotator);
+	if(TemporaryActor != nullptr && TemporaryActor->CollisionBox != nullptr)
+	{
+		TemporaryActor->CollisionBox->SetGenerateOverlapEvents(true);
+	}
+	ControllerState = SELECTION;
 }
 void ARTSPlayerController::Tick(float DeltaSeconds)
 {
@@ -33,20 +41,41 @@ void ARTSPlayerController::Tick(float DeltaSeconds)
 		this->GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, TraceResult);
 		if (TraceResult.GetActor() != nullptr)
 		{
-			NewLocation = TraceResult.ImpactPoint;
-			TemporaryActor->SetActorLocation(NewLocation, false);
-			if (this->WasInputKeyJustReleased(EKeys::LeftMouseButton))
+			if(bConstructionRotate)
 			{
-				UnitFactory->CreateUnit(ConstructUnitType,  ConstructNation, ConstructColor, NewLocation);
-				DisableTemporaryUnit();
+				FVector2D CurrentMousePos;
+				GetMousePosition(CurrentMousePos.X,CurrentMousePos.Y);
+				FVector2D MouseDir = CurrentMousePos-ConstructionMousePos;
+				if(MouseDir.X == 0)
+				{
+					return;
+				}
+				float angle = atan(MouseDir.Y/MouseDir.X);
+				angle = FMath::RadiansToDegrees(angle);
+				FRotator NewAngle = FRotator(0,angle,0);
+				TemporaryActor->SetActorRotation(NewAngle);
 			}
-			else if(this->WasInputKeyJustReleased(EKeys::RightMouseButton))
-			{	//Cancel Selection
-				DisableTemporaryUnit();
+			else
+			{
+				NewLocation = TraceResult.ImpactPoint;
+				TemporaryActor->SetActorLocation(NewLocation, false);
 			}
 		}
 		return;
 	}
+}
+
+void ARTSPlayerController::BuildTemporaryUnit()
+{
+	if(bCanConstruct)
+	{
+		RTSUnit* NewUnit =  UnitFactory->CreateUnit(ConstructUnitType,  ConstructNation, ConstructColor, TemporaryActor->GetActorLocation());
+		if(NewUnit != nullptr && NewUnit->actor!=nullptr)
+		{
+			NewUnit->actor->SetActorRotation(TemporaryActor->GetActorRotation());
+		}
+	}
+	DisableTemporaryUnit();
 }
 
 ARTSHud* ARTSPlayerController::GetRTSHud()
@@ -73,7 +102,14 @@ void ARTSPlayerController::SetTemporaryUnit(EUnitTypes UnitType, ENations Nation
 	ConstructUnitType = UnitType;
 	
 	RTS_DATA.SetRTSActorSMeshAndMaterial(*TemporaryActor, Nation, UnitType, Color);
+	TemporaryActor->SetTextureFromFile("ConstructionMatInstance");
 	ShowTemporaryUnit();
+	bCanConstruct = true;
+	if(TemporaryActor != nullptr && TemporaryActor->CollisionBox != nullptr)
+	{
+		TemporaryActor->CollisionBox->SetGenerateOverlapEvents(true);
+		TemporaryActor->SetActorEnableCollision(true);
+	}
 }
 
 void ARTSPlayerController::DisableTemporaryUnit()
@@ -85,6 +121,13 @@ void ARTSPlayerController::DisableTemporaryUnit()
 
 	ControllerState = SELECTION;
 	HideTemporaryUnit();
+	if(TemporaryActor != nullptr && TemporaryActor->CollisionBox != nullptr)
+	{
+		TemporaryActor->CollisionBox->SetGenerateOverlapEvents(false);
+		TemporaryActor->SetActorEnableCollision(false);
+		TemporaryActor->SetActorRotation(FRotator::ZeroRotator);
+	}
+	SetConstructionRotate(false);
 }
 
 void ARTSPlayerController::ShowTemporaryUnit()
@@ -112,7 +155,7 @@ void ARTSPlayerController::SetSelectedActors(FVector2D StartPos, FVector2D EndPo
 		this->GetHitResultUnderCursor(ECollisionChannel::ECC_WorldDynamic, false, TraceResult);
 
 		if (TraceResult.GetActor() != nullptr)
-		{
+		{	
 			ARTSActor* RTSHitActor = Cast<ARTSActor>(TraceResult.GetActor());
 
 			if (RTSHitActor != nullptr)
@@ -184,4 +227,23 @@ ARTSActor * ARTSPlayerController::GetSelectedActor(int index)
 	}
 
 	return SelectedActorsArray[index];
+}
+
+void ARTSPlayerController::SetConstructionRotate(bool bConstructionRotatePrm)
+{
+	this->bConstructionRotate = bConstructionRotatePrm;
+	if(bConstructionRotatePrm == true)
+	{
+		GetMousePosition(ConstructionMousePos.X, ConstructionMousePos.Y);
+	}
+}
+
+EPlayerControllerState ARTSPlayerController::GetControllerState() const
+{
+	return ControllerState;
+}
+
+void ARTSPlayerController::SetCanConstruct(bool bCanConstructPrm)
+{
+	this->bCanConstruct = bCanConstructPrm;
 }
