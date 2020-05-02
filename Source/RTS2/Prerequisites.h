@@ -8,9 +8,9 @@
 
 #include "UObject/ObjectMacros.h"
 
-#define LOG(txt) UE_LOG(LogTemp, Log, TEXT(txt) )
-#define LOG_W(txt) UE_LOG(LogTemp, Warning, TEXT(txt) )
-#define LOG_ERR(txt) UE_LOG(LogTemp, Error, TEXT(txt) )
+#define LOG(txt, ...) UE_LOG(LogTemp, Log, TEXT(txt), __VA_ARGS__)
+#define LOG_W(txt, ...) UE_LOG(LogTemp, Warning, TEXT(txt), __VA_ARGS__)
+#define LOG_ERR(txt, ...) UE_LOG(LogTemp, Error, TEXT(txt), __VA_ARGS__)
 
 #define RTS_GAME_INSTANCE Cast<URTSGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))
 
