@@ -14,10 +14,10 @@
 
 #define RTS_GAME_INSTANCE Cast<URTSGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))
 
-#define RTS_GAME			RTSManager::GetInstance().Game
-#define RTS_DATA			RTSManager::GetInstance().DataStore
-#define RTS_NATION(Index)	RTSManager::GetInstance().Game.GetNationByPlayer(Index)
-
+#define RTS_GAME					RTSManager::GetInstance().Game
+#define RTS_DATA					RTSManager::GetInstance().DataStore
+#define RTS_NATION(Index)			RTSManager::GetInstance().Game->GetNationByPlayer(Index)
+#define IS_RTS_NATION_EXIST(Index) 	(RTS_GAME && RTS_NATION(Index))
 #define RTS_NATION_MAX 8
 
 

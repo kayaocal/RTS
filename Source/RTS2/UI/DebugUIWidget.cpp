@@ -20,6 +20,7 @@
 
 bool UDebugUIWidget::Initialize()
 {
+	LOG_ERR("UDebugUIWidget::Initialize()");
 	bool Success = Super::Initialize();
 	if (!Success) return false;
 	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
@@ -27,7 +28,7 @@ bool UDebugUIWidget::Initialize()
 	{
 		PlayerController->SetUIWidget(this);
 	}
-
+	
 	CommandButtonArray.Add(Command_1);
 	CommandButtonArray.Add(Command_2);
 	CommandButtonArray.Add(Command_3);
@@ -39,13 +40,21 @@ bool UDebugUIWidget::Initialize()
 	CommandButtonArray.Add(Command_9);
 	CommandButtonArray.Add(Command_10);
 	SetCommandButtonsVisible(0);
+
+
+	if(IS_RTS_NATION_EXIST(NationIndex))
+	{
+		RTS_NATION(NationIndex)->NationalBank.OnResourceChanged.add<UDebugUIWidget, &UDebugUIWidget::OnPlayerResourcesChanged>(this);
+		RTS_NATION(NationIndex)->Population.OnChanged.add<UDebugUIWidget, &UDebugUIWidget::OnPlayerPopulationChanged>(this);
+	}	
+
+
 	return true;
 }
 
 void UDebugUIWidget::SetCommandButtonsVisible(int Count)
 {
 	int i;
-
 	for(i = 0;  i< 10; i++)//todo change 10 to define
 	{
 		if (CommandButtonArray[i] != nullptr)
@@ -62,6 +71,7 @@ void UDebugUIWidget::SetCommandButtonsVisible(int Count)
 	}
 }
 
+
 void UDebugUIWidget::AssignSpawnUnitCombobox(UComboBoxString * ComboNation, UComboBoxString * ComboUnitType, UComboBoxString * ComboColor)
 {
 
@@ -74,20 +84,12 @@ void UDebugUIWidget::AssignSpawnUnitCombobox(UComboBoxString * ComboNation, UCom
 	ComboboxUnitType->OnSelectionChanged.AddDynamic(this, &UDebugUIWidget::OnUnitTypeComboboxChanged);
 }
 
-void UDebugUIWidget::AssignBankEditableTexts(UEditableText * Wood, UEditableText * Food, UEditableText * Gold)
+void UDebugUIWidget::AssignBankEditableTexts(UEditableText * Wood, UEditableText * Food, UEditableText * Gold, UEditableText * Population)
 {
 	NBFoodAmountText = Food;
 	NBWoodAmountText = Wood;
 	NBGoldAmountText = Gold;
-	
-	if(WidgetNBObserver == nullptr)
-	{
-		if(RTS_NATION(NationIndex))
-		{
-			//TODO Delegate Unbind yapmali mi ogren!!!
-			RTS_NATION(NationIndex)->NationalBank.OnResourceChanged.BindUFunction(this, "OnPlayerResourcesChanged");
-		}
-	}
+	PopulationInfoText = Population;
  }
 
 void UDebugUIWidget::AssignPriceEditableTexts(UEditableText * Wood, UEditableText * Food, UEditableText * Gold)
@@ -105,10 +107,20 @@ void UDebugUIWidget::AssignCreateUnitMenuAnchor(UMenuAnchor * Menu)
 void UDebugUIWidget::SetMenuDefaults()
 {
 	NationIndex = 0;
-	
-	if (NBFoodAmountText) { NBFoodAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0")));}
-	if (NBWoodAmountText) { NBWoodAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0"))); }
-	if (NBGoldAmountText) { NBGoldAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0"))); }
+
+	if(IS_RTS_NATION_EXIST(NationIndex))
+	{
+		if (NBFoodAmountText) { NBFoodAmountText->SetText(FText::FromString((FString::FromInt(RTS_NATION(NationIndex)->NationalBank.GetFood()))));}
+		if (NBWoodAmountText) { NBWoodAmountText->SetText(FText::FromString((FString::FromInt(RTS_NATION(NationIndex)->NationalBank.GetWood())))); }
+		if (NBGoldAmountText) { NBGoldAmountText->SetText(FText::FromString((FString::FromInt(RTS_NATION(NationIndex)->NationalBank.GetGold())))); }
+		if (PopulationInfoText) {PopulationInfoText->SetText(FText::Format(FText::FromString(ANSI_TO_TCHAR("{0}/{1}")),RTS_NATION(NationIndex)->Population.GetPopulation(),RTS_NATION(NationIndex)->Population.GetLimit()));}
+	}
+	else
+	{
+		if (NBFoodAmountText) { NBFoodAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0")));}
+		if (NBWoodAmountText) { NBWoodAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0"))); }
+		if (NBGoldAmountText) { NBGoldAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0"))); }
+	}
 
 	if (PriceFoodAmountText) { PriceFoodAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0"))); }
 	if (PriceWoodAmountText) { PriceWoodAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0"))); }
@@ -145,7 +157,7 @@ void UDebugUIWidget::SetMenuDefaults()
 
 void UDebugUIWidget::GiveResource(int ID, int Amount)
 {
-	if(RTS_NATION(NationIndex) == nullptr)
+	if(IS_RTS_NATION_EXIST(NationIndex) == false)
 	{
 		return;
 	}
@@ -186,7 +198,7 @@ void UDebugUIWidget::OnColorComboboxChanged(FString selectedItem, ESelectInfo::T
 
 void UDebugUIWidget::UpdateUnitSpawnInfo()
 {
-	if(RTS_NATION(NationIndex))
+	if(IS_RTS_NATION_EXIST(NationIndex))
 	{
 		SelectedUnitPrice = RTS_DATA.GetUnitPrice((ENations)SelectedComboboxNation, (EUnitTypes)SelectedComboboxUnitType);
 		if(SelectedUnitPrice != nullptr)
@@ -198,28 +210,34 @@ void UDebugUIWidget::UpdateUnitSpawnInfo()
 	}
 }
 
-void UDebugUIWidget::OnPlayerResourcesChanged(FRTSPrimitiveResourceData& Resources)
+void UDebugUIWidget::OnPlayerPopulationChanged(int Population, int Limit)
 {
-	if (NBFoodAmountText) { NBFoodAmountText->SetText(FText::FromString(FString::FromInt(Resources.Food)));}
-	if (NBWoodAmountText) { NBWoodAmountText->SetText(FText::FromString(FString::FromInt(Resources.Wood))); }
-	if (NBGoldAmountText) { NBGoldAmountText->SetText(FText::FromString(FString::FromInt(Resources.Gold))); }
+	LOG("UDebugUIWidget::OnPlayerPopulationChanged");
+	if (PopulationInfoText) {PopulationInfoText->SetText(FText::Format(FText::FromString(ANSI_TO_TCHAR("{0}/{1}")),Population,Limit));}
+}
+
+void UDebugUIWidget::OnPlayerResourcesChanged(int Wood, int Food, int Gold)
+{
+	LOG("UDebugUIWidget::OnPlayerResourcesChanged");
+	if (NBFoodAmountText) { NBFoodAmountText->SetText(FText::FromString(FString::FromInt(Food)));}
+	if (NBWoodAmountText) { NBWoodAmountText->SetText(FText::FromString(FString::FromInt(Wood))); }
+	if (NBGoldAmountText) { NBGoldAmountText->SetText(FText::FromString(FString::FromInt(Gold))); }
 }
 
 UDebugUIWidget::UDebugUIWidget(const FObjectInitializer& ObjectInitializer)
 	:UUserWidget(ObjectInitializer)
 {
-	LOG("CTEST UDebugUIWidget constructor");
+	
 }
 
 UDebugUIWidget::~UDebugUIWidget()
 {
-	if(RTS_NATION(NationIndex))
+	LOG_ERR("Here Destroy");
+	if(IS_RTS_NATION_EXIST(NationIndex))
 	{
-		if(RTS_NATION(NationIndex)->NationalBank.OnResourceChanged.IsBound())
-		{
-			//RTS_NATION(NationIndex)->NationalBank.OnResourceChanged.Unbind(this, "OnPlayerResourcesChanged");
-		}
-	}
+		RTS_NATION(NationIndex)->NationalBank.OnResourceChanged.remove<UDebugUIWidget, &UDebugUIWidget::OnPlayerResourcesChanged>(this);
+		RTS_NATION(NationIndex)->Population.OnChanged.remove<UDebugUIWidget, &UDebugUIWidget::OnPlayerPopulationChanged>(this);
+	}	
 }
 
 void UDebugUIWidget::SpawnUnitButton()
@@ -227,9 +245,12 @@ void UDebugUIWidget::SpawnUnitButton()
 
 	if(SelectedUnitPrice != nullptr)
 	{
-		if(RTS_NATION(NationIndex)->NationalBank.Spend(*SelectedUnitPrice) == false)
+		if(IS_RTS_NATION_EXIST(NationIndex))
 		{
-			return;
+			if(RTS_NATION(NationIndex)->NationalBank.Spend(*SelectedUnitPrice) == false)
+			{
+				return;
+			}
 		}
 	}
 	else

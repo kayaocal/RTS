@@ -7,6 +7,19 @@
 URTSGameInstance::URTSGameInstance()
 	:UGameInstance()
 {
+	LOG_ERR("GAME INSTANCE INSTANTIATED");
+	RTSManager::GetInstance();
 	RTSManager::GetInstance().InitializeDataTables();
+	RTSManager::GetInstance().CreateGame();
+	
+}
+
+/*
+ *	Cleaning stuff here.
+ */
+void URTSGameInstance::Shutdown()
+{
+	LOG_ERR("GAME INSTANCE SHUTDOWN");
+	RTSManager::GetInstance().DeleteGame();
 }
 

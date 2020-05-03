@@ -16,6 +16,7 @@ public:
 	DataStore();
 	~DataStore();
 
+	struct FNationDefaultStats* GetNationDefaults(const FName& RowName) const;
 	struct FUnitDataRow* GetUnitConstructionDataRow(const FName& RowName) const;
 	struct FUnitNecessityRow* GetUnitNecessityRow(const FName& RowName) const;
 	FRTSPrimitiveResourceData* GetUnitPrice(ENations NationType, EUnitTypes UnitType);
@@ -28,8 +29,10 @@ public:
 
 private:
 
+	void ReadNationDefaults();
 	void ReadUnitConstructionData();
+	void ReadUnitNecessitiesData();
 	class UDataTable* UnitConstructionData;
 	class UDataTable* UnitNecessitiesData;
-	void ReadUnitNecessitiesData();
+	class UDataTable* NationDefaultsData;
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include "RTS2/Prerequisites.h"
 
 #define MAX_LISTENER_COUNT 10
 
@@ -16,6 +17,14 @@ class delegate
    template <class T, void (T::*TMethod)(P...)>
    void add(T* object_ptr)
    {
+        for(int i = 0; i < MAX_LISTENER_COUNT; i++)
+        {
+            if(object_ptrs[i] == object_ptr)
+            {
+                LOG_ERR("This Pointer is Already given!! ");
+                return;
+            }
+        }
         for(int i = 0; i < MAX_LISTENER_COUNT; i++)
         {
             if(object_ptrs[i] == nullptr)
@@ -49,6 +58,11 @@ class delegate
 
    void operator()(P... a1) const
    {
+        if(ListenerCount == 0)
+        {
+            return;
+        }
+        
         for(int i = 0; i < MAX_LISTENER_COUNT; i++)
         {
              if(object_ptrs[i] != nullptr)

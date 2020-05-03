@@ -10,18 +10,20 @@ class RTSManager
 public:
     
 
-	RTSGame 	Game;
+	RTSGame 	*Game;
 	DataStore 	DataStore;
 	RTSGameMode GameModeSetting;
 
 	static RTSManager& GetInstance();
 
 	void InitializeDataTables();
+	void CreateGame();
+	void DeleteGame();
 	
 private:
 	
     RTSManager();
-    ~RTSManager();
+	~RTSManager();
 
 };
 

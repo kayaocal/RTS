@@ -16,7 +16,6 @@ RTSPrimitiveResources::RTSPrimitiveResources(int GoldAmount, int WoodAmount, int
 	Gold = GoldAmount;
 	Wood = WoodAmount;
 	Food = FoodAmount;
-	OnResourceChanged.ExecuteIfBound(*this);
 }
 
 RTSPrimitiveResources::~RTSPrimitiveResources()
@@ -41,19 +40,19 @@ int RTSPrimitiveResources::GetFood() const
 void RTSPrimitiveResources::SetGold(int GoldAmount)
 {
 	Gold = GoldAmount;
-	OnResourceChanged.ExecuteIfBound(*this);
+	NotifyChanges();
 }
 
 void RTSPrimitiveResources::SetWood(int WoodAmount)
 {
 	Wood = WoodAmount;
-	OnResourceChanged.ExecuteIfBound(*this);
+	NotifyChanges();
 }
 
 void RTSPrimitiveResources::SetFood(int FoodAmount)
 {
 	Food = FoodAmount;
-	OnResourceChanged.ExecuteIfBound(*this);
+	NotifyChanges();
 }
 
 void RTSPrimitiveResources::Add(FRTSPrimitiveResourceData const &obj)
@@ -61,7 +60,7 @@ void RTSPrimitiveResources::Add(FRTSPrimitiveResourceData const &obj)
 	Gold += obj.Gold;
 	Wood += obj.Wood;
 	Food += obj.Food;
-	OnResourceChanged.ExecuteIfBound(*this);
+	NotifyChanges();
 }
 
 bool RTSPrimitiveResources::Spend(FRTSPrimitiveResourceData const & obj)
@@ -71,7 +70,7 @@ bool RTSPrimitiveResources::Spend(FRTSPrimitiveResourceData const & obj)
 		Gold -= obj.Gold;
 		Wood -= obj.Wood;
 		Food -= obj.Food;
-		OnResourceChanged.ExecuteIfBound(*this);
+		NotifyChanges();
 		return true;
 	}
 
@@ -94,10 +93,16 @@ bool RTSPrimitiveResources::operator-(FRTSPrimitiveResourceData const & obj)
 	return Spend(obj);
 }
 
+void RTSPrimitiveResources::NotifyChanges()
+{
+	OnResourceChanged(Wood, Food, Gold);
+}
+
 
 void RTSPrimitiveResources::operator=(FRTSPrimitiveResourceData const & obj)
 {
 	Gold = obj.Gold;
 	Wood = obj.Wood;
 	Food = obj.Food;
+	NotifyChanges();
 }

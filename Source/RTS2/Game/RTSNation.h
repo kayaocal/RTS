@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "RTS2/Prerequisites.h"
 #include "RTS2/Game/RTSPrimitiveResources.h"
+#include "RTS2/Data/RTSPopulationData.h"
 
 /**
  * 
@@ -55,11 +56,15 @@ public :
 };
 
 
+
 class RTS2_API RTSNation : public RTSNationIdentity
 {
 
 public:
 
+	
+	void OnBankUpdate(int Wood, int Food, int Gold);
+	
 	RTSNation(const RTSNationIdentity &Identity);
 
 	~RTSNation();
@@ -68,9 +73,10 @@ public:
 	*	All of the resources that nation has
 	*/
 	RTSPrimitiveResources NationalBank;
+	RTSPopulationData	  Population;
+	bool IsResourcesDirty();
 
-
-
-
+private:
+	bool bIsResourcesDirty = false;
 
 };

@@ -20,7 +20,7 @@ public :
 	URTSGameInstance();
 
 
-
+	virtual void Shutdown() override;
 
 
 

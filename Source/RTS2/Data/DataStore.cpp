@@ -4,6 +4,7 @@
 #include "DataStore.h"
 #include "RTS2/Data/UnitDataRow.h"
 #include "RTS2/Data/FUnitNecessityRow.h"
+#include "RTS2/Data/FNationDefaultStats.h"
 #include "RTS2/Game/RTSUnit.h"
 
 DataStore::DataStore()
@@ -13,6 +14,27 @@ DataStore::DataStore()
 
 DataStore::~DataStore()
 {
+}
+
+void DataStore::ReadNationDefaults()
+{
+	FSoftObjectPath UnitDataTablePath = FSoftObjectPath(TEXT("DataTable'/Game/Data/NationDefaultStats.NationDefaultStats'"));
+	NationDefaultsData = Cast<UDataTable>(UnitDataTablePath.ResolveObject());
+	
+	if (NationDefaultsData == nullptr)
+	{
+		NationDefaultsData = Cast<UDataTable>(UnitDataTablePath.TryLoad());
+	}
+}
+
+FNationDefaultStats* DataStore::GetNationDefaults(const FName& RowName) const
+{
+	if (NationDefaultsData == nullptr)
+	{
+		return nullptr;
+	}
+
+	return NationDefaultsData->FindRow<FNationDefaultStats>(RowName, TEXT(""));
 }
 
 void DataStore::ReadUnitConstructionData()
@@ -181,6 +203,7 @@ void DataStore::PrepareGameDatas()
 {
 	ReadUnitConstructionData();
 	ReadUnitNecessitiesData();
+	ReadNationDefaults();
 }
 
 FUnitDataRow* DataStore::GetUnitConstructionDataRow(const FName& RowName) const

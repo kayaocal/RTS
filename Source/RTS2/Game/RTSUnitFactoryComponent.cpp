@@ -32,8 +32,12 @@ RTSUnit* URTSUnitFactoryComponent::CreateUnit(EUnitTypes UnitType, ENations Nati
 	const FVector& Position)
 {
 	RTSUnit *unit = new RTSUnit();
-	
 	FUnitDataRow* unitRow = RTS_DATA.GetUnitConstructionDataRow(UnitNames[UnitType]);
+
+	if(UnitType == EUnitTypes::House)
+	{
+		RTS_NATION(0)->Population.AddLimit(10);	
+	}
 	
 	if (unitRow == nullptr)
 	{

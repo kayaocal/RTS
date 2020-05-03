@@ -31,6 +31,7 @@ class RTS2_API UDebugUIWidget : public UUserWidget
 	UEditableText*	NBFoodAmountText;
 	UEditableText*	NBGoldAmountText;
 	UEditableText*	NBWoodAmountText;
+	UEditableText*	PopulationInfoText;
 
 	UEditableText*	PriceFoodAmountText;
 	UEditableText*	PriceGoldAmountText;
@@ -43,11 +44,11 @@ class RTS2_API UDebugUIWidget : public UUserWidget
 	int SelectedComboboxUnitType;
 	FRTSPrimitiveResourceData* SelectedUnitPrice;
 	
-	class WidgetPrimitiveResObserver* WidgetNBObserver;
 
 	UDebugUIWidget(const FObjectInitializer& ObjectInitializer);
 	~UDebugUIWidget();
-
+ 
+		
 	UFUNCTION(BlueprintCallable, Category = "My Functions")
 	void SpawnUnitButton();
 
@@ -58,7 +59,7 @@ class RTS2_API UDebugUIWidget : public UUserWidget
 	void AssignSpawnUnitCombobox(UComboBoxString* ComboNation, UComboBoxString* ComboUnitType, UComboBoxString* ComboColor);
 		
 	UFUNCTION(BlueprintCallable, Category = "My Functions")
-	void AssignBankEditableTexts(UEditableText* Wood, UEditableText* Food, UEditableText* Gold);
+	void AssignBankEditableTexts(UEditableText* Wood, UEditableText* Food, UEditableText* Gold, UEditableText * Population);
 
 	UFUNCTION(BlueprintCallable, Category = "My Functions")
 	void AssignPriceEditableTexts(UEditableText* Wood, UEditableText* Food, UEditableText* Gold);
@@ -109,6 +110,7 @@ class RTS2_API UDebugUIWidget : public UUserWidget
 	virtual bool Initialize() override;
 	
 	void SetCommandButtonsVisible(int Count);
+
 	
 	UFUNCTION(BlueprintCallable)
 	void OnNationComboboxChanged(FString selectedItem, ESelectInfo::Type selectInfo);
@@ -120,12 +122,12 @@ class RTS2_API UDebugUIWidget : public UUserWidget
 	void OnColorComboboxChanged(FString selectedItem, ESelectInfo::Type selectInfo);
 	
 	void UpdateUnitSpawnInfo();
+	void OnPlayerPopulationChanged(int Population, int Limit);
 
 
 public:
 
-	UFUNCTION()
-	void OnPlayerResourcesChanged(FRTSPrimitiveResourceData& Resources);
+	void OnPlayerResourcesChanged(int Wood, int Food, int Gold);
 
 };
 

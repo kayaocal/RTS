@@ -18,9 +18,8 @@ public:
 	RTSPrimitiveResources(int Gold, int Wood, int Food);
 	~RTSPrimitiveResources();
 
-	/** Called when any resource amount is changed. */
-	UPROPERTY(BlueprintAssignable, Category=Events)
-	OnResourceChangedEvent OnResourceChanged;
+	delegate<int, int, int> OnResourceChanged;
+
 	
 	int GetGold() const;
 	int GetWood() const;
@@ -40,6 +39,11 @@ public:
 	void operator + (FRTSPrimitiveResourceData const &obj);
 
 	bool operator - (FRTSPrimitiveResourceData const &obj);
+
+private:
+
+	void NotifyChanges();
+
 
 };
 
