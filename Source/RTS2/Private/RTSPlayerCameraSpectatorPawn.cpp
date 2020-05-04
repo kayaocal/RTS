@@ -74,6 +74,7 @@ void ARTSPlayerCameraSpectatorPawn::SetupPlayerInputComponent(UInputComponent * 
 	PlayerInputComponent->BindAction("LeftMouseClick", IE_Released, this, &ARTSPlayerCameraSpectatorPawn::LeftClickReleaseHandler);
 	PlayerInputComponent->BindAction("RightMouseClick", IE_Pressed, this, &ARTSPlayerCameraSpectatorPawn::RightClickHandler);
 	PlayerInputComponent->BindAction("RightMouseClick", IE_Released, this, &ARTSPlayerCameraSpectatorPawn::RightClickReleaseHandler);
+	PlayerInputComponent->BindAction("RightMouseClick", IE_Pressed, this, &ARTSPlayerCameraSpectatorPawn::MoveUnit);
 
 }
 
@@ -474,5 +475,21 @@ void ARTSPlayerCameraSpectatorPawn::Tick(float DeltaSeconds)
 
 		ZoomCameraIn(ZoomInValue * DeltaSeconds);
 		RepositionCamera();
+	}
+}
+
+void ARTSPlayerCameraSpectatorPawn::MoveUnit()
+{
+	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	
+	if (PlayerController != nullptr)
+	{
+		FHitResult Hit;
+		PlayerController->GetHitResultUnderCursor(ECC_GameTraceChannel1, false, Hit);
+		if (Hit.bBlockingHit)
+		{
+			PlayerController->MoveUnitsToPosition(&(Hit.Location));
+		}
+		
 	}
 }

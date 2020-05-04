@@ -2,6 +2,7 @@
 
 
 #include "RTSActor.h"
+
 #include "Engine.h"
 #include "RTS2/Data/UnitDataRow.h"
 #include "RTS2/Public/RTSPlayerController.h"
@@ -15,25 +16,20 @@
 // Sets default values
 ARTSActor::ARTSActor()
 {
+	FString fstringVar = "RTS ACTOR CONSTRL START";
+    UE_LOG(LogTemp, Warning, TEXT("Text,  %s"), *fstringVar );
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	ItemStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("StaticMesh"));
-	ItemStaticMesh->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-	ItemStaticMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
+	//ItemStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("StaticMesh"));
+	//ItemStaticMesh->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+	//ItemStaticMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
 
 	SelectionPlaneComponent = CreateDefaultSubobject<UStaticMeshComponent>(FName("SelectionPlane"));
-	SelectionPlaneComponent->AttachToComponent(ItemStaticMesh, FAttachmentTransformRules::KeepRelativeTransform);
+	//SelectionPlaneComponent->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	SelectionPlaneComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
 	SelectionPlaneComponent->SetVisibility(false);
 
-	CollisionBox = CreateDefaultSubobject<UBoxComponent>(FName("CollisionBox"));
-	CollisionBox->AttachToComponent(ItemStaticMesh, FAttachmentTransformRules::KeepRelativeTransform);
-	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
-	CollisionBox->SetWorldScale3D(FVector(9,9,9));
-	CollisionBox->SetGenerateOverlapEvents(false);
-	CollisionBox->OnComponentBeginOverlap.AddDynamic(this,  &ARTSActor::OnOverlapBegin);
-	CollisionBox->OnComponentEndOverlap.AddDynamic(this,  &ARTSActor::OnOverlapEnd);
 	
 	FString PathString = TEXT("StaticMesh'/Engine/BasicShapes/Plane.Plane'");
 	const TCHAR*  PathChars = *PathString;
@@ -55,16 +51,19 @@ ARTSActor::ARTSActor()
 	{
 		SelectionPlaneComponent->SetMaterial(0,MaterialAsset.Object);
 	}
+
+	  fstringVar = "RTS ACTOR CONSTRL END";
+    UE_LOG(LogTemp, Warning, TEXT("Text,  %s"), *fstringVar );
 }
 
 void ARTSActor::SetMeshFromFile(FString MeshName)
 {
-	FString PathString = TEXT("StaticMesh'/Game/AdvancedVillagePack/Meshes/");
+	/*FString PathString = TEXT("StaticMesh'/Game/AdvancedVillagePack/Meshes/");
 
 	PathString += MeshName + "." + MeshName + "'";
 
 
-	FSoftObjectPath MeshPath = FSoftObjectPath(PathString);
+	FSoftObjectPath MeshPath = FSoftObjectPath(PathString);*/
 
 	/*const TCHAR*  PathChars = *PathString;
 
@@ -88,7 +87,7 @@ void ARTSActor::SetMeshFromFile(FString MeshName)
 		}
 	}*/
 
-	CustomMesh = Cast<UStaticMesh>(MeshPath.ResolveObject());
+/*	CustomMesh = Cast<UStaticMesh>(MeshPath.ResolveObject());
 	if (CustomMesh == nullptr)
 	{
 		CustomMesh = Cast<UStaticMesh>(MeshPath.TryLoad());
@@ -111,7 +110,7 @@ void ARTSActor::SetMeshFromFile(FString MeshName)
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Mesh not found"));
 		}
 	}
-
+	*/
 }
 
 void ARTSActor::SetTextureFromFile(FString MaterialName)
@@ -131,7 +130,7 @@ void ARTSActor::SetTextureFromFile(FString MaterialName)
 
 	if (CustomMaterial != nullptr)
 	{
-		ItemStaticMesh->SetMaterial(0,CustomMaterial);
+		Cast<ARTSStaticActor>(this)->ItemStaticMesh->SetMaterial(0,CustomMaterial);
 		
 	}
 	else

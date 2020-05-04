@@ -116,6 +116,8 @@ public:
 	void ZoomCameraInInput(float Direction);
 
 	void RepositionCamera();
+	
+	void MoveUnit();
 
 	float GetLandTerrainSurfaceAtCoord(float XCoord, float YCoord)const;
 

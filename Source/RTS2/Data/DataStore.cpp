@@ -6,6 +6,7 @@
 #include "RTS2/Data/FUnitNecessityRow.h"
 #include "RTS2/Data/FNationDefaultStats.h"
 #include "RTS2/Game/RTSUnit.h"
+#include "RTS2/Public/RTSStaticActor.h"
 
 DataStore::DataStore()
 {
@@ -95,12 +96,12 @@ FRTSPrimitiveResourceData* DataStore::GetUnitPrice(ENations NationType, EUnitTyp
 
 void DataStore::SetRTSActorSMeshAndMaterial(ARTSActor& Actor, ENations NationType, EUnitTypes UnitType, EColors Color)
 {
-	if(Actor.ItemStaticMesh == nullptr)
+	if((Cast<ARTSStaticActor>(&Actor))->ItemStaticMesh == nullptr)
 	{
 		return;
 	}
-	Actor.ItemStaticMesh->SetStaticMesh(GetUnitStaticMesh(NationType, UnitType));
-	Actor.ItemStaticMesh->SetMaterial(0, (UMaterialInterface*)GetUnitStaticMeshMaterial(NationType, UnitType));
+	(Cast<ARTSStaticActor>(&Actor))->ItemStaticMesh->SetStaticMesh(GetUnitStaticMesh(NationType, UnitType));
+	(Cast<ARTSStaticActor>(&Actor))->ItemStaticMesh->SetMaterial(0, (UMaterialInterface*)GetUnitStaticMeshMaterial(NationType, UnitType));
 }
 
 UStaticMesh* DataStore::GetUnitStaticMesh(ENations NationType, EUnitTypes UnitType)
@@ -133,10 +134,13 @@ USkeletalMesh* DataStore::GetUnitSkeletalMesh(ENations NationType, EUnitTypes Un
 	{
 		return nullptr;	
 	}
+
+	
 	FUnitDataRow* Row = GetUnitConstructionDataRow(UnitNames[UnitType]);
 	USkeletalMesh* SkeletalMesh = nullptr;
-	for(int i = 0; i < Row->NationStaticMeshData.Num(); i++)
+	for(int i = 0; i < Row->NationSkeletalMeshData.Num(); i++)
 	{
+			
 		if(Row->NationSkeletalMeshData[i].Nation == NationType)
 		{
 			return Row->NationSkeletalMeshData[i].MeshByAge[0];
@@ -147,7 +151,6 @@ USkeletalMesh* DataStore::GetUnitSkeletalMesh(ENations NationType, EUnitTypes Un
 			SkeletalMesh = Row->NationSkeletalMeshData[i].MeshByAge[0]; 
 		}
 	}
-	
 	return SkeletalMesh;	
 }
 

@@ -7,6 +7,7 @@
 #include "RTS2/Game/RTSManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "RTS2/Public/RTSPlayerController.h"
+#include "RTS2/Public/RTSSkeletalActor.h"
 
 // Sets default values for this component's properties
 URTSUnitFactoryComponent::URTSUnitFactoryComponent()
@@ -33,7 +34,7 @@ RTSUnit* URTSUnitFactoryComponent::CreateUnit(EUnitTypes UnitType, ENations Nati
 {
 	RTSUnit *unit = new RTSUnit();
 	FUnitDataRow* unitRow = RTS_DATA.GetUnitConstructionDataRow(UnitNames[UnitType]);
-
+	
 	if(UnitType == EUnitTypes::House)
 	{
 		RTS_NATION(0)->Population.AddLimit(10);	
@@ -48,26 +49,37 @@ RTSUnit* URTSUnitFactoryComponent::CreateUnit(EUnitTypes UnitType, ENations Nati
 	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	if (PlayerController != nullptr)
 	{
-		ARTSActor* NewActor = GetWorld()->SpawnActor<ARTSActor>(ARTSActor::StaticClass(), Position, FRotator::ZeroRotator);
-
-		unit->actor = NewActor;
-		NewActor->SetMyUnit(unit);
+		
 		if(unitRow->IsSkeletalMesh)
 		{
-			//NewActor->ItemStaticMesh->SkeletalMesh(RTS_GAME_INSTANCE->DataStore.GetUnitSkeletalMesh((ENations)SelectedComboboxNation, (EUnitTypes)SelectedComboboxUnitType));
-			//NewActor->ItemStaticMesh->SetMaterial(RTS_GAME_INSTANCE->DataStore.GetUnitSkeletalMeshMaterial((ENations)SelectedComboboxNation, (EUnitTypes)SelectedComboboxUnitType));
+			FString fstringVar = "MESH SKELETAl";
+			UE_LOG(LogTemp, Warning, TEXT("Text,  %s"), *fstringVar );
+			ARTSSkeletalActor* NewActor = GetWorld()->SpawnActor<ARTSSkeletalActor>(ARTSSkeletalActor::StaticClass(), Position, FRotator::ZeroRotator);
+			unit->actor = NewActor;
+			NewActor->SetMyUnit(unit);
+			
+			NewActor->ItemSkeletalMesh->SetSkeletalMesh(RTS_DATA.GetUnitSkeletalMesh((ENations)Nation, (EUnitTypes)UnitType));
+			NewActor->ItemSkeletalMesh->SetMaterial(0, (UMaterialInterface*)RTS_DATA.GetUnitSkeletalMeshMaterial((ENations)Nation, (EUnitTypes)UnitType));		
 		}
 		else
 		{
-			NewActor->ItemStaticMesh->SetStaticMesh(RTS_DATA.GetUnitStaticMesh((ENations)Nation, (EUnitTypes)UnitType));
-			NewActor->ItemStaticMesh->SetMaterial(0, (UMaterialInterface*)RTS_DATA.GetUnitStaticMeshMaterial((ENations)Nation, (EUnitTypes)UnitType));		
+			ARTSStaticActor* NewActor = GetWorld()->SpawnActor<ARTSStaticActor>(ARTSStaticActor::StaticClass(), FVector(0,0,200), FRotator::ZeroRotator);
+			if(NewActor != nullptr)
+			{
+				NewActor->SetActorLocation(Position, false);
+				unit->actor = NewActor;
+				NewActor->SetMyUnit(unit);
+				
+				NewActor->ItemStaticMesh->SetStaticMesh(RTS_DATA.GetUnitStaticMesh((ENations)Nation, (EUnitTypes)UnitType));
+				NewActor->ItemStaticMesh->SetMaterial(0, (UMaterialInterface*)RTS_DATA.GetUnitStaticMeshMaterial((ENations)Nation, (EUnitTypes)UnitType));		
+			}
 		}
-
+	
 	}
-
+	
 	DestroyCommand* NewCommand = new DestroyCommand(unit);
-
+	
 	unit->UnitCommands.Add(NewCommand);
-	return unit;
+	 return unit;
 }
 

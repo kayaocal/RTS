@@ -66,14 +66,15 @@ enum EUnitTypes
 	BaseBuilding		=0			UMETA(DisplayName = "BaseBuilding"),
 	House				=1			UMETA(DisplayName = "House"),
 	Library			 	=2			UMETA(DisplayName = "Library"),
-	Tomb				=3			UMETA(DisplayName = "Tomb"),			
+	Tomb				=3			UMETA(DisplayName = "Tomb"),
+	Soldier				=4			UMETA(DisplayName = "Soldier"),
 
 
 
 	EUnitTypeCounter									
 };
 
-#define UNIT_TYPE_COUNT 4
+#define UNIT_TYPE_COUNT 5
 
 /*
  * UnitNames Order and Size must be same with EUnitTypes enum
@@ -83,7 +84,8 @@ const char UnitNames[UNIT_TYPE_COUNT][40]
 	"BaseBuilding",					//0
 	"House",						//1
 	"Library",						//2
-	"Tomb"							//3
+	"Tomb",							//3
+	"Soldier"						//4
 };
 
 //------------------ UNIT TYPES -------------------<<<
