@@ -19,9 +19,15 @@ public :
 
 	URTSGameInstance();
 
-
+	virtual void Init() override;
+	
 	virtual void Shutdown() override;
 
+	UFUNCTION(Exec)
+	void Host();
+
+	UFUNCTION(Exec)
+	void Join(const FString& Adress);
 
 
 };
