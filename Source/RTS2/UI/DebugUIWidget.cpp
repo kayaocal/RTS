@@ -259,7 +259,6 @@ void UDebugUIWidget::SpawnUnitButton()
 		return;
 	}
 
-
 	FVector NewLocation = FVector(100, 100, 15);
 	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	PlayerController->SetTemporaryUnit((EUnitTypes)SelectedComboboxUnitType, (ENations)SelectedComboboxNation, (EColors)SelectedComboboxColor);

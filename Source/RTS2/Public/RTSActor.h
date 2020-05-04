@@ -6,17 +6,18 @@
 #include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
+//#include "Components/SkeletalMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Runtime/CoreUObject/Public/UObject/SoftObjectPtr.h"
 #include "RTSActor.generated.h"
 
 
 UCLASS()
-class RTS2_API ARTSActor : public AActor
+class RTS2_API ARTSActor : public APawn
 {
 	GENERATED_BODY()
 
-private:
+protected:
 	class RTSUnit* MyUnit;
 	int OverlappingUnitsCount = 0;
 
@@ -30,7 +31,8 @@ public:
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	
-	UStaticMeshComponent* ItemStaticMesh = nullptr;
+	//UStaticMeshComponent* ItemStaticMesh = nullptr;
+	//USkeletalMeshComponent* ItemSkeletalMesh = nullptr;
 	UStaticMesh* CustomMesh = nullptr;
 	UMaterialInstance* CustomMaterial = nullptr;
 
@@ -39,6 +41,7 @@ public:
 	UMaterialInstance* SelectionPlaneMaterial = nullptr;
 
 	UBoxComponent* CollisionBox = nullptr;
+	bool IsSkeletal = false;
 
 
 protected:
@@ -51,4 +54,5 @@ public:
 	void SetSelection(bool bIsSelected);
 	void SetMyUnit(RTSUnit* AUnit);
 	class RTSUnit* GetMyUnit();
+	
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RTSStaticActor.h"
 #include "GameFramework/PlayerController.h"
 #include "RTS2/Prerequisites.h"
 #include "RTS2/Public/RTSActor.h"
@@ -39,6 +40,7 @@ public:
 	void SetSelectedActors(FVector2D StartPos, FVector2D EndPos);
 	void SetSelectedActors(ARTSActor* SelectedUnit);
 	void ClearSelectedActors();
+	void MoveUnitsToPosition(FVector_NetQuantize* TargetPos);
 	void SetCanConstruct(bool bCanConstruct);
 	void SetConstructionRotate(bool bConstructionRotate);
 	EPlayerControllerState GetControllerState() const;
@@ -47,7 +49,7 @@ public:
 	class URTSUnitFactoryComponent* UnitFactory;
 
 private:
-	ARTSActor* TemporaryActor;
+	ARTSStaticActor* TemporaryActor;
 	UMaterialInstance* ConstructionMaterial;
 	class ARTSHud* RTSHud;
 	class UDebugUIWidget* UIWidget;

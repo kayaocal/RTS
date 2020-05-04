@@ -12,6 +12,8 @@
 #include "RTS2/Prerequisites.h"
 #include "RTS2/Game/RTSUnitFactoryComponent.h"
 #include "RTS2/Game/RTSManager.h"
+#include "RTS2/Data/UnitDataRow.h"
+#include "RTS2/Public/RTSSkeletalActor.h"
 
 ARTSPlayerController::ARTSPlayerController()
 {
@@ -25,7 +27,7 @@ ARTSPlayerController::ARTSPlayerController()
 void ARTSPlayerController::BeginPlay()
 {
 	RTSHud = Cast<ARTSHud>(GetHUD());
-	TemporaryActor = GetWorld()->SpawnActor<ARTSActor>(ARTSActor::StaticClass(), FVector(0,0, 0), FRotator::ZeroRotator);
+	TemporaryActor = GetWorld()->SpawnActor<ARTSStaticActor>(ARTSStaticActor::StaticClass(), FVector(0,0, 100), FRotator::ZeroRotator);
 	if(TemporaryActor != nullptr && TemporaryActor->CollisionBox != nullptr)
 	{
 		TemporaryActor->CollisionBox->SetGenerateOverlapEvents(true);
@@ -53,10 +55,12 @@ void ARTSPlayerController::Tick(float DeltaSeconds)
 				float angle = atan(MouseDir.Y/MouseDir.X);
 				angle = FMath::RadiansToDegrees(angle);
 				FRotator NewAngle = FRotator(0,angle,0);
+				
 				TemporaryActor->SetActorRotation(NewAngle);
 			}
 			else
 			{
+				
 				NewLocation = TraceResult.ImpactPoint;
 				TemporaryActor->SetActorLocation(NewLocation, false);
 			}
@@ -67,12 +71,15 @@ void ARTSPlayerController::Tick(float DeltaSeconds)
 
 void ARTSPlayerController::BuildTemporaryUnit()
 {
-	if(bCanConstruct)
+	if(bCanConstruct && TemporaryActor != nullptr)
 	{
 		RTSUnit* NewUnit =  UnitFactory->CreateUnit(ConstructUnitType,  ConstructNation, ConstructColor, TemporaryActor->GetActorLocation());
-		if(NewUnit != nullptr && NewUnit->actor!=nullptr)
+		if(NewUnit != nullptr )
 		{
-			NewUnit->actor->SetActorRotation(TemporaryActor->GetActorRotation());
+			if(NewUnit->actor!=nullptr)
+			{
+				NewUnit->actor->SetActorRotation(TemporaryActor->GetActorRotation());
+			}
 		}
 	}
 	DisableTemporaryUnit();
@@ -100,11 +107,16 @@ void ARTSPlayerController::SetTemporaryUnit(EUnitTypes UnitType, ENations Nation
 	ConstructColor = Color;
 	ConstructNation = Nation;
 	ConstructUnitType = UnitType;
+	bCanConstruct = true;
+
+	FUnitDataRow* Row = RTS_DATA.GetUnitConstructionDataRow(UnitNames[UnitType]);
+	
+	if(Row->IsSkeletalMesh == true)
+		return;
 	
 	RTS_DATA.SetRTSActorSMeshAndMaterial(*TemporaryActor, Nation, UnitType, Color);
 	TemporaryActor->SetTextureFromFile("ConstructionMatInstance");
 	ShowTemporaryUnit();
-	bCanConstruct = true;
 	if(TemporaryActor != nullptr && TemporaryActor->CollisionBox != nullptr)
 	{
 		TemporaryActor->CollisionBox->SetGenerateOverlapEvents(true);
@@ -246,4 +258,18 @@ EPlayerControllerState ARTSPlayerController::GetControllerState() const
 void ARTSPlayerController::SetCanConstruct(bool bCanConstructPrm)
 {
 	this->bCanConstruct = bCanConstructPrm;
+}
+
+void ARTSPlayerController::MoveUnitsToPosition(FVector_NetQuantize* TargetPos)
+{
+	for (int i = 0; i < SelectedActorsArray.Num(); ++i)
+	{
+		if (SelectedActorsArray[i] != nullptr && SelectedActorsArray[i]->GetMyUnit() != nullptr)
+		{
+			if(SelectedActorsArray[i]->IsSkeletal == true)
+			{
+				Cast<ARTSSkeletalActor>((SelectedActorsArray[i]))->MoveActor(TargetPos);
+			}
+		}
+	}
 }
