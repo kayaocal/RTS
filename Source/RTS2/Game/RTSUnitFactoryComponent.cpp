@@ -76,10 +76,21 @@ RTSUnit* URTSUnitFactoryComponent::CreateUnit(EUnitTypes UnitType, ENations Nati
 		}
 	
 	}
+
+	unit->Color = Color;
+	unit->Nation = Nation;
+	unit->UnitType = UnitType;
+
 	
 	DestroyCommand* NewCommand = new DestroyCommand(unit);
-	
 	unit->UnitCommands.Add(NewCommand);
-	 return unit;
+
+	if(unit->UnitType == EUnitTypes::BaseBuilding)
+	{
+		BuildCommand* SpawnSoldierCommand = new BuildCommand(unit,EUnitTypes::Soldier,FVector(0,400,0));
+		unit->UnitCommands.Add(SpawnSoldierCommand);
+	}
+	
+	return unit;
 }
 

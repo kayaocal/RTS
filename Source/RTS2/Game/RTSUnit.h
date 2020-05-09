@@ -20,6 +20,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ARTSActor* actor;
 	TArray<UnitCommand*> UnitCommands;
+	EUnitTypes UnitType;
+	ENations Nation;
+	EColors Color;
 
 	void SetSelection(bool bIsSelected);
 

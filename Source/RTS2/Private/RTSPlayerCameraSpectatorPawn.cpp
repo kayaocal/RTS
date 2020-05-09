@@ -24,7 +24,7 @@ ARTSPlayerCameraSpectatorPawn::ARTSPlayerCameraSpectatorPawn(const FObjectInitia
 	GetCollisionComponent()->SetSimulatePhysics(false);
 
 	CameraXYLimit = 7500.f;
-	CameraHeight = 4000.f;
+	CameraHeight = 1000.f;
 	CameraHeightMin = 5.f;
 	CameraHeightMax = 5000.f;
 
