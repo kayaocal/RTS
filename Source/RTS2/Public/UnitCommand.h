@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RTS2/Prerequisites.h"
 
 /**
  * 
@@ -21,5 +22,16 @@ public:
 	class RTSUnit* MyUnit = nullptr;
 	DestroyCommand(class RTSUnit* Receiver);
 	~DestroyCommand();
+	void Execute() override;
+};
+
+class RTS2_API BuildCommand : public UnitCommand
+{
+public:	
+	class RTSUnit* MyUnit = nullptr;
+	EUnitTypes UnitType;
+	FVector SpawnOffset;
+	BuildCommand(class RTSUnit* Receiver, EUnitTypes UnitToSpawn, FVector UnitOffset);
+	~BuildCommand();
 	void Execute() override;
 };
