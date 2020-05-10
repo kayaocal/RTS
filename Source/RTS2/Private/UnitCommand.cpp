@@ -57,9 +57,9 @@ void BuildCommand::Execute()
 	if (MyUnit != nullptr && MyUnit->actor != nullptr)
 	{
 		FRTSPrimitiveResourceData* UnitPrice = RTS_DATA.GetUnitPrice(MyUnit->Nation, UnitType);
-		if(IS_RTS_NATION_EXIST(0))
+		if(IS_RTS_NATION_EXIST(MyUnit->Nation))
 		{
-			if(RTS_NATION(0)->NationalBank.Spend(*UnitPrice) == false)
+			if(RTS_NATION(MyUnit->Nation)->NationalBank.Spend(*UnitPrice) == false)
 			{
 				return;
 			}
