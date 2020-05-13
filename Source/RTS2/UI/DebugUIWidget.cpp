@@ -3,6 +3,7 @@
 #include "DebugUIWidget.h"
 #include "RTS2/Game/RTSUnit.h"
 #include "RTSGameInstance.h"
+#include "UiUtilities.h"
 #include "RTS2/Prerequisites.h"
 #include "RTS2/Data/DataStore.h"
 #include "RTS2/Public/RTSActor.h"
@@ -110,48 +111,29 @@ void UDebugUIWidget::SetMenuDefaults()
 
 	if(IS_RTS_NATION_EXIST(NationIndex))
 	{
-		if (NBFoodAmountText) { NBFoodAmountText->SetText(FText::FromString((FString::FromInt(RTS_NATION(NationIndex)->NationalBank.GetFood()))));}
-		if (NBWoodAmountText) { NBWoodAmountText->SetText(FText::FromString((FString::FromInt(RTS_NATION(NationIndex)->NationalBank.GetWood())))); }
-		if (NBGoldAmountText) { NBGoldAmountText->SetText(FText::FromString((FString::FromInt(RTS_NATION(NationIndex)->NationalBank.GetGold())))); }
-		if (PopulationInfoText) {PopulationInfoText->SetText(FText::Format(FText::FromString(ANSI_TO_TCHAR("{0}/{1}")),RTS_NATION(NationIndex)->Population.GetPopulation(),RTS_NATION(NationIndex)->Population.GetLimit()));}
+		UiUtilities::SafeSetEditableText(NBFoodAmountText, FText::FromString((FString::FromInt(RTS_NATION(NationIndex)->NationalBank.GetFood()))));
+		UiUtilities::SafeSetEditableText(NBWoodAmountText, FText::FromString((FString::FromInt(RTS_NATION(NationIndex)->NationalBank.GetWood()))));
+		UiUtilities::SafeSetEditableText(NBGoldAmountText, FText::FromString((FString::FromInt(RTS_NATION(NationIndex)->NationalBank.GetGold()))));
+		UiUtilities::SafeSetEditableText(PopulationInfoText, FText::FromString((FString::FromInt(RTS_NATION(NationIndex)->NationalBank.GetGold()))));
+
+		UiUtilities::SafeSetEditableText(PopulationInfoText,FText::Format(FText::FromString(ANSI_TO_TCHAR("{0}/{1}")),
+			RTS_POPULATION(NationIndex), RTS_POPULATION_LIMIT(NationIndex)));
 	}
 	else
 	{
-		if (NBFoodAmountText) { NBFoodAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0")));}
-		if (NBWoodAmountText) { NBWoodAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0"))); }
-		if (NBGoldAmountText) { NBGoldAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0"))); }
+		UiUtilities::SafeSetEditableText(NBFoodAmountText, FText::FromString(ANSI_TO_TCHAR("0")));
+		UiUtilities::SafeSetEditableText(NBWoodAmountText, FText::FromString(ANSI_TO_TCHAR("0")));
+		UiUtilities::SafeSetEditableText(NBGoldAmountText, FText::FromString(ANSI_TO_TCHAR("0")));
 	}
+	
 
-	if (PriceFoodAmountText) { PriceFoodAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0"))); }
-	if (PriceWoodAmountText) { PriceWoodAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0"))); }
-	if (PriceGoldAmountText) { PriceGoldAmountText->SetText(FText::FromString(ANSI_TO_TCHAR("0"))); }
-
-	if (ComboboxNation)
-	{
-		for(int i = 0; i < NATION_COUNT; i++)
-		{
-			ComboboxNation->AddOption(NationNames[i]);
-		}
-	}
-	ComboboxNation->SetSelectedOption(NationNames[0]);
-
-	if (ComboboxColor)
-	{
-		for(int i = 0; i < COLOR_COUNT; i++)
-		{
-			ComboboxColor->AddOption(ColorNames[i]);
-		}
-	}
-	ComboboxColor->SetSelectedOption(ColorNames[0]);
-
-	if (ComboboxUnitType)
-	{
-		for(int i = 0; i < UNIT_TYPE_COUNT; i++)
-		{
-			ComboboxUnitType->AddOption(UnitNames[i]);
-		}
-	}
-	ComboboxUnitType->SetSelectedOption(UnitNames[0]);
+	UiUtilities::SafeSetEditableText(PriceFoodAmountText, FText::FromString(ANSI_TO_TCHAR("0")));
+	UiUtilities::SafeSetEditableText(PriceWoodAmountText, FText::FromString(ANSI_TO_TCHAR("0")));
+	UiUtilities::SafeSetEditableText(PriceGoldAmountText, FText::FromString(ANSI_TO_TCHAR("0")));
+	
+	UiUtilities::SafeFillComboboxWColor(ComboboxColor);
+	UiUtilities::SafeFillComboboxWNation(ComboboxNation);
+	UiUtilities::SafeFillComboboxWUnits(ComboboxUnitType);
 
 }
 
@@ -203,9 +185,9 @@ void UDebugUIWidget::UpdateUnitSpawnInfo()
 		SelectedUnitPrice = RTS_DATA.GetUnitPrice((ENations)SelectedComboboxNation, (EUnitTypes)SelectedComboboxUnitType);
 		if(SelectedUnitPrice != nullptr)
 		{
-			if(PriceFoodAmountText) { PriceFoodAmountText->SetText(FText::FromString((FString::FromInt(SelectedUnitPrice->Food)))); }
-			if(PriceGoldAmountText) { PriceGoldAmountText->SetText(FText::FromString((FString::FromInt(SelectedUnitPrice->Gold)))); }
-			if(PriceWoodAmountText) { PriceWoodAmountText->SetText(FText::FromString((FString::FromInt(SelectedUnitPrice->Wood)))); }
+			UiUtilities::SafeSetEditableText(PriceFoodAmountText,FText::FromString((FString::FromInt(SelectedUnitPrice->Food))));
+			UiUtilities::SafeSetEditableText(PriceGoldAmountText,FText::FromString((FString::FromInt(SelectedUnitPrice->Gold))));
+			UiUtilities::SafeSetEditableText(PriceWoodAmountText,FText::FromString((FString::FromInt(SelectedUnitPrice->Wood))));
 		}
 	}
 }
@@ -213,15 +195,15 @@ void UDebugUIWidget::UpdateUnitSpawnInfo()
 void UDebugUIWidget::OnPlayerPopulationChanged(int Population, int Limit)
 {
 	LOG("UDebugUIWidget::OnPlayerPopulationChanged");
-	if (PopulationInfoText) {PopulationInfoText->SetText(FText::Format(FText::FromString(ANSI_TO_TCHAR("{0}/{1}")),Population,Limit));}
+	UiUtilities::SafeSetEditableText(PopulationInfoText, FText::Format(FText::FromString(ANSI_TO_TCHAR("{0}/{1}")),Population,Limit));
 }
 
 void UDebugUIWidget::OnPlayerResourcesChanged(int Wood, int Food, int Gold)
 {
 	LOG("UDebugUIWidget::OnPlayerResourcesChanged");
-	if (NBFoodAmountText) { NBFoodAmountText->SetText(FText::FromString(FString::FromInt(Food)));}
-	if (NBWoodAmountText) { NBWoodAmountText->SetText(FText::FromString(FString::FromInt(Wood))); }
-	if (NBGoldAmountText) { NBGoldAmountText->SetText(FText::FromString(FString::FromInt(Gold))); }
+	UiUtilities::SafeSetEditableText(NBFoodAmountText, FText::FromString(FString::FromInt(Food)));
+	UiUtilities::SafeSetEditableText(NBWoodAmountText, FText::FromString(FString::FromInt(Wood))); 
+	UiUtilities::SafeSetEditableText(NBGoldAmountText, FText::FromString(FString::FromInt(Gold))); 
 }
 
 UDebugUIWidget::UDebugUIWidget(const FObjectInitializer& ObjectInitializer)
