@@ -23,3 +23,7 @@ This project uses Unreal's coding conventions system. [LINK](https://docs.unreal
 
 * **Content\Data\Unit\UnitNecessity:** This data table stores unit prices or any other necessities specific to Unit type and Nation.. 
 * **Content\Data\Unit\UnitConstruction:** This data table stores unit materials or meshes specific to Unit type and Nation and Age..
+
+## Starting Game Multiplayer
+On Windows Powershell run the code below. Each code runs one client.
+"**[ENGINE_DIR]**\\Engine\\Binaries\\Win64\\UE4Editor.exe" "**[PROJECT_DIRECTORY]**\\RTS\\RTS2.uproject"  -game -log
