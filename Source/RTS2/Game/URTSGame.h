@@ -7,21 +7,28 @@
 #include "RTS2/Prerequisites.h"
 #include "RTS2/Game/RTSNation.h"
 
+#include "URTSGame.generated.h"
+
 /**
  *	Main Class of game.
  *	Game State, Players, Nations etc
  *	RTSGame class rule them all.
  */
 
-class RTS2_API RTSGameMode
+
+UCLASS(Blueprintable)
+class RTS2_API URTSGameMode
+	:public UObject
 {
+	GENERATED_BODY()
 
 public:
 
-	RTSGameMode();
-	RTSGameMode(const RTSGameMode& Mode);
-	~RTSGameMode();
+	URTSGameMode();
+	~URTSGameMode();
 
+	void SetRtsGameMode(const URTSGameMode& Mode);
+	
 	void SetGameCountDown(uint64 Value);
 	
 
@@ -57,15 +64,17 @@ private:
 	RTSNationIdentity NationIdentities[RTS_NATION_MAX];
 };
 
-class RTS2_API RTSGame : public RTSGameMode
+UCLASS(Blueprintable)
+class RTS2_API URTSGame : public URTSGameMode
 {
+	GENERATED_BODY()
 
 public:
 
-	RTSGame();
-	RTSGame(const RTSGameMode& GameMode);
+	URTSGame();
+	URTSGame(const URTSGameMode& GameMode);
 
-	~RTSGame();
+	~URTSGame();
 
 
 	RTSNation* GetNationByPlayer(uint8 PlayerID);
