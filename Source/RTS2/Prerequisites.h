@@ -23,6 +23,10 @@
 #define RTS_NATION_MAX 8
 
 
+
+static const FColor RTSGreenColor{46, 204, 113, 255};
+static const FColor RTSRedColor{192, 57, 43, 255};
+
 UENUM(BlueprintType)
 enum EMap
 {

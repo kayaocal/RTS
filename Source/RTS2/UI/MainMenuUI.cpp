@@ -163,7 +163,6 @@ void UMainMenuUI::OnJoinSessionComplete(FName SessionName, EOnJoinSessionComplet
 	{
 		if(Result == EOnJoinSessionCompleteResult::AlreadyInSession)
 		{
-			GameInstance->SessionInterface->	
 		}
 		
 		UEngine* Engine = GameInstance->GetEngine();

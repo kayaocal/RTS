@@ -16,6 +16,9 @@ class RTS2_API AMultiplayerLobbyGameMode : public AGameModeBase
 	GENERATED_BODY()
 public:
 	AMultiplayerSetupConnActor* ConnActor;
+
+	int ControllerCount = 0;
+	class AMultiplayerSetupPlayerController* array[5];
 	
 	AMultiplayerLobbyGameMode();
 
@@ -24,7 +27,9 @@ public:
 	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
 
 	virtual void Logout(AController* Exiting) override;
+	
+	void PlayerIsRead(int PlayerIndex);
 
-	virtual void StartPlay() override;
+	// virtual void StartPlay() override;
 
 };

@@ -5,12 +5,13 @@
 #include "RTS2/Prerequisites.h"
 #include "RTS2/Public/RTSPlayerCameraSpectatorPawn.h"
 #include "RTS2/Public/RTSPlayerController.h"
+#include "RTS2/Game/MultiplayerSetupPlayerController.h"
 
 AMultiplayerLobbyGameMode::AMultiplayerLobbyGameMode()
 {
-	PlayerControllerClass = ARTSPlayerController::StaticClass();
+	PlayerControllerClass = AMultiplayerSetupPlayerController::StaticClass();
 	DefaultPawnClass = ARTSPlayerCameraSpectatorPawn::StaticClass();
-
+	ControllerCount = 0;
 
 }
 
@@ -18,13 +19,16 @@ void AMultiplayerLobbyGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	LOG("Player Logged In");
 	Super::PostLogin(NewPlayer);
-	if(ConnActor == nullptr)
-	{
-		ConnActor = GetWorld()->SpawnActor<AMultiplayerSetupConnActor>(AMultiplayerSetupConnActor::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator);
-	}
-	FRPCData data;
 	
-	ConnActor->SayHiRPC(data);
+	//ConnActor = GetWorld()->SpawnActor<AMultiplayerSetupConnActor>(AMultiplayerSetupConnActor::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator);
+	//NewPlayer->SetOwner(ConnActor);
+	//ConnActor->SetOwner(NewPlayer);
+	//((AMultiplayerSetupConnActor*)(NewPlayer->GetNetOwner()))->SayHiRPC(data);
+	//ConnActor->SayHiRPC(data);
+
+	array[ControllerCount] = ((AMultiplayerSetupPlayerController*)(NewPlayer));
+	ControllerCount++;
+	
 		
 }
 
@@ -41,10 +45,16 @@ void AMultiplayerLobbyGameMode::Logout(AController* Exiting)
 	
 }
 
-void AMultiplayerLobbyGameMode::StartPlay()
+void AMultiplayerLobbyGameMode::PlayerIsRead(int PlayerIndex)
 {
-	Super::StartPlay();
-	ConnActor = GetWorld()->SpawnActor<AMultiplayerSetupConnActor>(AMultiplayerSetupConnActor::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator);
-
+	bUseSeamlessTravel = true;
+	GetWorld()->ServerTravel("/Game/DebugLevel?listen");
 }
+
+// void AMultiplayerLobbyGameMode::StartPlay()
+// {
+// 	Super::StartPlay();
+// 	ConnActor = GetWorld()->SpawnActor<AMultiplayerSetupConnActor>(AMultiplayerSetupConnActor::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator);
+//
+// }
 

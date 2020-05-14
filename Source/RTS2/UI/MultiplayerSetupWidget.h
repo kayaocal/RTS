@@ -13,5 +13,8 @@ UCLASS()
 class RTS2_API UMultiplayerSetupWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+	UFUNCTION(BlueprintCallable, Category = "My Functions")
+	void ButtonSendClicked();
 	
 };
