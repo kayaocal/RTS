@@ -25,6 +25,7 @@ struct RTS2_API FUnitSkeletalMeshData
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		TArray<class UMaterialInstance*> MaterialsByAge;
+	
 };
 
 USTRUCT(BlueprintType)
