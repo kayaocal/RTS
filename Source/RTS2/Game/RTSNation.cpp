@@ -7,10 +7,11 @@
 #include "RTS2/Game/RTSManager.h"
 #include "RTS2/Data/FNationDefaultStats.h"
 
-RTSNation::RTSNation(const RTSNationIdentity& Identity)
-	: RTSNationIdentity(Identity)
+RTSNation::RTSNation(const FRTSNationIdentity& Identity)
 {
-	FNationDefaultStats* DefaultStats = RTS_DATA.GetNationDefaults(NationNames[Nation]);
+	NationIdentity =  Identity;
+
+	FNationDefaultStats* DefaultStats = RTS_DATA.GetNationDefaults(NationNames[Identity.Nation]);
 	
 	NationalBank.SetFood(DefaultStats->DefaultResourceAmount.Food);
 	NationalBank.SetGold(DefaultStats->DefaultResourceAmount.Gold);
@@ -38,21 +39,21 @@ void RTSNation::OnBankUpdate(int Wood, int Food, int Gold)
 	
 }
 
-RTSNationIdentity::RTSNationIdentity()
+FRTSNationIdentity::FRTSNationIdentity()
 {
 }
 
-RTSNationIdentity::RTSNationIdentity(const RTSNationIdentity & Identity)
+FRTSNationIdentity::FRTSNationIdentity(const FRTSNationIdentity & Identity)
 {
 	SetNationForm(Identity);
 	
 }
 
-RTSNationIdentity::~RTSNationIdentity()
+FRTSNationIdentity::~FRTSNationIdentity()
 {
 }
 
-void RTSNationIdentity::SetNationForm(ENations NationEnum, EColors ColorValue, uint8 PlayersID, uint8 TeamsID, EControllerType Controller)
+void FRTSNationIdentity::SetNationForm(ENations NationEnum, EColors ColorValue, uint8 PlayersID, uint8 TeamsID, ENationControllerType Controller)
 {
 	this->TeamID = TeamsID;
 	this->PlayerID = PlayersID;
@@ -61,7 +62,7 @@ void RTSNationIdentity::SetNationForm(ENations NationEnum, EColors ColorValue, u
 	this->Nation = NationEnum;
 }
 
-void RTSNationIdentity::SetNationForm(const RTSNationIdentity & NationIdentity)
+void FRTSNationIdentity::SetNationForm(const FRTSNationIdentity & NationIdentity)
 {
 	SetNationForm(NationIdentity.Nation, NationIdentity.Color, NationIdentity.PlayerID, NationIdentity.TeamID, NationIdentity.ControllerType);
 }

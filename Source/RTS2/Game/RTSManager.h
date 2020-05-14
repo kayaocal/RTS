@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "RTS2/Game/URTSGame.h"
+#include "RTS2/Game/RTSGame.h"
 #include "RTS2/Data/DataStore.h"
 
 class RTSManager
@@ -10,9 +10,9 @@ class RTSManager
 public:
     
 
-	URTSGame 	*Game;
+	RTSGame 	*Game;
 	DataStore 	DataStore;
-	URTSGameMode GameModeSetting;
+	FRTSGameMode GameModeSetting;
 
 	static RTSManager& GetInstance();
 

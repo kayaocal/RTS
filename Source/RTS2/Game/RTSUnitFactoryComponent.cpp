@@ -10,7 +10,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "RTS2/Public/RTSPlayerController.h"
 #include "RTS2/Public/RTSSkeletalActor.h"
-
+#include "RTS2/Game/RTSNation.h"
+#include "RTS2/Game/FRTSNationIdentity.h"
 // Sets default values for this component's properties
 URTSUnitFactoryComponent::URTSUnitFactoryComponent()
 {
@@ -28,7 +29,7 @@ void URTSUnitFactoryComponent::BeginPlay()
 
 RTSUnit* URTSUnitFactoryComponent::CreateUnit(EUnitTypes UnitType, const int PlayerIndex, const FVector& Position)
 {
-	return CreateUnit((EUnitTypes)UnitType, (ENations)RTS_NATION(PlayerIndex)->Nation, RTS_NATION(PlayerIndex)->Color, Position);
+	return CreateUnit((EUnitTypes)UnitType, (ENations)RTS_NATION(PlayerIndex)->NationIdentity.Nation, RTS_NATION(PlayerIndex)->NationIdentity.Color, Position);
 }
 
 RTSUnit* URTSUnitFactoryComponent::CreateUnit(EUnitTypes UnitType, ENations Nation, EColors Color,

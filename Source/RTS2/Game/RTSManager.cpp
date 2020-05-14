@@ -22,8 +22,7 @@ void RTSManager::CreateGame()
 {
 	if(Game == nullptr)
 	{
-		Game= NewObject<URTSGame>();
-		//Game = new URTSGame();
+		Game = new RTSGame();
 	}
 }
 

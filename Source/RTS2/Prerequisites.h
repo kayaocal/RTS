@@ -23,9 +23,17 @@
 #define RTS_NATION_MAX 8
 
 
-
-static const FColor RTSGreenColor{46, 204, 113, 255};
-static const FColor RTSRedColor{192, 57, 43, 255};
+/*
+ *	Colors are taken from https://flatuicolors.com/palette/defo
+ */
+static const FColor GGreenColor			{46 , 204, 113, 255};
+static const FColor GRedColor			{192, 57 , 43 , 255};
+static const FColor GOrangeColor		{243, 156, 18 , 255};
+static const FColor GYellowColor		{241, 196, 15 , 255};
+static const FColor GBlueColor			{41 , 128, 185, 255};
+static const FColor GTurquoiseColor		{26 , 188, 156, 255};
+static const FColor GPurpleColor		{155, 89 , 182, 255};
+static const FColor GDarkBlueColor		{44 , 62 , 80 , 255};
 
 UENUM(BlueprintType)
 enum EMap
@@ -35,7 +43,7 @@ enum EMap
 };
 
 UENUM(BlueprintType)
-enum EControllerType
+enum ENationControllerType
 {
 	Bot,
 	Player
@@ -65,6 +73,18 @@ enum EGameMode
 	Raid
 };
 
+/*
+ *	EPlayerLobbyStatus enum is used in multiplayer game setup scene
+ *	to check if players are ready to start game
+ */
+UENUM(BlueprintType)
+enum EPlayerLobbyStatus
+{
+	Connecting,
+	NotReady,
+	Ready
+};
+
 //------------------ UNIT TYPES ------------------->>>
 UENUM(BlueprintType)
 enum EUnitTypes
@@ -76,11 +96,10 @@ enum EUnitTypes
 	Soldier				=4			UMETA(DisplayName = "Soldier"),
 
 
-
 	EUnitTypeCounter									
 };
 
-#define UNIT_TYPE_COUNT 5
+#define UNIT_TYPE_COUNT EUnitTypes::EUnitTypeCounter
 
 /*
  * UnitNames Order and Size must be same with EUnitTypes enum
@@ -103,10 +122,12 @@ enum ENations
 	Any						= 0		UMETA(DisplayName = "ANY NATION",	ToolTip = "All Nations"),
 	Nation1					= 1		UMETA(DisplayName = "Nation 1",		ToolTip = "Nation One"),	
 	Nation2					= 2		UMETA(DisplayName = "Nation 2",		ToolTip = "Nation Two"),	
-	Nation3					= 3		UMETA(DisplayName = "Nation 3",		ToolTip = "Nation Three")
+	Nation3					= 3		UMETA(DisplayName = "Nation 3",		ToolTip = "Nation Three"),
+
+	NationCount
 }; 
 
-#define NATION_COUNT 4
+#define NATION_COUNT ENations::NationCount
 
 /*
 * NationNames Order and Size must be same with ENations enum
@@ -126,25 +147,27 @@ const char NationNames[UNIT_TYPE_COUNT][40]
 UENUM(BlueprintType)
 enum EColors
 {
-	Red						= 0		UMETA(DisplayName = "Red",			ToolTip = "Red"),
-	Green					= 1		UMETA(DisplayName = "Green",		ToolTip = "Green"),	
-	Blue					= 2		UMETA(DisplayName = "Blue",			ToolTip = "Blue"),	
-	Yellow					= 3		UMETA(DisplayName = "Yellow",		ToolTip = "Yellow")
+	Green					= 0		UMETA(DisplayName = "Green",		ToolTip = "Green"),
+	Red						= 1		UMETA(DisplayName = "Red",			ToolTip = "Red"),	
+	Orange					= 2		UMETA(DisplayName = "Orange",		ToolTip = "Orange"),	
+	Yellow					= 3		UMETA(DisplayName = "Yellow",		ToolTip = "Yellow"),
+	Blue					= 4		UMETA(DisplayName = "Blue",			ToolTip = "Blue"),
+	Turquoise				= 5		UMETA(DisplayName = "Turquoise",	ToolTip = "Turquoise"),
+	Purple					= 6		UMETA(DisplayName = "Purple",		ToolTip = "Purple"),
+
+	ColorCount
 }; 
 
-#define COLOR_COUNT 4
+#define COLOR_COUNT EColors::ColorCount
 const char ColorNames[COLOR_COUNT][40]
 {
-	"Red",
-    "Green",
+	"Green",
+    "Red",
+	"Orange",
+	"Yellow",
 	"Blue",
-	"Yellow"
+	"Turquoise",
+	"Purple"
 };
 
 //------------------- COLORS --------------------<<<
-
-UENUM(BlueprintType)
-enum DataTableEnums
-{
-	UnitConstructionDataTable = 0
-};
