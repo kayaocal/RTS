@@ -19,7 +19,6 @@ RTSNation::RTSNation(const FRTSNationIdentity& Identity)
 	Population.SetLimit(DefaultStats->DefaultPopulation);
 	Population.SetPopulation(0);
 	NationalBank.OnResourceChanged.add<RTSNation, &RTSNation::OnBankUpdate>(this);
-	
 }
 
 RTSNation::~RTSNation()

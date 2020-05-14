@@ -11,6 +11,7 @@
 
 #include "MSetupUserSettingsRow.generated.h"
 
+
 /**
  * 
  */
@@ -19,6 +20,8 @@ class RTS2_API UMSetupUserSettingsRow : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+
+	EPlayerLobbyStatus PlayerStatus;
 	
 	UPROPERTY(meta = (BindWidget))
 	UEditableText* ETPlayerName;
@@ -38,5 +41,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "My Functions")
 	void BindUI();
+
+	UFUNCTION(BlueprintCallable, Category = "My Functions")
+	void UpdatePlayerStatusButton();
 	
 };

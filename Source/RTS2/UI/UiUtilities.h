@@ -1,6 +1,7 @@
 #pragma once
 #include "Components/ComboBoxString.h"
 #include "Components/EditableText.h"
+#include "Components/TextBlock.h"
 #include "Components/Widget.h"
 
 class UiUtilities {
@@ -23,6 +24,14 @@ public:
 	}
 
 	static void SafeSetEditableText(UEditableText* EText, FText InText)
+	{
+		if(EText)
+		{
+			EText->SetText(InText);
+		}
+	}
+
+	static void SafeSetTextBlock(UTextBlock* EText, FText InText)
 	{
 		if(EText)
 		{

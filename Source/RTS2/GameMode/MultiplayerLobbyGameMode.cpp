@@ -6,6 +6,7 @@
 #include "RTS2/Public/RTSPlayerCameraSpectatorPawn.h"
 #include "RTS2/Public/RTSPlayerController.h"
 #include "RTS2/Game/MultiplayerSetupPlayerController.h"
+#include "RTS2/Game/RTSManager.h"
 
 AMultiplayerLobbyGameMode::AMultiplayerLobbyGameMode()
 {
@@ -19,17 +20,9 @@ void AMultiplayerLobbyGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	LOG("Player Logged In");
 	Super::PostLogin(NewPlayer);
-	
-	//ConnActor = GetWorld()->SpawnActor<AMultiplayerSetupConnActor>(AMultiplayerSetupConnActor::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator);
-	//NewPlayer->SetOwner(ConnActor);
-	//ConnActor->SetOwner(NewPlayer);
-	//((AMultiplayerSetupConnActor*)(NewPlayer->GetNetOwner()))->SayHiRPC(data);
-	//ConnActor->SayHiRPC(data);
-
 	array[ControllerCount] = ((AMultiplayerSetupPlayerController*)(NewPlayer));
 	ControllerCount++;
 	
-		
 }
 
 void AMultiplayerLobbyGameMode::PreLogin(const FString& Options, const FString& Address,
@@ -51,10 +44,11 @@ void AMultiplayerLobbyGameMode::PlayerIsRead(int PlayerIndex)
 	GetWorld()->ServerTravel("/Game/DebugLevel?listen");
 }
 
-// void AMultiplayerLobbyGameMode::StartPlay()
-// {
-// 	Super::StartPlay();
-// 	ConnActor = GetWorld()->SpawnActor<AMultiplayerSetupConnActor>(AMultiplayerSetupConnActor::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator);
-//
-// }
+void AMultiplayerLobbyGameMode::StartPlay()
+{
+	Super::StartPlay();
+	RTS_GAME->GameMode = FRTSGameMode();
+	RTS_GAME->GameMode.SetGamePlayType(EGamePlayType::Multiplayer);
+	RTS_GAME->GameMode.SetNumberOfPlayers(2);
+}
 
