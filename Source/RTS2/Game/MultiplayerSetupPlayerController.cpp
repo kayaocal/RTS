@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Engine/Classes/Kismet/GameplayStatics.h"
 #include "MultiplayerSetupPlayerController.h"
+#include "Engine/Classes/Kismet/GameplayStatics.h"
 #include "RTS2/Prerequisites.h"
 #include "RTS2/GameMode/MultiplayerLobbyGameMode.h"
 
