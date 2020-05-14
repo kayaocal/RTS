@@ -3,6 +3,11 @@
 
 #include "RTSUnit.h"
 
+
+#include "RTSPlayerController.h"
+#include "RTS2/Public/GridManager.h"
+#include "Kismet/GameplayStatics.h"
+
 void RTSUnit::SetSelection(bool bSelected)
 {
 	if (actor == nullptr)
@@ -19,8 +24,19 @@ RTSUnit::RTSUnit()
 
 RTSUnit::~RTSUnit()
 {
+
+
+	
 	if (actor != nullptr)
 	{
+		ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(actor, 0));
+		if(PlayerController!=nullptr)
+		{
+			if(PlayerController->GridSystem != nullptr)
+			{
+				PlayerController->GridSystem->RemoveUnit(this);
+			}
+		}
 		actor->Destroy(false, true);
 	}
 

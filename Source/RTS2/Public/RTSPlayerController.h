@@ -47,6 +47,7 @@ public:
 	ARTSActor* GetSelectedActor(int index);
 
 	class URTSUnitFactoryComponent* UnitFactory;
+	class GridManager* GridSystem;
 
 private:
 	ARTSStaticActor* TemporaryActor;
@@ -62,9 +63,7 @@ private:
 	EPlayerControllerState ControllerState;
 	
 private:
-	EUnitTypes		ConstructUnitType;
-	ENations		ConstructNation;
-	EColors			ConstructColor;
+	RTSUnit ConstructionUnit;
 	
 	
 };

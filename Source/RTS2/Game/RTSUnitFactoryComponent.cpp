@@ -2,6 +2,8 @@
 
 
 #include "RTSUnitFactoryComponent.h"
+
+#include "RTS2/Public/GridManager.h"
 #include "RTS2/Game/RTSUnit.h"
 #include "RTS2/Data/UnitDataRow.h"
 #include "RTS2/Game/RTSManager.h"
@@ -60,6 +62,7 @@ RTSUnit* URTSUnitFactoryComponent::CreateUnit(EUnitTypes UnitType, ENations Nati
 			
 			NewActor->ItemSkeletalMesh->SetSkeletalMesh(RTS_DATA.GetUnitSkeletalMesh((ENations)Nation, (EUnitTypes)UnitType));
 			NewActor->ItemSkeletalMesh->SetMaterial(0, (UMaterialInterface*)RTS_DATA.GetUnitSkeletalMeshMaterial((ENations)Nation, (EUnitTypes)UnitType));		
+			NewActor->SetGridScale(unitRow->GridSizeRow, unitRow->GridSizeCol);
 		}
 		else
 		{
@@ -71,7 +74,8 @@ RTSUnit* URTSUnitFactoryComponent::CreateUnit(EUnitTypes UnitType, ENations Nati
 				NewActor->SetMyUnit(unit);
 				
 				NewActor->ItemStaticMesh->SetStaticMesh(RTS_DATA.GetUnitStaticMesh((ENations)Nation, (EUnitTypes)UnitType));
-				NewActor->ItemStaticMesh->SetMaterial(0, (UMaterialInterface*)RTS_DATA.GetUnitStaticMeshMaterial((ENations)Nation, (EUnitTypes)UnitType));		
+				NewActor->ItemStaticMesh->SetMaterial(0, (UMaterialInterface*)RTS_DATA.GetUnitStaticMeshMaterial((ENations)Nation, (EUnitTypes)UnitType));
+				NewActor->SetGridScale(unitRow->GridSizeRow, unitRow->GridSizeCol);
 			}
 		}
 	
@@ -80,7 +84,14 @@ RTSUnit* URTSUnitFactoryComponent::CreateUnit(EUnitTypes UnitType, ENations Nati
 	unit->Color = Color;
 	unit->Nation = Nation;
 	unit->UnitType = UnitType;
+	unit->GridColSize = unitRow->GridSizeCol;
+	unit->GridRowSize = unitRow->GridSizeRow;
 
+	if(PlayerController != nullptr)
+	{
+		PlayerController->GridSystem->PlaceUnit(unit, PlayerController->GridSystem->WorldToGrid(Position));
+	}
+	
 	
 	DestroyCommand* NewCommand = new DestroyCommand(unit);
 	unit->UnitCommands.Add(NewCommand);

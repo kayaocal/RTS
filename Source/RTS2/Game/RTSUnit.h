@@ -23,6 +23,9 @@ public:
 	EUnitTypes UnitType;
 	ENations Nation;
 	EColors Color;
+	int GridRowSize;
+	int GridColSize;
+	int CenterGridIndex;
 
 	void SetSelection(bool bIsSelected);
 

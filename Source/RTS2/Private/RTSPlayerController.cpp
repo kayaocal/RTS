@@ -14,6 +14,7 @@
 #include "RTS2/Game/RTSManager.h"
 #include "RTS2/Data/UnitDataRow.h"
 #include "RTS2/Public/RTSSkeletalActor.h"
+#include "RTS2/Public/GridManager.h"
 
 ARTSPlayerController::ARTSPlayerController()
 {
@@ -28,14 +29,36 @@ void ARTSPlayerController::BeginPlay()
 {
 	RTSHud = Cast<ARTSHud>(GetHUD());
 	TemporaryActor = GetWorld()->SpawnActor<ARTSStaticActor>(ARTSStaticActor::StaticClass(), FVector(0,0, 100), FRotator::ZeroRotator);
-	if(TemporaryActor != nullptr && TemporaryActor->CollisionBox != nullptr)
-	{
-		TemporaryActor->CollisionBox->SetGenerateOverlapEvents(true);
-	}
 	ControllerState = SELECTION;
+
+	UNavigationSystemV1* NavSystem = Cast<UNavigationSystemV1>(GetWorld()->GetNavigationSystem());
+
+	if (NavSystem != nullptr)
+	{
+		TSet<FNavigationBounds> bounds = NavSystem->GetNavigationBounds();
+		FBox Bounds;
+		for (auto& Elem : bounds)
+		{
+			Bounds  = Elem.AreaBox;
+			break;
+		}
+		FVector Center = Bounds.GetCenter();
+		FVector Size = Bounds.GetSize();
+		FVector Min = Bounds.Min;
+		FVector Max = Bounds.Max;
+		int GridSize = 100;
+		
+		GridSystem = new GridManager(FVector2D(Max.X, Min.Y), GridSize, Size.Y/GridSize , Size.X/GridSize);
+		
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("REE222"));
+		
+	}
 }
 void ARTSPlayerController::Tick(float DeltaSeconds)
-{
+{	
 	if (ControllerState == EPlayerControllerState::CONSTRUCTION)
 	{
 		FVector NewLocation = FVector(0, 0, 0);
@@ -60,9 +83,23 @@ void ARTSPlayerController::Tick(float DeltaSeconds)
 			}
 			else
 			{
+				if(GridSystem != nullptr)
+				{
+					//LOG("Grid index = %d", GridSystem->WorldToGrid(TraceResult.ImpactPoint));
+					NewLocation = GridSystem->GetPositionToPlace(GridSystem->WorldToGrid(TraceResult.ImpactPoint), ConstructionUnit.GridRowSize, ConstructionUnit.GridColSize);
+					ConstructionUnit.CenterGridIndex = GridSystem->WorldToGrid(TraceResult.ImpactPoint);
+					TemporaryActor->SetActorLocation(NewLocation, false);
+
+					if(GridSystem->IsPlaceable(GridSystem->GetGridsFromCenter(ConstructionUnit.CenterGridIndex, ConstructionUnit.GridRowSize, ConstructionUnit.GridColSize), EGridState::Empty))
+					{
+						SetCanConstruct(true);
+					}
+					else
+					{
+						SetCanConstruct(false);
+					}
+				}
 				
-				NewLocation = TraceResult.ImpactPoint;
-				TemporaryActor->SetActorLocation(NewLocation, false);
 			}
 		}
 		return;
@@ -73,7 +110,7 @@ void ARTSPlayerController::BuildTemporaryUnit()
 {
 	if(bCanConstruct && TemporaryActor != nullptr)
 	{
-		RTSUnit* NewUnit =  UnitFactory->CreateUnit(ConstructUnitType,  ConstructNation, ConstructColor, TemporaryActor->GetActorLocation());
+		RTSUnit* NewUnit =  UnitFactory->CreateUnit(ConstructionUnit.UnitType,  ConstructionUnit.Nation, ConstructionUnit.Color, TemporaryActor->GetActorLocation());
 		if(NewUnit != nullptr )
 		{
 			if(NewUnit->actor!=nullptr)
@@ -103,13 +140,21 @@ void ARTSPlayerController::SetUIWidget(UDebugUIWidget * Widget)
 void ARTSPlayerController::SetTemporaryUnit(EUnitTypes UnitType, ENations Nation, EColors Color)
 {
 	ControllerState = EPlayerControllerState::CONSTRUCTION;
-
-	ConstructColor = Color;
-	ConstructNation = Nation;
-	ConstructUnitType = UnitType;
 	bCanConstruct = true;
 
+	ConstructionUnit.UnitType = UnitType;
+	ConstructionUnit.Nation = Nation;
+	ConstructionUnit.Color = Color;
+
 	FUnitDataRow* Row = RTS_DATA.GetUnitConstructionDataRow(UnitNames[UnitType]);
+	if(Row == nullptr)
+	{
+		return;
+	}
+
+	ConstructionUnit.GridColSize = Row->GridSizeCol;
+	ConstructionUnit.GridRowSize = Row->GridSizeRow;
+	
 	
 	if(Row->IsSkeletalMesh == true)
 		return;
@@ -117,11 +162,6 @@ void ARTSPlayerController::SetTemporaryUnit(EUnitTypes UnitType, ENations Nation
 	RTS_DATA.SetRTSActorSMeshAndMaterial(*TemporaryActor, Nation, UnitType, Color);
 	TemporaryActor->SetTextureFromFile("ConstructionMatInstance");
 	ShowTemporaryUnit();
-	if(TemporaryActor != nullptr && TemporaryActor->CollisionBox != nullptr)
-	{
-		TemporaryActor->CollisionBox->SetGenerateOverlapEvents(true);
-		TemporaryActor->SetActorEnableCollision(true);
-	}
 }
 
 void ARTSPlayerController::DisableTemporaryUnit()
@@ -133,12 +173,7 @@ void ARTSPlayerController::DisableTemporaryUnit()
 
 	ControllerState = SELECTION;
 	HideTemporaryUnit();
-	if(TemporaryActor != nullptr && TemporaryActor->CollisionBox != nullptr)
-	{
-		TemporaryActor->CollisionBox->SetGenerateOverlapEvents(false);
-		TemporaryActor->SetActorEnableCollision(false);
-		TemporaryActor->SetActorRotation(FRotator::ZeroRotator);
-	}
+	TemporaryActor->SetActorRotation(FRotator::ZeroRotator);
 	SetConstructionRotate(false);
 }
 
@@ -164,7 +199,7 @@ void ARTSPlayerController::SetSelectedActors(FVector2D StartPos, FVector2D EndPo
 	{
 		FVector NewLocation = FVector(0, 0, 0);
 		FHitResult TraceResult(ForceInit);
-		this->GetHitResultUnderCursor(ECollisionChannel::ECC_WorldDynamic, false, TraceResult);
+		this->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, TraceResult);
 
 		if (TraceResult.GetActor() != nullptr)
 		{	
@@ -258,6 +293,14 @@ EPlayerControllerState ARTSPlayerController::GetControllerState() const
 void ARTSPlayerController::SetCanConstruct(bool bCanConstructPrm)
 {
 	this->bCanConstruct = bCanConstructPrm;
+	if(bCanConstructPrm)
+	{
+		TemporaryActor->SetTextureFromFile("ConstructionMatInstance");
+	}
+	else
+	{
+		TemporaryActor->SetTextureFromFile("ConstructionMatFailInstance");
+	}
 }
 
 void ARTSPlayerController::MoveUnitsToPosition(FVector_NetQuantize* TargetPos)

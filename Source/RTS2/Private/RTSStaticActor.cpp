@@ -9,15 +9,7 @@ ARTSStaticActor::ARTSStaticActor()
 	ItemStaticMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
 
 	SelectionPlaneComponent->AttachToComponent(ItemStaticMesh, FAttachmentTransformRules::KeepRelativeTransform);
-
-	CollisionBox = CreateDefaultSubobject<UBoxComponent>(FName("CollisionBox"));
-	CollisionBox->AttachToComponent(ItemStaticMesh, FAttachmentTransformRules::KeepRelativeTransform);
-	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
-	CollisionBox->SetWorldScale3D(FVector(9,9,9));
-	CollisionBox->SetGenerateOverlapEvents(false);
-	CollisionBox->OnComponentBeginOverlap.AddDynamic(this,  &ARTSActor::OnOverlapBegin);
-	CollisionBox->OnComponentEndOverlap.AddDynamic(this,  &ARTSActor::OnOverlapEnd);
-	 fstringVar = "ARTSStaticActor  CONSTRL END";
+	fstringVar = "ARTSStaticActor  CONSTRL END";
 	UE_LOG(LogTemp, Warning, TEXT("Text,  %s"), *fstringVar );
 
 }

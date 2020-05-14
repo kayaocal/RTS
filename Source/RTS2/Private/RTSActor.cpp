@@ -143,53 +143,6 @@ void ARTSActor::SetTextureFromFile(FString MaterialName)
 
 }
 
-void ARTSActor::OnOverlapBegin(class UPrimitiveComponent* NewComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if(this == OtherActor || OtherActor == nullptr || OtherComp == nullptr)
-	{
-		return;
-	}
-	
-	ARTSActor* CollidingActor = Cast<ARTSActor>(OtherActor);
-	if(CollidingActor == nullptr)
-	{
-		return;
-	}
-	
-	this->SetTextureFromFile("ConstructionMatFailInstance");
-	ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-	if (PlayerController != nullptr)
-	{
-		PlayerController->SetCanConstruct(false);
-	}
-	OverlappingUnitsCount++;
-
-}
-
-void ARTSActor::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex)
-{
-	if(this == OtherActor || OtherActor == nullptr || OtherComp == nullptr)
-	{
-		return;
-	}
-	ARTSActor* CollidingActor = Cast<ARTSActor>(OtherActor);
-	if(CollidingActor == nullptr)
-	{
-		return;
-	}
-	OverlappingUnitsCount--;
-	if(OverlappingUnitsCount <= 0)
-	{
-		this->SetTextureFromFile("ConstructionMatInstance");
-		ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-		if (PlayerController != nullptr)
-		{
-			PlayerController->SetCanConstruct(true);
-		}
-	}
-}
-
 // Called when the game starts or when spawned
 void ARTSActor::BeginPlay()
 {
@@ -222,5 +175,13 @@ void ARTSActor::SetMyUnit(RTSUnit * AUnit)
 RTSUnit * ARTSActor::GetMyUnit()
 {
 	return MyUnit;
+}
+
+void ARTSActor::SetGridScale(int RowSize, int ColSize)
+{
+	if(SelectionPlaneComponent != nullptr)
+	{
+		SelectionPlaneComponent->SetWorldScale3D(FVector(RowSize, ColSize, 0.1f));
+	}
 }
 

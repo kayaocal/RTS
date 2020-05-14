@@ -45,18 +45,24 @@ struct RTS2_API FUnitStaticMeshData
 USTRUCT(BlueprintType)
 struct RTS2_API FUnitDataRow : public FTableRowBase
 {
-	 GENERATED_BODY();
+	GENERATED_BODY();
 
-	 UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		 TEnumAsByte<EUnitTypes> UnitTpe;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TEnumAsByte<EUnitTypes> UnitTpe;
 
-	 UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		 bool IsSkeletalMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool IsSkeletalMesh;
 
-	 UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	 TArray<FUnitStaticMeshData> NationStaticMeshData;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<FUnitStaticMeshData> NationStaticMeshData;
 
-	 UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	 TArray<FUnitSkeletalMeshData> NationSkeletalMeshData;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<FUnitSkeletalMeshData> NationSkeletalMeshData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int GridSizeRow;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int GridSizeCol;
 
 };
