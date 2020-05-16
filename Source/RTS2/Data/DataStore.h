@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "RTSActor.h"
 #include "RTSPrimitiveResourceData.h"
+#include "Animation/AnimBlueprint.h"
 #include "RTS2/Prerequisites.h"
 
 /**
@@ -24,6 +25,7 @@ public:
 	class UStaticMesh* GetUnitStaticMesh(ENations NationType, EUnitTypes UnitType);
 	class USkeletalMesh* GetUnitSkeletalMesh(ENations NationType, EUnitTypes UnitType);
 	class UMaterialInstance* GetUnitSkeletalMeshMaterial(ENations NationType, EUnitTypes UnitType);
+	UAnimBlueprint* GetUnitSkeletalMeshAnimClass(ENations NationType, EUnitTypes UnitType);
 	class UMaterialInstance* GetUnitStaticMeshMaterial(ENations NationType, EUnitTypes UnitType);
 	void PrepareGameDatas();
 
