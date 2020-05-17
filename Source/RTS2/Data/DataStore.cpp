@@ -2,9 +2,12 @@
 
 
 #include "DataStore.h"
+
+#include "FPredefinedGameMode.h"
 #include "RTS2/Data/UnitDataRow.h"
 #include "RTS2/Data/FUnitNecessityRow.h"
 #include "RTS2/Data/FNationDefaultStats.h"
+#include "RTS2/Game/RTSGameMode.h"
 #include "RTS2/Game/RTSUnit.h"
 #include "RTS2/Public/RTSStaticActor.h"
 
@@ -16,6 +19,7 @@ DataStore::DataStore()
 DataStore::~DataStore()
 {
 }
+
 
 void DataStore::ReadNationDefaults()
 {
@@ -57,6 +61,17 @@ void DataStore::ReadUnitNecessitiesData()
 	if (UnitNecessitiesData == nullptr)
 	{
 		UnitNecessitiesData = Cast<UDataTable>(UnitDataTablePath.TryLoad());
+	} 
+}
+
+void DataStore::ReadGameInfoData()
+{
+	FSoftObjectPath UnitDataTablePath = FSoftObjectPath(TEXT("DataTable'/Game/Data/DefaultGameModes.DefaultGameModes'"));
+	DefaultGameModesData = Cast<UDataTable>(UnitDataTablePath.ResolveObject());
+	
+	if (DefaultGameModesData == nullptr)
+	{
+		DefaultGameModesData = Cast<UDataTable>(UnitDataTablePath.TryLoad());
 	} 
 }
 
@@ -207,6 +222,7 @@ void DataStore::PrepareGameDatas()
 	ReadUnitConstructionData();
 	ReadUnitNecessitiesData();
 	ReadNationDefaults();
+	ReadGameInfoData();
 }
 
 FUnitDataRow* DataStore::GetUnitConstructionDataRow(const FName& RowName) const
@@ -217,4 +233,51 @@ FUnitDataRow* DataStore::GetUnitConstructionDataRow(const FName& RowName) const
 		return nullptr;
 	}
 	return UnitConstructionData->FindRow<FUnitDataRow>(RowName, TEXT(""));
+}
+
+FRTSGameMode* DataStore::GetDefaultGameMode() const
+{
+	if (DefaultGameModesData == nullptr)
+	{
+		ensureMsgf(DefaultGameModesData != nullptr, TEXT("GetDefaultGameMode DefaultGameModesData is null"));
+		return nullptr;
+	}
+	FPredefinedGameMode* GameModes = DefaultGameModesData->FindRow<FPredefinedGameMode>("GameInfos", TEXT(""));
+
+	if(GameModes != nullptr)
+	{
+		return GetRTSGameModeFromGameInfo(GameModes->ActiveGameModeIndex);
+	}
+	ensureMsgf(GameModes != nullptr, TEXT("GetDefaultGameMode GameModes is null"));
+	return nullptr;	
+}
+
+FRTSGameMode* DataStore::GetRTSGameModeFromGameInfo(int Index) const
+{
+	if (DefaultGameModesData == nullptr)
+	{
+		ensureMsgf(DefaultGameModesData != nullptr, TEXT("GetRTSGameModeFromGameInfo DefaultGameModesData is null"));
+		return nullptr;
+	}
+	FPredefinedGameMode* GameModes = DefaultGameModesData->FindRow<FPredefinedGameMode>("GameInfos", TEXT(""));
+	
+	if(GameModes != nullptr)
+	{
+		
+		if(Index >= 0 && Index < GameModes->GameModes.Num())
+		{
+			return &GameModes->GameModes[Index].Mode;
+		}
+		else
+		{
+			LOG_ERR("+++ NULL");
+		}
+	}
+	else
+	{
+		LOG_ERR("GameModes NULL");
+	}
+
+	LOG_ERR("----NULL");
+	return nullptr;
 }
