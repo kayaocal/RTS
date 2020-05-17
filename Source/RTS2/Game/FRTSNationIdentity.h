@@ -2,17 +2,16 @@
 
 #include "RTS2/Prerequisites.h"
 #include "CoreMinimal.h"
-#include "UObject/ObjectMacros.h"
 
 #include "FRTSNationIdentity.generated.h"
 /*
  *	Responsible of holding game setup datas
  */
-USTRUCT()
+
+USTRUCT(BlueprintType)
 struct RTS2_API FRTSNationIdentity
 {
 	GENERATED_BODY()
-public :
 
 	FRTSNationIdentity();
 	FRTSNationIdentity(const FRTSNationIdentity& Identity);
@@ -21,40 +20,50 @@ public :
 	                   ENationControllerType Controller);
 
 	void SetNationForm(const FRTSNationIdentity& NationIdentity);
+
+	bool IsValidPlayer();
 	
 	/*
 	*	Nation cannot change after game started
 	*	It is necessary to create other gameplay modules
 	*/
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TEnumAsByte<ENations> Nation;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TEnumAsByte<EColors> Color;
 
 	/*
 	*	Bot or Gamer
 	* */
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TEnumAsByte<ENationControllerType> ControllerType;
 	
 	/*
 	*	Given ID to player. Used to identfy which player controls this nation.
 	*	A player can be a Bot or a Gamer.
 	*/
-	UPROPERTY()
-	uint8 PlayerID;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int PlayerID;
 
 	/*
 	*	Natural Allies has same TeamID
 	*/
-	UPROPERTY()
-	uint8 TeamID;
-
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int TeamID;
 
 	/*TODO: Connection datas such as ip...*/
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString Nickname;
+
+
+	/*
+	 * If true : this is a valid player
+	 * If false : this is empty player
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bIsValid;
+
+	
 };

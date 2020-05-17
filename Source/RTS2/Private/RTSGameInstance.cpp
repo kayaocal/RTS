@@ -11,15 +11,19 @@ URTSGameInstance::URTSGameInstance()
 	:UGameInstance()
 {
 	LOG_ERR("GAME INSTANCE INSTANTIATED");
-	RTSManager::GetInstance();
-	RTSManager::GetInstance().InitializeDataTables();
-	RTSManager::GetInstance().CreateGame();
 	
+
 }
 
 //Only works on game start
 void URTSGameInstance::Init()
 {
+
+	RTSManager::GetInstance();
+	RTSManager::GetInstance().GameInstance = this;
+	RTSManager::GetInstance().InitializeDataTables();
+	RTSManager::GetInstance().Existance = EGameExistance::None;
+	
 	LOG_ERR("GAME INSTANCE Inited");
 	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
 

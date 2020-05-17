@@ -15,5 +15,8 @@ class RTS2_API ARTS2GameModeBase : public AGameModeBase
 	GENERATED_BODY()
 public:
 	ARTS2GameModeBase();
-	
+
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage);
+	virtual void StartPlay() override;
+	void CreateUI();
 };

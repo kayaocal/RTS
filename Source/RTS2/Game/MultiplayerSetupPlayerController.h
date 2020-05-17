@@ -27,6 +27,8 @@ class RTS2_API AMultiplayerSetupPlayerController : public APlayerController
 	GENERATED_BODY()
 
 	public:
+
+	AMultiplayerSetupPlayerController();
 	
 	UFUNCTION(Client, Reliable, WithValidation)
 	void SayHiRPC(const FRPCData2& data);

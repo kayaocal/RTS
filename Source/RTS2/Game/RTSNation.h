@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RTS2/Prerequisites.h"
 #include "RTS2/Game/RTSPrimitiveResources.h"
 #include "RTS2/Data/RTSPopulationData.h"
 #include "FRTSNationIdentity.h"

@@ -25,7 +25,7 @@ public:
 
 	~RTSGame();
 
-	FRTSGameMode GameMode;
+	FRTSGameMode* GameMode = nullptr;
 
 	RTSNation* GetNationByPlayer(uint8 PlayerID);
 
@@ -33,5 +33,5 @@ private:
 
 	EGameStates GameState;
 
-	RTSNation* Nations[RTS_NATION_MAX];
+	RTSNation* Nations[RTS_NATION_MAX] = {nullptr};
 };
