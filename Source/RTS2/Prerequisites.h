@@ -24,11 +24,22 @@
 
 
 
+
 UENUM(BlueprintType)
 enum EMap
 {
-	MainMenu		= 0,
-	DebugMap		= 1
+	MainMenu				= 0,	
+	MultiplayerGameSetup 	= 1,	//Multiplayer Game Menu
+	DebugLevel				= 2,
+
+	MapCount
+};
+
+const char MapNames[EMap::MapCount][100]
+{
+	"/Game/Maps/Menu",
+	"/Game/Maps/MultiplayerGameSetup",
+	"/Game/DebugLevel"
 };
 
 UENUM(BlueprintType)
@@ -201,6 +212,7 @@ static const FLinearColor* GGetLinearColor[COLOR_COUNT]
 	& GTurquoiseLinearColor,
 	& GPurpleLinearColor
 };
+
 
 
 //------------------- COLORS --------------------<<<

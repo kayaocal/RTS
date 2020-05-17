@@ -125,8 +125,9 @@ void UMainMenuUI::OnCreateSessionComplete(FName Name, bool Success)
 
 	UWorld* World = GetWorld();
 	if(!ensure(World != nullptr)) return;
-
-	World->ServerTravel("/Game/Maps/MultiplayerGameSetup?listen");
+	FString MapStr(MapNames[EMap::MultiplayerGameSetup]);
+	MapStr.Append("?listen");
+	World->ServerTravel(MapStr);
 }
 
 void UMainMenuUI::OnJoinToServerButtonClicked(int Index)

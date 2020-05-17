@@ -98,8 +98,9 @@ void URTSGameInstance::Host()
 
 	UWorld* World = GetWorld();
 	if(!ensure(World != nullptr)) return;
-
-	World->ServerTravel("/Game/DebugLevel?listen");
+	FString MapStr(MapNames[EMap::DebugLevel]);
+	MapStr.Append("?listen");
+	World->ServerTravel(MapStr);
 }
 
 void URTSGameInstance::OnDestroySessionComplete(FName Name, bool Success)
@@ -171,7 +172,9 @@ void URTSGameInstance::OnCreateSessionComplete(FName Name, bool Success)
 	UWorld* World = GetWorld();
 	if(!ensure(World != nullptr)) return;
 
-	World->ServerTravel("/Game/Maps/MultiplayerGameSetup?listen");
+	FString MapStr(MapNames[EMap::MultiplayerGameSetup]);
+	MapStr.Append("?listen");
+	World->ServerTravel(MapStr);
 }
 
 void URTSGameInstance::Join(const FString& Adress)
