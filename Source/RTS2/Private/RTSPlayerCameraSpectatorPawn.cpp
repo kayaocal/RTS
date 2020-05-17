@@ -74,8 +74,6 @@ void ARTSPlayerCameraSpectatorPawn::SetupPlayerInputComponent(UInputComponent * 
 	PlayerInputComponent->BindAction("LeftMouseClick", IE_Released, this, &ARTSPlayerCameraSpectatorPawn::LeftClickReleaseHandler);
 	PlayerInputComponent->BindAction("RightMouseClick", IE_Pressed, this, &ARTSPlayerCameraSpectatorPawn::RightClickHandler);
 	PlayerInputComponent->BindAction("RightMouseClick", IE_Released, this, &ARTSPlayerCameraSpectatorPawn::RightClickReleaseHandler);
-	PlayerInputComponent->BindAction("RightMouseClick", IE_Pressed, this, &ARTSPlayerCameraSpectatorPawn::MoveUnit);
-
 }
 
 void ARTSPlayerCameraSpectatorPawn::LeftClickHandler()
@@ -156,6 +154,7 @@ void ARTSPlayerCameraSpectatorPawn::RightClickReleaseHandler()
 	switch(PlayerController->GetControllerState())
 	{
 		case SELECTION:
+			MoveUnit();
 		break;
 		
 		case CONSTRUCTION:
@@ -489,7 +488,6 @@ void ARTSPlayerCameraSpectatorPawn::MoveUnit()
 		if (Hit.bBlockingHit)
 		{
 			PlayerController->MoveUnitsToPosition(&(Hit.Location));
-		}
-		
+		}	
 	}
 }

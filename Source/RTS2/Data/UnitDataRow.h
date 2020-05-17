@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Animation/AnimBlueprint.h"
 #include "Engine/DataTable.h"
 #include "RTS2\Prerequisites.h"
 #include "RTS2/Data/RTSPrimitiveResourceData.h"
@@ -25,6 +26,8 @@ struct RTS2_API FUnitSkeletalMeshData
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		TArray<class UMaterialInstance*> MaterialsByAge;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		UAnimBlueprint* AnimationBP;
 	
 };
 

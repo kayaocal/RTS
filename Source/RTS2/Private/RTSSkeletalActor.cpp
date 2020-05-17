@@ -1,5 +1,7 @@
 ﻿#include "RTS2/Public/RTSSkeletalActor.h"
 
+#include "RTS2/Prerequisites.h"
+
 ARTSSkeletalActor::ARTSSkeletalActor()
 {
 	IsSkeletal = true;
@@ -8,8 +10,6 @@ ARTSSkeletalActor::ARTSSkeletalActor()
 	ItemSkeletalMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
 
 	SelectionPlaneComponent->AttachToComponent(ItemSkeletalMesh, FAttachmentTransformRules::KeepRelativeTransform);
-
-	//CollisionBox->AttachToComponent(ItemSkeletalMesh, FAttachmentTransformRules::KeepRelativeTransform);
 	
      Pawnmovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("movement component"));
 	 Pawnmovement->UpdatedComponent = RootComponent;
@@ -26,7 +26,7 @@ void ARTSSkeletalActor::MoveActor(FVector_NetQuantize* TargetPos)
     // APlayerController* PC = Cast<APlayerController>(GetWorld()->GetFirstPlayerController());
     TArray<FVector> Locations;
     if (NavSystem){
-        FPathFindingQuery Query;
+        /*FPathFindingQuery Query;
         FAIMoveRequest MoveReq;
         FNavPathSharedPtr OutPath;
         //MoveReq.SetGoalLocation(Hit.Location);
@@ -62,11 +62,13 @@ void ARTSSkeletalActor::MoveActor(FVector_NetQuantize* TargetPos)
          // 	for (auto &PathPoint : PathFindingResult.Path->GetPathPoints()){
          // 		Locations.Add(PathPoint.Location);
          // 	}
-         // }
-         
+         // }*/
+         AAIController* AiCtrl = Cast<AAIController>(GetController());
          if(AiCtrl != nullptr)
         {
-    		AiCtrl->MoveTo(MoveReq , &OutPath);
+    		//AiCtrl->MoveTo(MoveReq , &OutPath);
+
+         	AiCtrl->MoveToLocation(FVector(TargetPos->X, TargetPos->Y, TargetPos->Z));
          	FString fstringVar2 = "IS FALLOWING PATH ";
          	UE_LOG(LogTemp, Warning, TEXT("Text, %d  %s"), AiCtrl->IsFollowingAPath(), *fstringVar2 );
         }

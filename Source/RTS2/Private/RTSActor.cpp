@@ -29,6 +29,8 @@ ARTSActor::ARTSActor()
 	//SelectionPlaneComponent->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	SelectionPlaneComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
 	SelectionPlaneComponent->SetVisibility(false);
+	SelectionPlaneComponent->SetCanEverAffectNavigation(false);
+	SelectionPlaneComponent->bNavigationRelevant = false;
 
 	
 	FString PathString = TEXT("StaticMesh'/Engine/BasicShapes/Plane.Plane'");

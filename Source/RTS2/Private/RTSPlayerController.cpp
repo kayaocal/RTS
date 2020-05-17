@@ -31,6 +31,20 @@ void ARTSPlayerController::BeginPlay()
 	TemporaryActor = GetWorld()->SpawnActor<ARTSStaticActor>(ARTSStaticActor::StaticClass(), FVector(0,0, 100), FRotator::ZeroRotator);
 	ControllerState = SELECTION;
 
+	TemporaryActor->SetCanAffectNavigationGeneration(false);
+	
+	if(TemporaryActor->ItemStaticMesh != nullptr)
+	{
+		TemporaryActor->ItemStaticMesh->SetCanEverAffectNavigation(false);
+		
+	}
+	if(TemporaryActor->SelectionPlaneComponent != nullptr)
+	{
+		TemporaryActor->SelectionPlaneComponent->SetCanEverAffectNavigation(false);
+	}
+
+	TemporaryActor->SetActorEnableCollision(false);
+	
 	UNavigationSystemV1* NavSystem = Cast<UNavigationSystemV1>(GetWorld()->GetNavigationSystem());
 
 	if (NavSystem != nullptr)

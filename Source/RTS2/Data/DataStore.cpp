@@ -177,7 +177,7 @@ UMaterialInstance* DataStore::GetUnitSkeletalMeshMaterial(ENations NationType, E
 	}
 	FUnitDataRow* Row = GetUnitConstructionDataRow(UnitNames[UnitType]);
 	UMaterialInstance* Material = nullptr;
-	for(int i = 0; i < Row->NationStaticMeshData.Num(); i++)
+	for(int i = 0; i < Row->NationSkeletalMeshData.Num(); i++)
 	{
 		if(Row->NationSkeletalMeshData[i].Nation == NationType)
 		{
@@ -191,6 +191,30 @@ UMaterialInstance* DataStore::GetUnitSkeletalMeshMaterial(ENations NationType, E
 	}
 	
 	return Material;	
+}
+
+UAnimBlueprint* DataStore::GetUnitSkeletalMeshAnimClass(ENations NationType, EUnitTypes UnitType)
+{
+	if(UnitType >= EUnitTypes::EUnitTypeCounter || UnitType < 0)
+	{
+		return nullptr;	
+	}
+	FUnitDataRow* Row = GetUnitConstructionDataRow(UnitNames[UnitType]);
+	UAnimBlueprint* AnimClass = nullptr;
+	for(int i = 0; i < Row->NationSkeletalMeshData.Num(); i++)
+	{
+		if(Row->NationSkeletalMeshData[i].Nation == NationType)
+		{
+			return Row->NationSkeletalMeshData[i].AnimationBP;
+		}
+
+		if(Row->NationSkeletalMeshData[i].Nation == ENations::Any)
+		{
+			AnimClass = Row->NationSkeletalMeshData[i].AnimationBP;
+		}
+	}
+	
+	return AnimClass;	
 }
 
 UMaterialInstance* DataStore::GetUnitStaticMeshMaterial(ENations NationType, EUnitTypes UnitType)

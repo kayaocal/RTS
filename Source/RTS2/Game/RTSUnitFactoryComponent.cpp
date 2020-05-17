@@ -61,8 +61,24 @@ RTSUnit* URTSUnitFactoryComponent::CreateUnit(EUnitTypes UnitType, ENations Nati
 			unit->actor = NewActor;
 			NewActor->SetMyUnit(unit);
 			
-			NewActor->ItemSkeletalMesh->SetSkeletalMesh(RTS_DATA.GetUnitSkeletalMesh((ENations)Nation, (EUnitTypes)UnitType));
-			NewActor->ItemSkeletalMesh->SetMaterial(0, (UMaterialInterface*)RTS_DATA.GetUnitSkeletalMeshMaterial((ENations)Nation, (EUnitTypes)UnitType));		
+			USkeletalMesh* SkeletalMesh = RTS_DATA.GetUnitSkeletalMesh((ENations)Nation, (EUnitTypes)UnitType);
+			if(SkeletalMesh != nullptr)
+			{
+				NewActor->ItemSkeletalMesh->SetSkeletalMesh(SkeletalMesh);
+			
+			}
+			UMaterialInterface* MeshMaterial = (UMaterialInterface*)RTS_DATA.GetUnitSkeletalMeshMaterial((ENations)Nation, (EUnitTypes)UnitType);
+			
+			if(MeshMaterial != nullptr)
+			{
+				NewActor->ItemSkeletalMesh->SetMaterial(0, MeshMaterial);
+			}
+
+			UAnimBlueprint* AnimBP = RTS_DATA.GetUnitSkeletalMeshAnimClass((ENations)Nation, (EUnitTypes)UnitType);
+			if(AnimBP != nullptr)
+			{
+				//NewActor->ItemSkeletalMesh->SetAnimInstanceClass(AnimBP);
+			}
 			NewActor->SetGridScale(unitRow->GridSizeRow, unitRow->GridSizeCol);
 		}
 		else
