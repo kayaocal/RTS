@@ -19,16 +19,16 @@ void UMSetupUserSettingsRow::UpdatePlayerStatusButton()
 	switch (PlayerStatus)
 	{
 		case EPlayerLobbyStatus::Connecting:
-			BLPlayerStatus->SetBackgroundColor(GOrangeColor);
+			BLPlayerStatus->SetBackgroundColor(*GGetLinearColor[EColors::Orange]);
 			UiUtilities::SafeSetTextBlock(TPlayerStatus, FText::FromString(ANSI_TO_TCHAR("Connecting")));
 		break;
 		case EPlayerLobbyStatus::Ready:
-			BLPlayerStatus->SetBackgroundColor(GGreenColor);
+			BLPlayerStatus->SetBackgroundColor(*GGetLinearColor[EColors::Green]);
 			UiUtilities::SafeSetTextBlock(TPlayerStatus, FText::FromString(ANSI_TO_TCHAR("Ready")));
 		break;
 		case EPlayerLobbyStatus::NotReady:
 		default:
-			BLPlayerStatus->SetBackgroundColor(GRedColor);
+			BLPlayerStatus->SetBackgroundColor(*GGetLinearColor[EColors::Red]);
 			UiUtilities::SafeSetTextBlock(TPlayerStatus, FText::FromString(ANSI_TO_TCHAR("Waiting")));
 		break;
 		
