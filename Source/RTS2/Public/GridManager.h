@@ -23,6 +23,7 @@ public:
 	void SetGridState(int Index, EGridState NewState);
 	void SetGridStates(TArray<RTSGrid*> GridsToSet, EGridState NewState);
 	TArray<RTSGrid*> GetGridsFromCenter(int Index, int RowCount, int ColumnCount);
+	TArray<RTSGrid*> GetNeighbours(int Index, int RowCount, int ColumnCount);
 	FVector GetPositionToPlace(int Index, int RowCount, int ColumnCount);
 	void PlaceUnit(RTSUnit* UnitToPlace, int Index);
 	void RemoveUnit(RTSUnit* UnitToRemove);

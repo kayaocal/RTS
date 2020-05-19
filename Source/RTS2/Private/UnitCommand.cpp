@@ -8,6 +8,7 @@
 #include "RTS2/Prerequisites.h"
 #include "RTS2/Data/RTSPrimitiveResourceData.h"
 #include "RTS2/Game/RTSManager.h"
+#include "RTS2/Public/GridManager.h"
 #include "RTS2/Game/RTSUnitFactoryComponent.h"
 
 UnitCommand::UnitCommand()
@@ -41,11 +42,10 @@ void DestroyCommand::Execute()
 	}
 }
 
-BuildCommand::BuildCommand(RTSUnit* Receiver, EUnitTypes UnitToSpawn, FVector UnitOffset)
+BuildCommand::BuildCommand(RTSUnit* Receiver, EUnitTypes UnitToSpawn)
 {
 	MyUnit = Receiver;
 	UnitType = UnitToSpawn;
-	SpawnOffset = UnitOffset;
 }
 
 BuildCommand::~BuildCommand()
@@ -67,7 +67,23 @@ void BuildCommand::Execute()
 		ARTSPlayerController* PlayerController = Cast<ARTSPlayerController>(UGameplayStatics::GetPlayerController(MyUnit->actor, 0));
 		if (PlayerController != nullptr)
 		{
-			RTSUnit* NewUnit =  PlayerController->UnitFactory->CreateUnit(UnitType,  MyUnit->Nation, MyUnit->Color, MyUnit->actor->GetActorLocation()+SpawnOffset);
+			GridManager* GridManager = PlayerController->GridSystem;
+			if(GridManager == nullptr)
+			{
+				return;
+			}
+			
+			int BaseGridIndex = MyUnit->CenterGridIndex;
+			TArray<RTSGrid*> NeighbourGrids =  GridManager->GetNeighbours(BaseGridIndex, MyUnit->GridRowSize, MyUnit->GridColSize);
+
+			for(int i = 0; i< NeighbourGrids.Num(); i++)
+			{
+				if(NeighbourGrids[i] != nullptr && NeighbourGrids[i]->GridState == EGridState::Empty)
+				{
+					RTSUnit* NewUnit =  PlayerController->UnitFactory->CreateUnit(UnitType,  MyUnit->Nation, MyUnit->Color, GridManager->GetGridCenter(NeighbourGrids[i]->Index));
+					return;
+				}
+			}
 		}
 	}
 }

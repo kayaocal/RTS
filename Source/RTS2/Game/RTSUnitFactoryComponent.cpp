@@ -57,6 +57,7 @@ RTSUnit* URTSUnitFactoryComponent::CreateUnit(EUnitTypes UnitType, ENations Nati
 		{
 			FString fstringVar = "MESH SKELETAl";
 			UE_LOG(LogTemp, Warning, TEXT("Text,  %s"), *fstringVar );
+
 			ARTSSkeletalActor* NewActor = GetWorld()->SpawnActor<ARTSSkeletalActor>(ARTSSkeletalActor::StaticClass(), Position, FRotator::ZeroRotator);
 			unit->actor = NewActor;
 			NewActor->SetMyUnit(unit);
@@ -115,7 +116,7 @@ RTSUnit* URTSUnitFactoryComponent::CreateUnit(EUnitTypes UnitType, ENations Nati
 
 	if(unit->UnitType == EUnitTypes::BaseBuilding)
 	{
-		BuildCommand* SpawnSoldierCommand = new BuildCommand(unit,EUnitTypes::Soldier,FVector(0,400,0));
+		BuildCommand* SpawnSoldierCommand = new BuildCommand(unit,EUnitTypes::Soldier);
 		unit->UnitCommands.Add(SpawnSoldierCommand);
 	}
 	

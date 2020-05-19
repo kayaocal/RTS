@@ -87,6 +87,45 @@ TArray<RTSGrid*> GridManager::GetGridsFromCenter(int Index, int ARowCount, int A
     return GridsResult; 
 }
 
+TArray<RTSGrid*> GridManager::GetNeighbours(int Index, int ARowCount, int AColumnCount)
+{
+    TArray<RTSGrid*> GridsResult;
+    if(Index < 0)
+    {
+        return GridsResult;  
+    }
+     GridsResult.Reserve((ARowCount+1)*2 + (AColumnCount+1)*2);
+
+    int RowIndex = Index/this->ColumnCount;
+    int ColIndex = Index%this->ColumnCount;
+    int ColStart = ColIndex - (AColumnCount+1)/2;
+    int RowStart = RowIndex - (ARowCount+1)/2;
+    int StartIndex = RowStart*this->ColumnCount + ColStart;
+
+
+    //Right
+    for(int i = 0; i < ARowCount; i++)
+    {
+        GridsResult.Add(&RTSGrids[StartIndex + ColumnCount + AColumnCount + 1 + i*ColumnCount]);
+    }
+    //Bottom
+    for(int i = 0; i < AColumnCount+2; i++)
+    {
+        GridsResult.Add(&RTSGrids[StartIndex+(ColumnCount*(ARowCount+1)) + i]);
+    }
+    //Left
+    for(int i = 0; i < ARowCount; i++)
+    {
+        GridsResult.Add(&RTSGrids[StartIndex + ColumnCount + i*ColumnCount]);
+    }
+    //Top
+    for(int i = 0; i < AColumnCount+2; i++)
+    {
+        GridsResult.Add(&RTSGrids[StartIndex + i]);
+    }
+    return GridsResult;   
+}
+
 FVector GridManager::GetPositionToPlace(int Index, int ARowCount, int AColumnCount)
 {
     if(ARowCount%2 == 0 && AColumnCount %2 == 0)

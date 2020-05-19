@@ -31,7 +31,7 @@ public:
 	class RTSUnit* MyUnit = nullptr;
 	EUnitTypes UnitType;
 	FVector SpawnOffset;
-	BuildCommand(class RTSUnit* Receiver, EUnitTypes UnitToSpawn, FVector UnitOffset);
+	BuildCommand(class RTSUnit* Receiver, EUnitTypes UnitToSpawn);
 	~BuildCommand();
 	void Execute() override;
 };
