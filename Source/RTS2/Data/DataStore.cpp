@@ -114,12 +114,12 @@ UStaticMesh* DataStore::GetUnitStaticMesh(ENations NationType, EUnitTypes UnitTy
 	UStaticMesh* StaticMesh = nullptr;
 	for(int i = 0; i < Row->NationStaticMeshData.Num(); i++)
 	{
-		if(Row->NationStaticMeshData[i].Nation == NationType)
+		if(Row->NationStaticMeshData[i].Nation == NationType && Row->NationStaticMeshData[i].MeshByAge.Num() > 0)
 		{
 			return Row->NationStaticMeshData[i].MeshByAge[0];
 		}
 
-		if(Row->NationStaticMeshData[i].Nation == ENations::Any)
+		if(Row->NationStaticMeshData[i].Nation == ENations::Any && Row->NationStaticMeshData[i].MeshByAge.Num() > 0)
 		{
 			StaticMesh = Row->NationStaticMeshData[i].MeshByAge[0]; 
 		}
@@ -141,12 +141,12 @@ USkeletalMesh* DataStore::GetUnitSkeletalMesh(ENations NationType, EUnitTypes Un
 	for(int i = 0; i < Row->NationSkeletalMeshData.Num(); i++)
 	{
 			
-		if(Row->NationSkeletalMeshData[i].Nation == NationType)
+		if(Row->NationSkeletalMeshData[i].Nation == NationType && Row->NationSkeletalMeshData[i].MeshByAge.Num()>0)
 		{
 			return Row->NationSkeletalMeshData[i].MeshByAge[0];
 		}
 
-		if(Row->NationSkeletalMeshData[i].Nation == ENations::Any)
+		if(Row->NationSkeletalMeshData[i].Nation == ENations::Any && Row->NationSkeletalMeshData[i].MeshByAge.Num()>0)
 		{
 			SkeletalMesh = Row->NationSkeletalMeshData[i].MeshByAge[0]; 
 		}
@@ -164,12 +164,12 @@ UMaterialInstance* DataStore::GetUnitSkeletalMeshMaterial(ENations NationType, E
 	UMaterialInstance* Material = nullptr;
 	for(int i = 0; i < Row->NationSkeletalMeshData.Num(); i++)
 	{
-		if(Row->NationSkeletalMeshData[i].Nation == NationType)
+		if(Row->NationSkeletalMeshData[i].Nation == NationType && Row->NationSkeletalMeshData[i].MaterialsByAge.Num()>0)
 		{
 			return Row->NationSkeletalMeshData[i].MaterialsByAge[0];
 		}
 
-		if(Row->NationSkeletalMeshData[i].Nation == ENations::Any)
+		if(Row->NationSkeletalMeshData[i].Nation == ENations::Any && Row->NationSkeletalMeshData[i].MaterialsByAge.Num()>0)
 		{
 			Material = Row->NationSkeletalMeshData[i].MaterialsByAge[0]; 
 		}
@@ -212,12 +212,12 @@ UMaterialInstance* DataStore::GetUnitStaticMeshMaterial(ENations NationType, EUn
 	UMaterialInstance* Material = nullptr;
 	for(int i = 0; i < Row->NationStaticMeshData.Num(); i++)
 	{
-		if(Row->NationStaticMeshData[i].Nation == NationType)
+		if(Row->NationStaticMeshData[i].Nation == NationType && Row->NationStaticMeshData[i].MaterialsByAge.Num() > 0)
 		{
 			return Row->NationStaticMeshData[i].MaterialsByAge[0];
 		}
 
-		if(Row->NationStaticMeshData[i].Nation == ENations::Any)
+		if(Row->NationStaticMeshData[i].Nation == ENations::Any && Row->NationStaticMeshData[i].MaterialsByAge.Num() > 0)
 		{
 			Material = Row->NationStaticMeshData[i].MaterialsByAge[0]; 
 		}
