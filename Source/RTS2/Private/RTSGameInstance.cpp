@@ -11,15 +11,19 @@ URTSGameInstance::URTSGameInstance()
 	:UGameInstance()
 {
 	LOG_ERR("GAME INSTANCE INSTANTIATED");
-	RTSManager::GetInstance();
-	RTSManager::GetInstance().InitializeDataTables();
-	RTSManager::GetInstance().CreateGame();
 	
+
 }
 
 //Only works on game start
 void URTSGameInstance::Init()
 {
+
+	RTSManager::GetInstance();
+	RTSManager::GetInstance().GameInstance = this;
+	RTSManager::GetInstance().InitializeDataTables();
+	RTSManager::GetInstance().Existance = EGameExistance::None;
+	
 	LOG_ERR("GAME INSTANCE Inited");
 	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
 
@@ -98,8 +102,9 @@ void URTSGameInstance::Host()
 
 	UWorld* World = GetWorld();
 	if(!ensure(World != nullptr)) return;
-
-	World->ServerTravel("/Game/DebugLevel?listen");
+	FString MapStr(MapNames[EMap::DebugLevel]);
+	MapStr.Append("?listen");
+	World->ServerTravel(MapStr);
 }
 
 void URTSGameInstance::OnDestroySessionComplete(FName Name, bool Success)
@@ -171,7 +176,9 @@ void URTSGameInstance::OnCreateSessionComplete(FName Name, bool Success)
 	UWorld* World = GetWorld();
 	if(!ensure(World != nullptr)) return;
 
-	World->ServerTravel("/Game/Maps/MultiplayerGameSetup?listen");
+	FString MapStr(MapNames[EMap::MultiplayerGameSetup]);
+	MapStr.Append("?listen");
+	World->ServerTravel(MapStr);
 }
 
 void URTSGameInstance::Join(const FString& Adress)

@@ -3,10 +3,11 @@
 #include "RTSNation.h"
 #include "UObject/ObjectMacros.h"
 #include "RTS2/Prerequisites.h"
+#include "FRTSNationIdentity.h"
 
 #include "RTSGameMode.generated.h"
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FRTSGameMode
 {
 	GENERATED_BODY()
@@ -31,24 +32,29 @@ struct FRTSGameMode
 	
 
 
-private:
 
 	/*
 	*	in terms of seconds
 	*	-value means limitless.
 	*/
-	UPROPERTY()
-	uint64 GameCountDown;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int GameCountDown;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	uint8 NumberOfPlayers;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	uint8 MapID;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TEnumAsByte<EGamePlayType> GamePlayType;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TEnumAsByte<EGameMode> GameMode;
 
-	FRTSNationIdentity NationIdentities[RTS_NATION_MAX];
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FString GameName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<FRTSNationIdentity> NationIdentities;
+	
 };
 
 inline FRTSGameMode::FRTSGameMode(const FRTSGameMode & Mode)
@@ -58,17 +64,33 @@ inline FRTSGameMode::FRTSGameMode(const FRTSGameMode & Mode)
 	MapID = Mode.MapID;
 	GameMode = Mode.GameMode;
 	GamePlayType = Mode.GamePlayType;
-
-	for (int i = 0; i < RTS_NATION_MAX; i++)
+	
+	FRTSNationIdentity data{};
+	data.bIsValid = false;
+	NationIdentities.Init(data, RTS_NATION_MAX);
+	
+	if(Mode.NationIdentities.Num() > 0)
 	{
-		NationIdentities[i].SetNationForm(Mode.NationIdentities[i]);
+		 for (int i = 0; i < RTS_NATION_MAX; i++)
+		 {
+			if(Mode.NationIdentities.IsValidIndex(i))
+			{
+				NationIdentities[i].SetNationForm(Mode.NationIdentities[i]);
+			}
+		 	else
+		 	{
+		 		NationIdentities[i].bIsValid = false;
+		 	}
+		 }
 	}
 }
 
 inline FRTSGameMode::FRTSGameMode()
 	:GameCountDown(0), NumberOfPlayers(0), MapID(0), GamePlayType(EGamePlayType::Campaign), GameMode(EGameMode::Classic)
 {
-
+	FRTSNationIdentity data{};
+	data.bIsValid = false;
+	NationIdentities.Init(data, RTS_NATION_MAX);
 }
 
 inline FRTSGameMode::~FRTSGameMode()

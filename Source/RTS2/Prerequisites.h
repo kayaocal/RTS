@@ -23,23 +23,23 @@
 #define RTS_NATION_MAX 8
 
 
-/*
- *	Colors are taken from https://flatuicolors.com/palette/defo
- */
-static const FColor GGreenColor			{46 , 204, 113, 255};
-static const FColor GRedColor			{192, 57 , 43 , 255};
-static const FColor GOrangeColor		{243, 156, 18 , 255};
-static const FColor GYellowColor		{241, 196, 15 , 255};
-static const FColor GBlueColor			{41 , 128, 185, 255};
-static const FColor GTurquoiseColor		{26 , 188, 156, 255};
-static const FColor GPurpleColor		{155, 89 , 182, 255};
-static const FColor GDarkBlueColor		{44 , 62 , 80 , 255};
+
 
 UENUM(BlueprintType)
 enum EMap
 {
-	MainMenu		= 0,
-	DebugMap		= 1
+	MainMenu				= 0,	
+	MultiplayerGameSetup 	= 1,	//Multiplayer Game Menu
+	DebugLevel				= 2,
+
+	MapCount
+};
+
+const char MapNames[EMap::MapCount][100]
+{
+	"/Game/Maps/Menu",
+	"/Game/Maps/MultiplayerGameSetup",
+	"/Game/DebugLevel"
 };
 
 UENUM(BlueprintType)
@@ -169,5 +169,50 @@ const char ColorNames[COLOR_COUNT][40]
 	"Turquoise",
 	"Purple"
 };
+
+/*
+ *	Colors are taken from https://flatuicolors.com/palette/defo
+ */
+static const FColor GGreenColor			{46 , 204, 113, 255};
+static const FColor GRedColor			{192, 57 , 43 , 255};
+static const FColor GOrangeColor		{243, 156, 18 , 255};
+static const FColor GYellowColor		{241, 196, 15 , 255};
+static const FColor GBlueColor			{41 , 128, 185, 255};
+static const FColor GTurquoiseColor		{26 , 188, 156, 255};
+static const FColor GPurpleColor		{155, 89 , 182, 255};
+static const FColor GDarkBlueColor		{44 , 62 , 80 , 255};
+
+static const FLinearColor GGreenLinearColor			{GGreenColor};
+static const FLinearColor GRedLinearColor			{GRedColor};
+static const FLinearColor GOrangeLinearColor		{GOrangeColor};
+static const FLinearColor GYellowLinearColor		{GYellowColor};
+static const FLinearColor GBlueLinearColor			{GBlueColor};
+static const FLinearColor GTurquoiseLinearColor		{GTurquoiseColor};
+static const FLinearColor GPurpleLinearColor		{GPurpleColor};
+static const FLinearColor GDarkBlueLinearColor		{GDarkBlueColor};
+
+static const FColor* GGetColor[COLOR_COUNT]
+{
+	&GGreenColor,
+	&GRedColor,
+	&GOrangeColor,
+	&GYellowColor,
+	&GBlueColor,
+	&GTurquoiseColor,
+	&GPurpleColor
+};
+
+static const FLinearColor* GGetLinearColor[COLOR_COUNT]
+{
+	& GGreenLinearColor,
+	& GRedLinearColor,
+	& GOrangeLinearColor,
+	& GYellowLinearColor,
+	& GBlueLinearColor,
+	& GTurquoiseLinearColor,
+	& GPurpleLinearColor
+};
+
+
 
 //------------------- COLORS --------------------<<<

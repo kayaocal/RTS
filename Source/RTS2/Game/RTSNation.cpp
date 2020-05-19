@@ -39,6 +39,7 @@ void RTSNation::OnBankUpdate(int Wood, int Food, int Gold)
 }
 
 FRTSNationIdentity::FRTSNationIdentity()
+	:bIsValid(false)
 {
 }
 
@@ -59,9 +60,15 @@ void FRTSNationIdentity::SetNationForm(ENations NationEnum, EColors ColorValue, 
 	this->ControllerType = Controller;
 	this->Color = ColorValue;
 	this->Nation = NationEnum;
+	this->bIsValid = true;
 }
 
 void FRTSNationIdentity::SetNationForm(const FRTSNationIdentity & NationIdentity)
 {
 	SetNationForm(NationIdentity.Nation, NationIdentity.Color, NationIdentity.PlayerID, NationIdentity.TeamID, NationIdentity.ControllerType);
+}
+
+bool FRTSNationIdentity::IsValidPlayer()
+{
+	return bIsValid;
 }

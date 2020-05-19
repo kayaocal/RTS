@@ -5,6 +5,13 @@
 #include "RTS2/Prerequisites.h"
 #include "RTS2/GameMode/MultiplayerLobbyGameMode.h"
 
+AMultiplayerSetupPlayerController::AMultiplayerSetupPlayerController()
+{
+	bShowMouseCursor = true;
+	bEnableClickEvents = true;
+	bEnableTouchEvents = true;
+}
+
 void AMultiplayerSetupPlayerController::SayHiRPC_Implementation(const FRPCData2& data)
 {
 	LOG_ERR("Controller this time");

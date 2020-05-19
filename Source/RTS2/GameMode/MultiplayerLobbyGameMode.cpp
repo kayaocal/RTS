@@ -41,14 +41,16 @@ void AMultiplayerLobbyGameMode::Logout(AController* Exiting)
 void AMultiplayerLobbyGameMode::PlayerIsRead(int PlayerIndex)
 {
 	bUseSeamlessTravel = true;
-	GetWorld()->ServerTravel("/Game/DebugLevel?listen");
+	FString MapStr(MapNames[EMap::DebugLevel]);
+	MapStr.Append("?listen");
+	GetWorld()->ServerTravel(MapStr);
 }
 
 void AMultiplayerLobbyGameMode::StartPlay()
 {
 	Super::StartPlay();
-	RTS_GAME->GameMode = FRTSGameMode();
-	RTS_GAME->GameMode.SetGamePlayType(EGamePlayType::Multiplayer);
-	RTS_GAME->GameMode.SetNumberOfPlayers(2);
+	//RTS_GAME->GameMode = new FRTSGameMode();
+	//RTS_GAME->GameMode->SetGamePlayType(EGamePlayType::Multiplayer);
+	//RTS_GAME->GameMode->SetNumberOfPlayers(2);
 }
 

@@ -8,20 +8,39 @@
 RTSGame::RTSGame()
 {
 	GameState = EGameStates::Waiting;
-	Nations[0] = new RTSNation(FRTSNationIdentity());
 }
 
 RTSGame::RTSGame(const FRTSGameMode& Mode)
 {
 	GameState = EGameStates::Waiting;
-	GameMode = Mode;
+	GameMode = new FRTSGameMode(Mode);
+
+	for(int i = 0; i < RTS_NATION_MAX; i++)
+	{
+		if(GameMode->NationIdentities[i].IsValidPlayer())
+		{
+			Nations[i] = new RTSNation(GameMode->NationIdentities[i]);
+		}
+		else
+		{
+			Nations[i] = nullptr;
+		}
+	}
 }
 
 RTSGame::~RTSGame()
 {
+	for(int i = 0; i < RTS_NATION_MAX; i++)
+	{
+		if(Nations[i] != nullptr)
+		{
+			delete Nations[i];
+			Nations[i] = nullptr;
+		}
+	}
 }
 
-RTSNation* RTSGame::GetNationByPlayer(uint8 PlayerID)
+RTSNation* RTSGame::GetNationByPlayer(const uint8 PlayerID)
 {
 	return Nations[PlayerID];
 }
