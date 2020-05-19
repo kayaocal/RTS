@@ -11,9 +11,9 @@ ARTSSkeletalActor::ARTSSkeletalActor()
 
 	SelectionPlaneComponent->AttachToComponent(ItemSkeletalMesh, FAttachmentTransformRules::KeepRelativeTransform);
 	
-     Pawnmovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("movement component"));
-	 Pawnmovement->UpdatedComponent = RootComponent;
-	 AutoPossessAI = EAutoPossessAI::Spawned;
+    Pawnmovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("movement component"));
+	Pawnmovement->UpdatedComponent = RootComponent;
+	AutoPossessAI = EAutoPossessAI::Spawned;
 }
 
 void ARTSSkeletalActor::MoveActor(FVector_NetQuantize* TargetPos)
@@ -68,7 +68,7 @@ void ARTSSkeletalActor::MoveActor(FVector_NetQuantize* TargetPos)
         {
     		//AiCtrl->MoveTo(MoveReq , &OutPath);
 
-         	AiCtrl->MoveToLocation(FVector(TargetPos->X, TargetPos->Y, TargetPos->Z));
+         	AiCtrl->MoveToLocation(FVector(TargetPos->X, TargetPos->Y, TargetPos->Z),0,false,true,false,true,0,false);
          	FString fstringVar2 = "IS FALLOWING PATH ";
          	UE_LOG(LogTemp, Warning, TEXT("Text, %d  %s"), AiCtrl->IsFollowingAPath(), *fstringVar2 );
         }
